@@ -1,17 +1,27 @@
-import { resolve } from 'node:path';
+import path from 'node:path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import jsconfigPaths from 'vite-jsconfig-paths';
 
 const __dirname = new URL('.', import.meta.url).pathname;
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), jsconfigPaths()],
+  plugins: [react()],
+  resolve: {
+    alias: { '@': path.resolve(__dirname, './src') },
+  },
+  css: {
+    devSourcemap: true,
+    modules: {},
+  },
   build: {
+    cssCodeSplit: true,
     rollupOptions: {
-      markup: {
-        main: resolve(__dirname, 'markup.html'),
+      output: {
+        manualChunks: {
+          react: ['react'],
+          reactDom: ['react-dom'],
+          reactRouter: ['react-router-dom'],
+        },
       },
     },
   },
