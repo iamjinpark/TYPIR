@@ -64,7 +64,9 @@ export default {
         'p-lg': ['21.3px', { lineHeight: '160%', fontWeight: '400' }],
         'p-xl': ['28.4px', { lineHeight: '160%', fontWeight: '400' }],
       },
-      fontFamily: { sans: 'Pretendard-Regular' },
+      fontFamily: {
+        serif: ['PT Serif', 'sans-serif'],
+      },
       boxShadow: {
         text: 'inset 1px 1px 0px 0px rgba(0,0,0,1)',
         'Above/High': '0px -16px 48px 0px rgba(0,0,0,0.3)',
