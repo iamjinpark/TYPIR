@@ -6,6 +6,7 @@ export default {
     extend: {
       colors: {
         black: '#000000',
+        misty: '#d9d9d9',
         secondary: '#bd76ff',
         white: '#ffffff',
         primary: '#5f0080',
@@ -21,7 +22,6 @@ export default {
           700: '#404040',
           800: '#2b2b2b',
           900: '#151515',
-          divider: '#d9d9d9',
         },
         accent: { yellow: '#fa622f' },
         blue: {
