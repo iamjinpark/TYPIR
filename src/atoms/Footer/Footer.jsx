@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function Footer() {
   return (
-    <footer className="w-80 h-72 pt-8 pr-10 pl-6 border border-gray-50">
+    <footer className="w-80 h-72 pt-8 pr-10 pl-6 border-t border-gray-50 bg-white">
       <div>
         <div className="font-bold grid grid-cols-2 grid-rows-1 mb-4 text-[12px]">
           <span>이용안내</span>
