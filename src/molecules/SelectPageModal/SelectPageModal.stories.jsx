@@ -3,6 +3,11 @@ import SelectPageModal from './SelectPageModal';
 /**@type{import('@storybook/react').Meta} */
 export default {
   component: SelectPageModal,
+  parameters: {
+    backgrounds: {
+      default: 'light',
+    },
+  },
 };
 
 /**@type{import('@storybook/react').StoryObj} */
