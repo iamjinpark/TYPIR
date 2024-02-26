@@ -13,10 +13,7 @@
     "prettier",
     "plugin:storybook/recommended"
   ],
-  "ignorePatterns": [
-    "dist",
-    ".eslintrc.json"
-  ],
+  "ignorePatterns": ["dist", ".eslintrc.json"],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
@@ -26,10 +23,9 @@
       "version": "18.2"
     }
   },
-  "plugins": [
-    "react-refresh"
-  ],
+  "plugins": ["react-refresh"],
   "rules": {
+    "no-unused-vars": "off",
     "react/jsx-no-target-blank": "off",
     "react-refresh/only-export-components": [
       "warn",
