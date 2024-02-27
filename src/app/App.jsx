@@ -3,6 +3,7 @@ import MyPage from '@/pages/MyPage/MyPage';
 import AccountManagement from '@/pages/AccountManagement/AccountManagement';
 import Header from '@/molecules/Header/Header';
 import EditProfile from '@/pages/EditProfile/EditProfile';
+import Footer from '@/atoms/Footer/Footer';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/mypage/account" element={<AccountManagement />} />
         <Route path="/mypage/editProfile" element={<EditProfile />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }
