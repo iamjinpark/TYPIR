@@ -7,14 +7,17 @@ function LinkButton({
   hoverColor = 'hover:text-white',
   hoverScale = 'hover:scale-110',
   transition = 'transition-all duration-100',
+  position = 'relative',
   onClick,
+  children,
 }) {
   return (
     <button
-      className={`${fontFamily} ${fontWeight} ${fontColor} ${fontSize} ${hoverColor} ${hoverScale} ${transition}`}
+      className={`${fontFamily} ${fontWeight} ${fontColor} ${fontSize} ${hoverColor} ${hoverScale} ${transition} ${position}`}
       onClick={onClick}
     >
       {text}
+      {children}
     </button>
   );
 }
