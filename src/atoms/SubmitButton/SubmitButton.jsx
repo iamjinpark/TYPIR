@@ -1,11 +1,11 @@
-const SubmitButton = ({ isFormValid, content = '로그인' }) => {
+const SubmitButton = ({ isFormValid, text = '로그인', width = 'w-72' }) => {
   return (
     <button
       type="submit"
       disabled={!isFormValid}
-      className={`w-72 h-11 mt-1 block rounded-2xl px-4 text-white font-bold ${isFormValid ? 'bg-black' : 'bg-gray-400'}`}
+      className={`${width} h-11 mt-1 block rounded-2xl px-4 text-white font-bold ${isFormValid ? 'bg-black' : 'bg-gray-400'}`}
     >
-      {content}
+      {text}
     </button>
   );
 };

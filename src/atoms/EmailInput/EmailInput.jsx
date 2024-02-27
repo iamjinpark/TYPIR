@@ -26,7 +26,7 @@ const EmailInput = () => {
   return (
     <div>
       <label className="font-bold	px-2" htmlFor="emailInput">
-        email
+        이메일
       </label>
       <input
         type="text"
