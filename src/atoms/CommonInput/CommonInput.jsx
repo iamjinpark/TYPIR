@@ -6,11 +6,19 @@ function CommonInput({
   border = 'rounded-xl',
   borderColor = 'border-content',
   text = 'label',
+  onChange,
+  value,
+  placeholder = '',
 }) {
   return (
     <div>
       <TextContents text={text} fontWeight="font-bold" fontSize="text-[15px]" padding="pl-2" margin="mt-3" />
-      <input className={`${width} ${height} border ${border} ${borderColor} `}></input>
+      <input
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`${width} ${height} border ${border} ${borderColor} px-2 `}
+      ></input>
     </div>
   );
 }
