@@ -1,3 +1,4 @@
+
 import Category from '@/molecules/Category/Category.jsx';
 import DetailCategoryButton from '@/atoms/DetailCategory/DetailCategory';
 import DetailCategory from '@/molecules/DetailCategory/DetailCategory';
@@ -11,5 +12,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
