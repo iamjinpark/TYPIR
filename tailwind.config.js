@@ -1,3 +1,13 @@
+import range from 'lodash/range';
+const pxToRem = (px, base = 16) => `${px / base}rem`;
+
+const pxToRemFunc = (start, end) => {
+  return range(start, end).reduce((acc, px) => {
+    acc[`${px}px`] = pxToRem(px);
+    return acc;
+  }, {});
+};
+
 //@ts-nocheck
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -49,6 +59,21 @@ export default {
         '1px': '1px',
         '2px': '2px',
         '3px': '3px',
+        ...pxToRemFunc(1, 1000),
+      },
+      inset: {
+        ...pxToRemFunc(1, 1000),
+      },
+      fontSize: {
+        ...pxToRemFunc(1, 1000),
+      },
+      lineHeight: {
+        ...pxToRemFunc(1, 1000),
+      },
+      screens: {
+        mobile: '360px',
+        tablet: '768px',
+        desktop: '1280px',
       },
     },
     animation: {
