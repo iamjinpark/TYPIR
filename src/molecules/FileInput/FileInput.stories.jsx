@@ -1,8 +1,8 @@
-import CategoryButton from './CategoryButton';
+import FileInput from './FileInput';
 
 /**@type{import('@storybook/react').Meta} */
 export default {
-  component: CategoryButton,
+  component: FileInput,
 };
 
 /**@type{import('@storybook/react').StoryObj} */
