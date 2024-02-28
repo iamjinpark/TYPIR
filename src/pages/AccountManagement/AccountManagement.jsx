@@ -3,11 +3,18 @@ import CommonInput from '@/atoms/CommonInput/CommonInput';
 import TextContents from '@/atoms/TextContents/TextContents';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
+import Backward from '@/atoms/Backward/Backward';
 
 function AccountManagement() {
   return (
-    <div className="w-[320px] h-[500px] bg-white flex flex-col items-center mb-8">
-      <TextContents text="계정 관리" fontWeight="font-bold" fontSize="text-[20px]" />
+    <div className="w-full h-[570px] bg-white flex flex-col items-center mb-8">
+      <div className="w-full flex justify-between p-5">
+        <div className="flex-1">
+          <Backward />
+        </div>
+        <TextContents text="계정 관리" fontWeight="font-bold" fontSize="text-[20px]" />
+        <div className="flex-1"></div>
+      </div>
       <CommonInput text="이메일" borderColor="border-transparent" />
       <CommonInput text="비밀번호" borderColor="border-content" />
       <CommonButton text="비밀번호 변경" width="w-[90px]" height="h-[33px]" margin="mt-5" />
