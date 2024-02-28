@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function Footer() {
   return (
-    <footer className="w-[320px] h-[288px] pt-8 pl-6 border-t border-gray-50 bg-white">
-      <div className="pr-10">
+    <footer className="w-full max-w-[550px] mx-auto h-[288px] pt-8 pl-6 border-t border-gray-50 bg-white">
+      <div className="max-w-md pr-10">
         <div className="font-bold grid grid-cols-2 grid-rows-1 mb-4 text-[12px]">
           <span>이용안내</span>
           <span>고객지원</span>
@@ -18,7 +18,7 @@ function Footer() {
           <span>이메일 문의</span>
         </div>
       </div>
-      <div className="pt-6 pr-10 grid grid-cols-4 text-[11px]">
+      <div className="w-[320px] pt-6 pr-10 grid grid-cols-4 text-[11px]">
         <span>회사소개</span>
         <span>인재채용</span>
         <span>이용약관</span>
