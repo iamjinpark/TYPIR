@@ -40,7 +40,7 @@ function MyPage() {
       </div>
 
       <div className="flex justify-evenly pt-2">
-        <Link to="/mypage/album">
+        <Link to="/mypage">
           <LinkButton
             text="앨범"
             fontWeight="font-bold"
@@ -48,7 +48,7 @@ function MyPage() {
             fontSize="text-[14px]"
             hoverColor="hover:text-black"
           >
-            {pathname === '/mypage/album' && <UnderBar layoutId="underBar" margin="mt-1" />}
+            {pathname === '/mypage' && <UnderBar layoutId="underBar" margin="mt-1" />}
           </LinkButton>
         </Link>
 
@@ -88,31 +88,36 @@ function MyPage() {
         </Link>
       </div>
 
-      {(pathname === '/mypage' || pathname === '/mypage/album') && (
+      {pathname === '/mypage' && (
         <div className="flex flex-col items-center mt-8 h-auto">
           <ImageTemplate />
         </div>
       )}
 
       {pathname === '/mypage/board' && (
-        <div className="flex justify-center mt-4">
+        <div className="flex flex-wrap justify-center mt-4 gap-[12px]">
+          <BoardTemplate text={'Simple'} />
+          <BoardTemplate text={'Daily'} />
           <BoardTemplate text={'Modern'} />
+          <BoardTemplate text={'Vintage'} />
         </div>
       )}
 
       {pathname === '/mypage/post' && (
-        <div className="flex justify-center mt-4">
-          <BoardTemplate text={'Modern'} />
+        <div className="flex flex-col items-center mt-4 h-[210px]">
+          <OverlapTemplate text={'All'} />
         </div>
       )}
 
       {pathname === '/mypage/bookmark' && (
         <>
-          <div className="flex flex-col items-center mt-4 h-[210px]">
-            <OverlapTemplate text={'All'} />
-          </div>
-          <div className="flex justify-center mt-4">
+          <div className="flex flex-wrap justify-center mt-4 gap-[12px]">
+            <div className="flex flex-col items-center h-[210px]">
+              <OverlapTemplate text={'All'} />
+            </div>
+            <BoardTemplate text={'Daily'} />
             <BoardTemplate text={'Modern'} />
+            <BoardTemplate text={'Vintage'} />
           </div>
         </>
       )}
