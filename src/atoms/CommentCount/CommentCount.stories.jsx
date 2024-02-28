@@ -1,8 +1,8 @@
-import DetailCategory from './DetailCategory';
+import CommentCount from './CommentCount';
 
 /**@type{import('@storybook/react').Meta} */
 export default {
-  component: DetailCategory,
+  component: CommentCount,
 };
 
 /**@type{import('@storybook/react').StoryObj} */
