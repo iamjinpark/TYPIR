@@ -8,14 +8,16 @@ import LandingPageRoutes from '@/route/LandingPageRoutes';
 
 function App() {
   return (
-    <Router>
-      <Header />
-      <UserPageRoutes />
-      <LandingPageRoutes />
-      <CommunityPageRoutes />
-      <MyPageRoutes />
-      <Footer />
-    </Router>
+    <div className="max-w-screen-md mx-auto">
+      <Router>
+        <Header />
+        <UserPageRoutes />
+        <LandingPageRoutes />
+        <CommunityPageRoutes />
+        <MyPageRoutes />
+        <Footer />
+      </Router>
+    </div>
   );
 }
 export default App;

@@ -4,8 +4,9 @@ import HandleLogo from '@/atoms/HandleLogo/HandleLogo';
 import HandleText from '@/atoms/HandleText/HandleText';
 import StrokeButton from '@/atoms/StrokeButton/StrokeButton';
 import LinkButton from '@/atoms/LinkButton/LinkButton';
-import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
+import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
+import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
 import UnderBar from '@/atoms/UnderBar/UnderBar';
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -20,7 +21,7 @@ function MyPage() {
   }, [location.key, scrollTo]);
 
   return (
-    <div className="w-[320px] h-auto min-h-[600px] bg-white mb-8">
+    <div className="w-full h-auto min-h-[570px] bg-white mb-8">
       <div className="flex flex-col items-center p-3">
         <ProfileImage />
         <ProfileUserName />
@@ -88,8 +89,8 @@ function MyPage() {
       </div>
 
       {(pathname === '/mypage' || pathname === '/mypage/album') && (
-        <div className="flex flex-col items-center mt-4 h-[210px]">
-          <OverlapTemplate text={'All'} />
+        <div className="flex flex-col items-center mt-8 h-auto">
+          <ImageTemplate />
         </div>
       )}
 
