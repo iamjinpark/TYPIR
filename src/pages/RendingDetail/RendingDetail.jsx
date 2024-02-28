@@ -4,12 +4,10 @@ import DetailCategory from '@/molecules/DetailCategory/DetailCategory';
 
 const RendingDetail = () => {
   return (
-    <div className="w-[320px] mx-auto">
-      <Header />
-      <div className="px-[15px] mt-[10px]">
+    <div className="template">
         <FileInput />
         <DetailCategory />
-      </div>
+  
     </div>
   );
 };
