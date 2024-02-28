@@ -1,8 +1,8 @@
-import DetailCategory from './DetailCategory';
+import DetailImage from './DetailImage';
 
 /**@type{import('@storybook/react').Meta} */
 export default {
-  component: DetailCategory,
+  component: DetailImage,
 };
 
 /**@type{import('@storybook/react').StoryObj} */

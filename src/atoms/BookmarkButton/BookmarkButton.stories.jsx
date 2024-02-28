@@ -1,8 +1,8 @@
-import DetailCategory from './DetailCategory';
+import BookmarkButton from './BookmarkButton';
 
 /**@type{import('@storybook/react').Meta} */
 export default {
-  component: DetailCategory,
+  component: BookmarkButton,
 };
 
 /**@type{import('@storybook/react').StoryObj} */

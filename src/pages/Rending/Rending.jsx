@@ -5,12 +5,9 @@ import { Route } from 'react-router-dom';
 
 const Rending = () => {
   return (
-    <div className="w-[320px] mx-auto">
-      <Header />
-      <div className="px-[15px]">
-        <Category />
-        <ImageTemplate />
-      </div>
+    <div className="template">
+      <Category />
+      <ImageTemplate />
     </div>
   );
 };

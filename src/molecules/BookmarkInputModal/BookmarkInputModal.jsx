@@ -23,18 +23,18 @@ const BookmarkInputModal = ({ onAddBookmark, onClose }) => {
 
   return (
     <div className='absolute top-[103px] right-[35px]'>
-      <div className="w-[250px] h-[145px] bg-white border border-black rounded-xl flex items-center flex-col">
+      <div className="w-[260px] h-[170px] bg-white border border-black rounded-xl flex items-center flex-col">
         <p className="mt-[15px] font-semibold">나만의 북마크 만들기</p>
         <input 
           type="text" 
           value={bookmarkName} 
-          onChange={handleBookmarkName} 
+          onChange={handleBookmarkName}
           onKeyPress={handleEnterPress} 
-          className="w-[160px] border border-black my-[15px] rounded-md outline-none"
+          className="w-[170px] border-black border-b-2 mt-[22px] outline-none"
         />
-        <div>
-          <button onClick={handleAddBookmark} className="bg-[#F3F3F3] rounded-md px-5 py-1 mr-3 font-semibold">확인</button>
-          <button onClick={onClose} className="bg-[#F3F3F3] rounded-md px-5 py-1 font-semibold">취소</button>
+        <div className="mt-[25px]">
+          <button onClick={onClose} className="border-2 border-black rounded px-[22px] py-1 mr-6 font-semibold">취소</button>
+          <button onClick={handleAddBookmark} className="border-2 border-black rounded px-[22px] py-1 font-semibold">확인</button>
         </div>
       </div>
     </div>
