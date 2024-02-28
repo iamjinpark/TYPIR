@@ -1,8 +1,8 @@
-import DetailCategory from './DetailCategory';
+import HeartCount from './HeartCount';
 
 /**@type{import('@storybook/react').Meta} */
 export default {
-  component: DetailCategory,
+  component: HeartCount,
 };
 
 /**@type{import('@storybook/react').StoryObj} */
