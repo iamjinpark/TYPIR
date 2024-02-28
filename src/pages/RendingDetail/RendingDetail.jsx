@@ -7,7 +7,6 @@ const RendingDetail = () => {
   return (
     <div className="template">
       <DetailImage />
-      <DetailCategory />
     </div>
   );
 };
