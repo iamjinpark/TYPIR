@@ -28,7 +28,7 @@ const PasswordInput = ({ text = '패스워드' }) => {
   };
 
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="flex flex-col">
       <label htmlFor="passwordInput" className="font-bold px-2">
         {text}
       </label>
