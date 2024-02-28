@@ -9,8 +9,8 @@ const Category = ({ gap = 'gap-3' }) => {
   };
 
   return (
-    <div>
-      <ul className={`flex flex-row ${gap}`}>
+    <div className="mt-[5px] mb-[15px]">
+      <ul className={`flex flex-row ${gap} font-serif`}>
         {categories.map((item) => (
           <li
             key={item}

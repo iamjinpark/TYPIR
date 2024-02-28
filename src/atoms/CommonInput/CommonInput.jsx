@@ -3,7 +3,7 @@ import TextContents from '../TextContents/TextContents';
 function CommonInput({
   width = 'w-[290px]',
   height = 'h-[45px]',
-  border = 'rounded-xl',
+  border = 'rounded-2xl',
   borderColor = 'border-content',
   text = 'label',
   onChange,
