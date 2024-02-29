@@ -1,6 +1,6 @@
-function SocialLogin() {
+function SocialLogin({ className }) {
   return (
-    <div>
+    <div className={`${className}`}>
       <p className="text-center">소셜 로그인</p>
       <ul className="flex gap-4">
         <li>

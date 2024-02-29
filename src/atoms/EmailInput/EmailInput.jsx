@@ -20,11 +20,11 @@ const useEmailValidation = () => {
   return { email, isValid, handleInputChange };
 };
 
-const EmailInput = () => {
+const EmailInput = ({ className }) => {
   const { email, isValid, handleInputChange } = useEmailValidation();
 
   return (
-    <div>
+    <div className={`${className}`}>
       <label className="font-bold	px-2" htmlFor="emailInput">
         이메일
       </label>

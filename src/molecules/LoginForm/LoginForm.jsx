@@ -7,22 +7,9 @@ import SubmitButton from '@/atoms/SubmitButton/SubmitButton';
 function LoginForm() {
   return (
     <form action="" className="space-y-4">
-      <div className="mb-4">
-        {' '}
-        {/* EmailInput 아래 16px */}
-        <EmailInput />
-      </div>
-      <div className="mb-14">
-        {' '}
-        {/* PasswordInput 아래 16px */}
-        <PasswordInput />
-      </div>
-      <div className="mb-15">
-        {' '}
-        {/* Checkbox에서 44px 아래 */}
-        <Checkbox />
-      </div>
-      {/* SubmitButton */}
+      <EmailInput className={'mb-[16px]'} />
+      <PasswordInput className={'mb-[16px]'} />
+      <Checkbox className={'mb-[44px] mt-[16px]'} />
       <SubmitButton />
     </form>
   );
