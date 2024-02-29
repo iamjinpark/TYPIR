@@ -19,7 +19,7 @@ const usePasswordValidation = () => {
   return { password, isValid, handleInputChange };
 };
 
-const PasswordInput = ({ text = '패스워드' }) => {
+const PasswordInput = ({ text = '패스워드', className }) => {
   const { password, isValid, handleInputChange } = usePasswordValidation();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -28,7 +28,7 @@ const PasswordInput = ({ text = '패스워드' }) => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className={`flex flex-col ${className}`}>
       <label htmlFor="passwordInput" className="font-bold px-2">
         {text}
       </label>
@@ -38,7 +38,7 @@ const PasswordInput = ({ text = '패스워드' }) => {
           id="passwordInput"
           value={password}
           onChange={(e) => handleInputChange(e.target.value)}
-          className={`w-full h-11 mt-1 border ${isValid ? 'border-gray-300' : 'border-red-500'} rounded-2xl px-4 pr-10 relative`}
+          className={`w-full h-11 mt-1 border ${isValid ? 'border-black' : 'border-red-500'} rounded-2xl px-4 pr-10 relative`}
           placeholder="비밀번호를 입력하세요"
         />
         <button
