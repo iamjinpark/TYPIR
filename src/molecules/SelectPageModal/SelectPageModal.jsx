@@ -2,12 +2,17 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LinkButton from '@/atoms/LinkButton/LinkButton';
 import Bar from '../../atoms/Bar/Bar';
-import useStore from '@/hooks/useStore';
+import { useSelectCategoryStore } from '@/hooks/useStore';
 import { useNavigate } from 'react-router-dom';
 
 function SelectPageModal() {
-  const { closeModal } = useStore();
+  const { closeModal } = useSelectCategoryStore();
   const navigate = useNavigate();
+
+  const handleCategoryClick = () => {
+    navigate('/category', { state: { scrollTo: 0 } });
+    closeModal();
+  };
 
   const handleMyPageClick = () => {
     navigate('/mypage', { state: { scrollTo: 0 } });
@@ -25,7 +30,7 @@ function SelectPageModal() {
         <FontAwesomeIcon icon={faXmark} color="white" onClick={closeModal} />
       </div>
       <div className="h-5/6 flex flex-col gap-6 justify-center items-center">
-        <LinkButton text="CATEGORY" />
+        <LinkButton text="CATEGORY" onClick={handleCategoryClick} />
         <LinkButton text="COMMUNITY" />
         <LinkButton text="MY PAGE" onClick={handleMyPageClick} />
       </div>
