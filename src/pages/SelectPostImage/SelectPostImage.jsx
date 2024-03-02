@@ -11,7 +11,7 @@ function SelectPostImage() {
   const pathname = location.pathname;
   const newPostImageMatch = useMatch('/mypage/newpost/detail/:imageId');
   const layoutId = newPostImageMatch?.params.imageId;
-  console.log(newPostImageMatch);
+  const isDetailPage = newPostImageMatch != null;
 
   return (
     <div className="w-full h-auto min-h-[570px] bg-white mt-2 mb-8">
@@ -41,14 +41,14 @@ function SelectPostImage() {
         </Link>
       </div>
 
-      {location.pathname.startsWith('/mypage/newpost') && (
+      {(pathname === '/mypage/newpost' || isDetailPage) && (
         <div className="flex flex-col items-center mt-8 h-auto">
           <ImageTemplate />
           {newPostImageMatch && <DetailImage layoutId={layoutId} />}
         </div>
       )}
 
-      {location.pathname.endsWith('/mypage/newpost/board') && (
+      {pathname === '/mypage/newpost/board' && (
         <div className="flex flex-wrap justify-center mt-4 gap-[12px]">
           <BoardTemplate text={'Simple'} />
           <BoardTemplate text={'Daily'} />
