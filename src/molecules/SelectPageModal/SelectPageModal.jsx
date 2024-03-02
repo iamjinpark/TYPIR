@@ -6,21 +6,11 @@ import { useSelectCategoryStore } from '@/hooks/useStore';
 import { useNavigate } from 'react-router-dom';
 
 function SelectPageModal() {
-  const { closeModal } = useSelectCategoryStore();
   const navigate = useNavigate();
+  const { closeModal } = useSelectCategoryStore();
 
-  const handleCategoryClick = () => {
-    navigate('/category', { state: { scrollTo: 0 } });
-    closeModal();
-  };
-
-  const handleMyPageClick = () => {
-    navigate('/mypage', { state: { scrollTo: 0 } });
-    closeModal();
-  };
-
-  const handleNewPostClick = () => {
-    navigate('/mypage', { state: { scrollTo: 295 } });
+  const handleNavigate = (path) => {
+    navigate(path);
     closeModal();
   };
 
@@ -30,12 +20,17 @@ function SelectPageModal() {
         <FontAwesomeIcon icon={faXmark} color="white" onClick={closeModal} />
       </div>
       <div className="h-5/6 flex flex-col gap-6 justify-center items-center">
-        <LinkButton text="CATEGORY" onClick={handleCategoryClick} />
+        <LinkButton text="CATEGORY" onClick={() => handleNavigate('/category')} />
         <LinkButton text="COMMUNITY" />
-        <LinkButton text="MY PAGE" onClick={handleMyPageClick} />
+        <LinkButton text="MY PAGE" onClick={() => handleNavigate('/mypage')} />
       </div>
       <div className="h-1/6 flex justify-center items-center pb-14">
-        <LinkButton text="New Post" fontSize="text-[14px]" hoverScale="" onClick={handleNewPostClick} />
+        <LinkButton
+          text="New Post"
+          fontSize="text-[14px]"
+          hoverScale=""
+          onClick={() => handleNavigate('/mypage/newpost')}
+        />
         <Bar />
         <LinkButton text="Logout" fontSize="text-[14px]" hoverScale="" />
       </div>
