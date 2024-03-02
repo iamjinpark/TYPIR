@@ -16,6 +16,7 @@ function MyPage() {
   const pathname = location.pathname;
   const myPageImageMatch = useMatch('/mypage/detail/:imageId');
   const layoutId = myPageImageMatch?.params.imageId;
+  const isDetailPage = myPageImageMatch != null;
 
   return (
     <div className="w-full h-auto min-h-[570px] bg-white mt-4 mb-8">
@@ -85,12 +86,12 @@ function MyPage() {
         </Link>
       </div>
 
-      {location.pathname.startsWith('/mypage') && (
+      {(pathname === '/mypage' || isDetailPage) && (
         <div className="flex flex-col items-center mt-8 h-auto">
           <ImageTemplate />
-          {myPageImageMatch && <DetailImage layoutId={layoutId} />}
         </div>
       )}
+      {myPageImageMatch && <DetailImage layoutId={layoutId} />}
 
       {pathname === '/mypage/board' && (
         <div className="flex flex-wrap justify-center mt-4 gap-[12px]">
