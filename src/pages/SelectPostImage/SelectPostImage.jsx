@@ -1,4 +1,4 @@
-import DetailImage from '@/atoms/DetailImage/DetailImage';
+import DetailImage from '@/molecules/DetailImage/DetailImage';
 import LinkButton from '@/atoms/LinkButton/LinkButton';
 import UnderBar from '@/atoms/UnderBar/UnderBar';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
