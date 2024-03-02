@@ -8,20 +8,17 @@ import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
 import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
 import UnderBar from '@/atoms/UnderBar/UnderBar';
-import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useMatch } from 'react-router-dom';
+import DetailImage from '@/molecules/DetailImage/DetailImage';
 
 function MyPage() {
   const location = useLocation();
-  const scrollTo = location.state?.scrollTo || 0;
   const pathname = location.pathname;
-
-  useEffect(() => {
-    window.scrollTo(0, scrollTo);
-  }, [location.key, scrollTo]);
+  const myPageImageMatch = useMatch('/mypage/detail/:imageId');
+  const layoutId = myPageImageMatch?.params.imageId;
 
   return (
-    <div className="w-full h-auto min-h-[570px] bg-white mb-8">
+    <div className="w-full h-auto min-h-[570px] bg-white mt-4 mb-8">
       <div className="flex flex-col items-center p-3">
         <ProfileImage />
         <ProfileUserName />
@@ -33,7 +30,7 @@ function MyPage() {
           <Link to="/mypage/account">
             <StrokeButton text="계정 관리" />
           </Link>
-          <Link to="/mypage/editProfile">
+          <Link to="/mypage/editprofile">
             <StrokeButton text="프로필 수정" />
           </Link>
         </div>
@@ -45,7 +42,7 @@ function MyPage() {
             text="앨범"
             fontWeight="font-bold"
             fontColor="text-content"
-            fontSize="text-[14px]"
+            fontSize="text-[16px]"
             hoverColor="hover:text-black"
           >
             {pathname === '/mypage' && <UnderBar layoutId="underBar" margin="mt-1" />}
@@ -57,7 +54,7 @@ function MyPage() {
             text="보드"
             fontWeight="font-bold"
             fontColor="text-content"
-            fontSize="text-[14px]"
+            fontSize="text-[16px]"
             hoverColor="hover:text-black"
           >
             {pathname === '/mypage/board' && <UnderBar layoutId="underBar" margin="mt-1" />}
@@ -69,7 +66,7 @@ function MyPage() {
             text="게시물"
             fontWeight="font-bold"
             fontColor="text-content"
-            fontSize="text-[14px]"
+            fontSize="text-[16px]"
             hoverColor="hover:text-black"
           >
             {pathname === '/mypage/post' && <UnderBar layoutId="underBar" margin="mt-1" />}
@@ -81,16 +78,17 @@ function MyPage() {
             text="북마크"
             fontWeight="font-bold"
             fontColor="text-content"
-            fontSize="text-[14px]"
+            fontSize="text-[16px]"
             hoverColor="hover:text-black"
           />
           {pathname === '/mypage/bookmark' && <UnderBar layoutId="underBar" margin="mt-1" />}
         </Link>
       </div>
 
-      {pathname === '/mypage' && (
+      {location.pathname.startsWith('/mypage') && (
         <div className="flex flex-col items-center mt-8 h-auto">
           <ImageTemplate />
+          {myPageImageMatch && <DetailImage layoutId={layoutId} />}
         </div>
       )}
 
