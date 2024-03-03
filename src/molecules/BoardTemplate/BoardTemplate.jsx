@@ -8,11 +8,11 @@ function BoardItem({ content, span }) {
   return <div className={`w-[${width}] h-[${itemHeight}] bg-gray-100 ${span}`}>{content}</div>;
 }
 
-function BoardTemplate({ text }) {
+function BoardTemplate({ text, onBoardClick }) {
   return (
     <div>
       <TextContents text={text} fontFamily="font-serif" fontWeight="font-bold" fontSize="text-[18px]" padding="p-2" />
-      <div className="w-[280px] h-[170px] rounded-2xl overflow-hidden">
+      <div className="w-[280px] h-[170px] rounded-2xl overflow-hidden" onClick={() => onBoardClick(text.toLowerCase())}>
         <div className="w-full h-full grid grid-cols-3 grid-rows-2 gap-1px">
           {images.slice(0, 3).map((image, index) => (
             <BoardItem key={image.id} {...image} span={index === 0 ? 'col-span-2 row-span-2' : ''} />
