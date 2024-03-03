@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CommonInput from '@/atoms/CommonInput/CommonInput';
 import ModifyProfileImg from '@/atoms/ModifyProfileImg/ModifyProfileImg';
 import SubmitButton from '@/atoms/SubmitButton/SubmitButton';
+import AccountPageTitle from '@/atoms/AccountPageTitle/AccountPageTitle';
 
 function SetInitialProfile() {
   const [nickname, setNickname] = useState('');
@@ -15,8 +16,8 @@ function SetInitialProfile() {
   const isFormValid = isNicknameValid && isHandleValid;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-4xl mb-4">프로필 설정</h1>
+    <div className="w-[320px] h-[650px] mx-auto flex flex-col items-center justify-start">
+      <AccountPageTitle text={'프로필 설정'} className={'mt-75px mb-18px'} />
       <ModifyProfileImg />
       <div className="mb-2">
         <CommonInput
@@ -40,7 +41,7 @@ function SetInitialProfile() {
           <p className="text-red-500">핸들은 1글자 이상, 16글자 이하여야 합니다.</p>
         )}
       </div>
-      <SubmitButton isFormValid={isFormValid} text="설정" width="w-36" />
+      <SubmitButton isFormValid={isFormValid} text="설정" width="w-36" className={'mt-30px'} />
     </div>
   );
 }
