@@ -18,6 +18,7 @@ import DetailImage from '@/molecules/DetailImage/DetailImage';
 import SignIn from '@/pages/SignIn/SignIn';
 import SignUp from '@/pages/SignUp/SignUp';
 import SetInitialProfile from '@/pages/SetInitialProfile/SetInitialProfile';
+import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
 
 function App() {
   const router = createBrowserRouter([
@@ -38,12 +39,24 @@ function App() {
               element: <AccountManagement />,
             },
             {
-              path: 'editprofile',
+              path: 'editProfile',
               element: <EditProfile />,
             },
             {
               path: 'board',
               element: <MyPage />,
+              children: [
+                {
+                  path: ':boardText',
+                  element: <ImageTemplate />,
+                  children: [
+                    {
+                      path: 'detail/:imageId',
+                      element: <DetailImage />,
+                    },
+                  ],
+                },
+              ],
             },
             {
               path: 'post',
@@ -70,6 +83,18 @@ function App() {
                 {
                   path: 'board',
                   element: <SelectPostImage />,
+                  children: [
+                    {
+                      path: ':boardText',
+                      element: <ImageTemplate />,
+                      children: [
+                        {
+                          path: 'detail/:imageId',
+                          element: <DetailImage />,
+                        },
+                      ],
+                    },
+                  ],
                 },
                 {
                   path: 'detail/:imageId',
@@ -81,17 +106,11 @@ function App() {
         },
         {
           path: 'category',
+          element: <Rending />,
           children: [
-            { index: true, element: <Rending /> },
             {
-              path: 'detail',
-              element: <Rending />,
-              children: [
-                {
-                  path: ':imageId',
-                  element: <DetailImage />,
-                },
-              ],
+              path: 'detail/:imageId',
+              element: <DetailImage />,
             },
           ],
         },
