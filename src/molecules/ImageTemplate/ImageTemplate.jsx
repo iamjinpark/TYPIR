@@ -1,10 +1,9 @@
 import Masonry from 'react-masonry-css';
 import images from '/src/data/images.json';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
-function ImageTemplate() {
+function ImageTemplate({ boardText }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -13,8 +12,12 @@ function ImageTemplate() {
       navigate(`/category/detail/${imageId}`);
     } else if (location.pathname.endsWith('/mypage')) {
       navigate(`/mypage/detail/${imageId}`);
-    } else if (location.pathname.includes('/newpost')) {
+    } else if (location.pathname.startsWith('/mypage/board')) {
+      navigate(`/mypage/board/${boardText}/detail/${imageId}`);
+    } else if (location.pathname.endsWith('/newpost')) {
       navigate(`/mypage/newpost/detail/${imageId}`);
+    } else if (location.pathname.includes('/newpost/board')) {
+      navigate(`/mypage/newpost/board/${boardText}/detail/${imageId}`);
     }
   };
 
