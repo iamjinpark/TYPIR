@@ -3,15 +3,29 @@ import LinkButton from '@/atoms/LinkButton/LinkButton';
 import UnderBar from '@/atoms/UnderBar/UnderBar';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
 import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
-import { useLocation, useMatch } from 'react-router-dom';
+import { useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 function SelectPostImage() {
+  const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
+
+  /* 앨범 */
   const newPostImageMatch = useMatch('/mypage/newpost/detail/:imageId');
   const layoutId = newPostImageMatch?.params.imageId;
-  const isDetailPage = newPostImageMatch != null;
+  const isAlbumDetail = newPostImageMatch != null;
+
+  /* 보드 */
+  const boardImageMatch = useMatch('/mypage/newpost/board/:boardText');
+  const boardDetailMatch = useMatch('/mypage/newpost/board/:boardText/detail/:imageId');
+  const boardlayoutId = boardDetailMatch?.params.imageId;
+  const isBoardDetail = boardDetailMatch != null;
+
+  const boardText = boardImageMatch?.params.boardText;
+  const onBoardClicked = (boardText) => {
+    navigate(`/mypage/newpost/board/${boardText}`);
+  };
 
   return (
     <div className="w-full h-auto min-h-[570px] bg-white mt-2 mb-8">
@@ -24,7 +38,9 @@ function SelectPostImage() {
             fontSize="text-[20px]"
             hoverColor="hover:text-black"
           >
-            {pathname === '/mypage/newpost' && <UnderBar layoutId="post-underBar" margin="mt-1" />}
+            {(pathname === '/mypage/newpost' || newPostImageMatch) && (
+              <UnderBar layoutId="post-underBar" margin="mt-1" />
+            )}
           </LinkButton>
         </Link>
 
@@ -36,26 +52,38 @@ function SelectPostImage() {
             fontSize="text-[20px]"
             hoverColor="hover:text-black"
           >
-            {pathname === '/mypage/newpost/board' && <UnderBar layoutId="post-underBar" margin="mt-1" />}
+            {(pathname === '/mypage/newpost/board' || boardImageMatch || boardDetailMatch) && (
+              <UnderBar layoutId="post-underBar" margin="mt-1" />
+            )}
           </LinkButton>
         </Link>
       </div>
 
-      {(pathname === '/mypage/newpost' || isDetailPage) && (
+      {/* 앨범 */}
+      {(pathname === '/mypage/newpost' || isAlbumDetail) && (
         <div className="flex flex-col items-center mt-8 h-auto">
           <ImageTemplate />
           {newPostImageMatch && <DetailImage layoutId={layoutId} />}
         </div>
       )}
 
-      {pathname === '/mypage/newpost/board' && (
+      {/* 보드 */}
+      {pathname === '/mypage/newpost/board' && !boardImageMatch && !boardDetailMatch && (
         <div className="flex flex-wrap justify-center mt-4 gap-[12px]">
-          <BoardTemplate text={'Simple'} />
-          <BoardTemplate text={'Daily'} />
-          <BoardTemplate text={'Modern'} />
-          <BoardTemplate text={'Vintage'} />
+          <BoardTemplate text={'Simple'} onBoardClick={onBoardClicked} />
+          <BoardTemplate text={'Daily'} onBoardClick={onBoardClicked} />
+          <BoardTemplate text={'Modern'} onBoardClick={onBoardClicked} />
+          <BoardTemplate text={'Vintage'} onBoardClick={onBoardClicked} />
         </div>
       )}
+
+      {(boardImageMatch || isBoardDetail) && (
+        <div className="flex flex-col items-center mt-8 h-auto">
+          <ImageTemplate boardText={boardText} />
+        </div>
+      )}
+
+      {boardDetailMatch && <DetailImage layoutId={boardlayoutId} />}
     </div>
   );
 }
