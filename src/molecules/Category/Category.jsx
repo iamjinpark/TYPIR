@@ -3,6 +3,8 @@ import { NavLink, useSearchParams, useLocation } from 'react-router-dom';
 import { getPbImage } from '@/utils';
 import pb from '@/api/pocketbase';
 import ImageTemplate from '../ImageTemplate/ImageTemplate';
+import UserModal from '../UserModal/UserModal';
+import ShareModal from '../ShareModal/ShareModal';
 
 const CATEGORIES = ['all', 'simple', 'daily', 'vintage'];
 

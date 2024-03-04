@@ -23,11 +23,11 @@ function Header() {
     >
       <Logo size="w-[80px] sm:w-[100px]" cursor="cursor-pointer" onClick={() => handleNavigate('/category')} />
 
-      <div className="hidden sm:flex sm:flex-col sm:items-end sm:gap-1 sm:mt-2">
+      <div className="hidden sm:flex sm:flex-col sm:items-end sm:gap-1">
         <div className="flex items-center">
           <LinkButton
             text="New Post"
-            fontFamily="font-sans"
+            fontFamily="font-serif"
             fontColor="text-black"
             fontSize="text-[13px]"
             hoverColor="hover:text-black"
@@ -37,7 +37,7 @@ function Header() {
           <Bar color="bg-black" />
           <LinkButton
             text="Logout"
-            fontFamily="font-sans"
+            fontFamily="font-serif"
             fontColor="text-black"
             fontSize="text-[13px]"
             hoverColor="hover:text-black"
@@ -48,7 +48,7 @@ function Header() {
         <div className="flex gap-5">
           <LinkButton
             text="CATEGORY"
-            fontFamily="font-sans"
+            fontFamily="font-serif"
             fontColor="text-black"
             fontSize="text-[16px]"
             hoverColor="hover:text-black"
@@ -56,14 +56,14 @@ function Header() {
           />
           <LinkButton
             text="COMMUNITY"
-            fontFamily="font-sans"
+            fontFamily="font-serif"
             fontColor="text-black"
             fontSize="text-[16px]"
             hoverColor="hover:text-black"
           />
           <LinkButton
             text="MY PAGE"
-            fontFamily="font-sans"
+            fontFamily="font-serif"
             fontColor="text-black"
             fontSize="text-[16px]"
             hoverColor="hover:text-black"
