@@ -25,7 +25,17 @@ export const useToggleStore = create((set) => ({
 }));
 
 /* 포켓베이스 데이터 관련 */
-export const useStylesStore = create((set) => ({
+export const useStyleStore = create((set) => ({
   styles: [],
   setStyles: (data) => set({ styles: data }),
+}));
+
+export const useAlbumStore = create((set) => ({
+  albums: [],
+  setAlbums: (data) => set({ albums: data }),
+}));
+
+export const useBoardStore = create((set) => ({
+  boards: [],
+  setBoards: (data) => set({ boards: data }),
 }));
