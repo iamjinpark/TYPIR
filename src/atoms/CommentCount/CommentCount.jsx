@@ -1,7 +1,11 @@
-const CommentCount = ({ count }) => {
+const HeartCount = ({ count }) => {
   return (
-    <p className="text-sm">댓글 {count}개</p>
+    <p className="text-sm">
+      댓글
+      <span className="font-semibold ml-1">{count}</span>
+      개
+    </p>
   );
 };
 
-export default CommentCount;
+export default HeartCount;

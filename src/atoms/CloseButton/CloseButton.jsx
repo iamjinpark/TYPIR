@@ -1,6 +1,6 @@
-const CloseButton = ({ handleCloseModal }) => {
+const CloseButton = ({ onClose }) => {
   return (
-        <button onClick={handleCloseModal} className="absolute top-4 right-4">
+        <button onClick={onClose} className="absolute top-4 right-4">
           <img src="/images/close.svg" className="w-[13px] h-[13px]"/>
         </button>
   );
