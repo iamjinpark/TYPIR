@@ -1,42 +1,43 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
-// 커스텀 훅을 사용하여 이메일 유효성 검사 로직 분리
-const useEmailValidation = () => {
+const EmailInput = ({ className, onValidationChange }) => {
   const [email, setEmail] = useState('');
+  const [isTouched, setIsTouched] = useState(false);
   const [isValid, setIsValid] = useState(true);
-  const timeoutId = useRef();
 
-  const validateEmail = (inputEmail) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setIsValid(emailRegex.test(inputEmail));
-  };
+  useEffect(() => {
+    if (!isTouched && email) {
+      setIsTouched(true);
+    }
 
-  const handleInputChange = (inputEmail) => {
-    setEmail(inputEmail);
-    clearTimeout(timeoutId.current);
-    timeoutId.current = setTimeout(() => validateEmail(inputEmail), 300);
-  };
+    const timer = setTimeout(() => {
+      if (email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const valid = emailRegex.test(email);
+        setIsValid(valid);
+        onValidationChange(valid);
+      }
+    }, 500);
 
-  return { email, isValid, handleInputChange };
-};
-
-const EmailInput = ({ className }) => {
-  const { email, isValid, handleInputChange } = useEmailValidation();
+    return () => clearTimeout(timer);
+  }, [email, isTouched, onValidationChange]);
 
   return (
-    <div className={`${className}`}>
-      <label className="font-bold	px-2" htmlFor="emailInput">
+    <div className={`${className} relative`}>
+      <label className="font-bold px-2" htmlFor="emailInput">
         이메일
       </label>
       <input
         type="text"
         id="emailInput"
         value={email}
-        placeholder="email@email.com"
-        onChange={(e) => handleInputChange(e.target.value)}
-        className={`w-72 h-11 mt-1 border border-black block rounded-2xl px-4`}
+        onChange={(e) => setEmail(e.target.value)}
+        className={`w-72 h-11 mt-1 border ${isValid ? 'border-black' : 'border-red-500'} block rounded-2xl px-4`}
+        placeholder="email@example.com"
       />
-      {!isValid && <p className="text-red-500 px-2  ">유효한 이메일 형식이 아닙니다.</p>}
+      <div className="h-1">
+        {isTouched && !isValid && <p className="text-red-500 text-xs px-2">유효한 이메일 형식이 아닙니다.</p>}
+      </div>
     </div>
   );
 };

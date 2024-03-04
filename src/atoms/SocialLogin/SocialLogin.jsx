@@ -1,7 +1,9 @@
+import TextContents from '../TextContents/TextContents';
+
 function SocialLogin({ className }) {
   return (
     <div className={`${className}`}>
-      <p className="text-center">소셜 로그인</p>
+      <TextContents text="소셜 로그인" fontWeight="font-bold" fontSize="text-[15px]" padding="pl-5" margin="mb-2" />
       <ul className="flex gap-4">
         <li>
           <a href="#">
