@@ -6,6 +6,7 @@ import TextContents from "@/atoms/TextContents/TextContents";
 import Comment from "@/molecules/Comment/Comment";
 import CommentWindow from "@/molecules/CommentWindow/CommentWindow";
 import Header from "@/molecules/Header/Header";
+import Profile from "@/molecules/Profile/Profile";
 import { useEffect, useState } from "react";
 
 const CommunityDetail = ({ count = 3 }) => {
@@ -14,15 +15,28 @@ const CommunityDetail = ({ count = 3 }) => {
     return savedCount ? parseInt(savedCount) : count;
   })
 
-  const [comment, setComment] = useState([]);
+  const [comment, setComment] = useState(() => {
+    const savedComment = localStorage.getItem("comments")
+  
+    return (savedComment) ? JSON.parse(savedComment) : [];
+  })
 
   const handleLikeChange = (change) => {
     setLikeCount((prevCount) => prevCount + change)
   };
 
+
+  // const handleAddComment = (newComment) => {
+  //   const updatedComment = [...comment, {...newComment, time: new Date()}]
+  //   setComment(updatedComment)
+  //   localStorage.setItem("comments", JSON.stringify(updatedComment))
+  // }
+
   const handleAddComment = (newComment) => {
-    setComment((prevComments) => [...prevComments, newComment])
-  };
+    const updatedComment = [...comment, newComment]
+    setComment(updatedComment)
+    localStorage.setItem("comments", JSON.stringify(updatedComment))
+  }
 
   useEffect(() => {
     localStorage.setItem("likeCount", likeCount.toString())
@@ -31,6 +45,7 @@ const CommunityDetail = ({ count = 3 }) => {
   return (
     <div className="w-[320px] mx-auto">
       <Header />
+      <Profile />
       <div className="px-[15px] mt-[10px]">
         <img src="/images/sampleImg.png"/>  {/* DB에서 뿌릴 이미지 */}
         <div className="flex justify-between my-[5px]">
@@ -44,10 +59,11 @@ const CommunityDetail = ({ count = 3 }) => {
       <TextContents fontSize="14" text="this is content this is content this is content this is content this is content this is content this is content this is content this is content this is content this is content this is content ✨"/>
       <div className="w-full h-px bg-[#C4C4C4] my-[10px]"></div>
       {comment.map((comment, index) => (
-        <Comment key={index} userName={comment.userName} text={comment.text} daysAgo={comment.daysAgo}/>
+        <Comment onAddComment={handleAddComment} key={index} userName={comment.userName} text={comment.text} time={comment.time}/>
       ))}
       <CommentWindow onAddComment={handleAddComment} />
       </div>
+      <div className="w-[320px] h-[55px]"></div>
     </div>
   );
   };

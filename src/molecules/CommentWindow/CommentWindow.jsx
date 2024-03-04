@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 const CommentWindow = ({ onAddComment }) => {
   const [text, setText] = useState("")
 
-  const [comments, setComments] = useState([])
+  // const [comments, setComments] = useState([])
+  const [comments, setComments] = useState(() => {
+    const savedComment = localStorage.getItem("comments")
+    return savedComment ? JSON.parse(savedComment) : []
+  })
 
   const handleInputChange = (e) => {
     setText(e.target.value)
@@ -19,8 +23,17 @@ const CommentWindow = ({ onAddComment }) => {
       onAddComment(newComment)
       setComments(prev => [...prev, newComment])
       setText("")
+
+      localStorage.setItem("comments", JSON.stringify([...comments, newComment]))
     }
   }
+
+  useEffect(() => {
+    const savedComments = localStorage.getItem("comments")
+    if (savedComments) {
+      setComments(JSON.parse(savedComments))
+    }
+  }, [])
 
   const handleEnterPress = (e) => {
     if (e.key === "Enter") {
@@ -29,7 +42,7 @@ const CommentWindow = ({ onAddComment }) => {
   }
 
   return (
-    <div className="fixed bottom-0 h-[64px] w-full bg-white flex items-center">
+    <div className="fixed bottom-0 w-[320px] h-[64px] bg-white flex items-center">
       <img src="/images/profile.svg" className="w-[35px] h-[35xpx]"/>
       <input 
         type="text" 
