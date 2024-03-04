@@ -23,3 +23,9 @@ export const useToggleStore = create((set) => ({
   isToggled: false,
   toggle: () => set((state) => ({ isToggled: !state.isToggled })),
 }));
+
+/* 포켓베이스 데이터 관련 */
+export const useStylesStore = create((set) => ({
+  styles: [],
+  setStyles: (data) => set({ styles: data }),
+}));

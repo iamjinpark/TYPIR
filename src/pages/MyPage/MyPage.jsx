@@ -1,25 +1,61 @@
+/* UI */
 import ProfileImage from '@/atoms/ProfileImage/ProfileImage';
 import ProfileUserName from '@/atoms/ProfileUserName/ProfileUserName';
 import HandleLogo from '@/atoms/HandleLogo/HandleLogo';
 import HandleText from '@/atoms/HandleText/HandleText';
 import StrokeButton from '@/atoms/StrokeButton/StrokeButton';
 import LinkButton from '@/atoms/LinkButton/LinkButton';
+import UnderBar from '@/atoms/UnderBar/UnderBar';
+
+/* 템플릿 */
 import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
 import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
-import UnderBar from '@/atoms/UnderBar/UnderBar';
-import { Link, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import DetailImage from '@/molecules/DetailImage/DetailImage';
+
+/* 데이터 */
+import pb from '@/api/pocketbase';
+import { getPbImage } from '@/utils';
+import { Link, useLocation, useMatch, useNavigate } from 'react-router-dom';
+import { useStylesStore } from '@/hooks/useStore';
+import { useEffect, useRef } from 'react';
 
 function MyPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
 
+  const isFetching = useRef(false);
+
+  async function getData() {
+    if (isFetching.current) return; // 중복 요청 방지
+
+    isFetching.current = true;
+
+    try {
+      const stylesData = await pb.collection('styles').getFullList();
+      const styles = stylesData.map((style) => {
+        const imageURL = getPbImage(style);
+        return { ...style, image: imageURL };
+      });
+
+      useStylesStore.getState().setStyles(styles);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      isFetching.current = false;
+    }
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   /* 앨범 */
   const myPageImageMatch = useMatch('/mypage/detail/:imageId');
   const layoutId = myPageImageMatch?.params.imageId;
   const isAlbumDetail = myPageImageMatch != null;
+  const styles = useStylesStore((state) => state.styles);
 
   /* 보드 */
   const boardImageMatch = useMatch('/mypage/board/:boardText');
@@ -105,10 +141,10 @@ function MyPage() {
       {/* 앨범 */}
       {(pathname === '/mypage' || isAlbumDetail) && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <ImageTemplate />
+          <ImageTemplate data={styles} />
         </div>
       )}
-      {myPageImageMatch && <DetailImage layoutId={layoutId} />}
+      {myPageImageMatch && <DetailImage layoutId={layoutId} styles={styles} />}
 
       {/* 보드 */}
       {pathname === '/mypage/board' && !boardImageMatch && !boardDetailMatch && (
