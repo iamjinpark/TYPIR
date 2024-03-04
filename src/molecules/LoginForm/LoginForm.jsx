@@ -4,6 +4,7 @@ import PasswordInput from '@/atoms/PasswordInput/PasswordInput';
 import Checkbox from '@/atoms/Checkbox/Checkbox';
 import SubmitButton from '@/atoms/SubmitButton/SubmitButton';
 import PocketBase from 'pocketbase';
+import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -12,7 +13,8 @@ function LoginForm() {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
 
-  // 포켓베이스 클라이언트 인스턴스 생성
+  const navigate = useNavigate();
+
   const pb = new PocketBase('https://pocket10.kro.kr');
 
   useEffect(() => {
@@ -21,17 +23,13 @@ function LoginForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!isFormValid) {
-      alert('이메일 또는 비밀번호가 유효하지 않습니다.');
-      return;
-    }
+
     try {
       const authData = await pb.collection('users').authWithPassword(email, password);
-      alert('로그인 성공: ' + authData.username);
-      // 로그인 성공 후 처리, 예: 페이지 리다이렉션
+      alert('로그인 성공: ' + authData.Username);
+      navigate('/category');
     } catch (error) {
-      alert('로그인 실패: ' + error.message);
-      // 로그인 실패 처리
+      alert('유효하지 않은 이메일 혹은 패스워드입니다.' + error.message);
     }
   };
 

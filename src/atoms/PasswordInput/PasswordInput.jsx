@@ -34,7 +34,7 @@ const PasswordInput = ({
           valid = regex.test(inputValue);
         }
         setIsValid(valid);
-        onValidationChange(valid);
+        onValidationChange(valid, inputValue);
       }
     }, 500);
 

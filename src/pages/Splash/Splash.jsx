@@ -5,7 +5,7 @@ import SignInSignUpLinks from '@/atoms/SignInSignUpLinks/SignInSignUpLinks';
 const Splash = () => {
   return (
     <div
-      className="min-w-[360px] max-w-[768px] h-[650px] flex flex-col items-center px-15 py-0 m-auto relative"
+      className="min-w-[360px] max-w-[768px] h-screen flex flex-col items-center px-15 py-0 m-auto relative"
       style={{
         backgroundImage: "url('/public/images/splash_bg.png')",
         backgroundSize: 'cover',
