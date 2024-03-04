@@ -10,7 +10,6 @@ const Rending = () => {
   return (
     <div className="template">
       <Category />
-      <ImageTemplate />
       {categoryImageMatch ? <DetailImage layoutId={layoutId} /> : null}
     </div>
   );
