@@ -15,7 +15,7 @@ const EmailInput = ({ className, onValidationChange }) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const valid = emailRegex.test(email);
         setIsValid(valid);
-        onValidationChange(valid);
+        onValidationChange(valid, email);
       }
     }, 500);
 
