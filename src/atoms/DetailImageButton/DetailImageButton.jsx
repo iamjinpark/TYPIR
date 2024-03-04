@@ -1,3 +1,12 @@
+import { useState } from 'react';
+
+function HandleModal() {
+  const [showModal, setShowModal] = useState('');
+  const openModal = () => {
+    setShowModal(true);
+  };
+}
+
 const DetailImageButton = () => {
   return (
     <div className="w-[48px] h-[48px] rounded-full bg-black flex justify-center items-center">
