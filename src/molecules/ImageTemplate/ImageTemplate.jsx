@@ -3,7 +3,7 @@ import images from '/src/data/images.json';
 import { motion } from 'framer-motion';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
-function ImageTemplate({ boardText }) {
+function ImageTemplate({ boardText, margin = 'mt-[15px]', data = images }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -28,25 +28,25 @@ function ImageTemplate({ boardText }) {
   };
 
   return (
-    <div className="max-w-screen-md h-auto bg-white">
+    <ul className={`max-w-screen-md h-auto bg-white ${margin}`}>
       <Masonry
         breakpointCols={breakpointColumnsObj}
         className="my-masonry-grid flex gap-[12px]"
         columnClassName="my-masonry-grid_column flex flex-col items-center"
       >
-        {images.map((item) => (
-          <motion.div
-            key={item.id}
-            className={`w-[170px] bg-gray-100 rounded-2xl mb-[15px] cursor-zoom-in`}
-            style={{ height: `${item.height}px` }}
-            onClick={() => onBoxClicked(item.id)}
-            layoutId={item.id + ''}
-          >
-            {item.content}
-          </motion.div>
+        {data.map((item) => (
+          <motion.li key={item.id} layoutId={item.id + ''}>
+            <img
+              src={item.image}
+              alt={item.alt}
+              className={`w-[170px] bg-gray-100 rounded-2xl mb-[15px] cursor-zoom-in`}
+              style={{ height: `${item.height}px` }}
+              onClick={() => onBoxClicked(item.id)}
+            />
+          </motion.li>
         ))}
       </Masonry>
-    </div>
+    </ul>
   );
 }
 export default ImageTemplate;
