@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SelectPageModal from '../SelectPageModal/SelectPageModal';
 import Logo from '@/atoms/Logo/Logo';
 import LinkButton from '@/atoms/LinkButton/LinkButton';
-import { useSelectCategoryStore } from '@/hooks/useStore';
+import { useSelectCategoryStore } from '@/zustand/useStore';
 import { useNavigate } from 'react-router-dom';
 import Bar from '@/atoms/Bar/Bar';
 

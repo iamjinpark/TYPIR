@@ -17,7 +17,7 @@ import DetailImage from '@/molecules/DetailImage/DetailImage';
 import pb from '@/api/pocketbase';
 import { getPbImage } from '@/utils';
 import { Link, useLocation, useMatch, useNavigate } from 'react-router-dom';
-import { useStylesStore } from '@/hooks/useStore';
+import { useStylesStore } from '@/zustand/useStore';
 import { useEffect, useRef } from 'react';
 
 function MyPage() {

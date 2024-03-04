@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
 import Backward from '@/atoms/Backward/Backward';
 import DeleteModal from '@/molecules/DeleteModal/DeleteModal';
-import { useDeleteModalStore } from '@/hooks/useStore';
+import { useDeleteModalStore } from '@/zustand/useStore';
 import ToggleButton from '@/atoms/ToggleButton/ToggleButton';
 
 function AccountManagement() {

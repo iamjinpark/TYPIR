@@ -2,7 +2,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LinkButton from '@/atoms/LinkButton/LinkButton';
 import Bar from '../../atoms/Bar/Bar';
-import { useSelectCategoryStore } from '@/hooks/useStore';
+import { useSelectCategoryStore } from '@/zustand/useStore';
 import { useNavigate } from 'react-router-dom';
 
 function SelectPageModal() {
