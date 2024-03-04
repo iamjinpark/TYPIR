@@ -1,15 +1,18 @@
 import Footer from '@/atoms/Footer/Footer';
 import Header from '@/molecules/Header/Header';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 function Layout() {
+  const location = useLocation();
+  const isSplashPage = location.pathname === '/' || location.pathname.startsWith('/splash');
+
   return (
     <>
-      <Header />
+      {!isSplashPage && <Header />}
 
       <Outlet />
 
-      <Footer />
+      {!isSplashPage && <Footer />}
     </>
   );
 }
