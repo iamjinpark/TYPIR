@@ -6,13 +6,21 @@ const useStore = create((set) => ({
   setSelectedFile: (file) => set({ selectedFile: file }),
 }));
 
-function ProfileImage({ width = 'w-[120px]', height = 'h-[120px]', border = 'rounded-full', bgColor = 'bg-gray-100' }) {
+function ProfileImage({
+  width = 'w-[120px]',
+  height = 'h-[120px]',
+  border = 'rounded-full',
+  bgColor = 'bg-gray-100',
+  editable = true,
+}) {
   const fileInputRef = useRef();
   const selectedFile = useStore((state) => state.selectedFile);
   const setSelectedFile = useStore((state) => state.setSelectedFile);
 
   const handleImageClick = () => {
-    fileInputRef.current.click();
+    if (editable) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleFileChange = (event) => {

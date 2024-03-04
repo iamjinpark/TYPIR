@@ -1,27 +1,149 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from '@/molecules/Header/Header';
-import Footer from '@/atoms/Footer/Footer';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Layout from '@/route/Layout';
+import Splash from '@/pages/Splash/Splash';
 
-import UserPageRoutes from '@/route/UserPageRoutes';
-import LandingPageRoutes from '@/route/LandingPageRoutes';
-import CommunityPageRoutes from '@/route/CommunityPageRoutes';
-import MyPageRoutes from '@/route/MyPageRoutes';
+/* 마이 페이지 관련 */
+import MyPage from '@/pages/MyPage/MyPage';
+import AccountManagement from '@/pages/AccountManagement/AccountManagement';
+import EditProfile from '@/pages/EditProfile/EditProfile';
+import SelectPostImage from '@/pages/SelectPostImage/SelectPostImage';
+
+/* 랜딩 페이지 관련 */
+import Rending from '@/pages/Rending/Rending';
+import DetailImage from '@/molecules/DetailImage/DetailImage';
+
+/* 커뮤니티 페이지 관련 */
+
+/* 유저 페이지 관련 */
+import SignIn from '@/pages/SignIn/SignIn';
+import SignUp from '@/pages/SignUp/SignUp';
+import SetInitialProfile from '@/pages/SetInitialProfile/SetInitialProfile';
+import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
 
 function App() {
+  const router = createBrowserRouter([
+    {
+      path: import.meta.env.BASE_URL ?? '/',
+      element: <Layout />,
+      children: [
+        {
+          index: true,
+          element: <Splash />,
+        },
+        {
+          path: 'mypage',
+          children: [
+            { index: true, element: <MyPage /> },
+            {
+              path: 'account',
+              element: <AccountManagement />,
+            },
+            {
+              path: 'editProfile',
+              element: <EditProfile />,
+            },
+            {
+              path: 'board',
+              element: <MyPage />,
+              children: [
+                {
+                  path: ':boardText',
+                  element: <ImageTemplate />,
+                  children: [
+                    {
+                      path: 'detail/:imageId',
+                      element: <DetailImage />,
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              path: 'post',
+              element: <MyPage />,
+            },
+            {
+              path: 'bookmark',
+              element: <MyPage />,
+            },
+            {
+              path: 'detail',
+              element: <MyPage />,
+              children: [
+                {
+                  path: ':imageId',
+                  element: <DetailImage />,
+                },
+              ],
+            },
+            {
+              path: 'newpost',
+              element: <SelectPostImage />,
+              children: [
+                {
+                  path: 'board',
+                  element: <SelectPostImage />,
+                  children: [
+                    {
+                      path: ':boardText',
+                      element: <ImageTemplate />,
+                      children: [
+                        {
+                          path: 'detail/:imageId',
+                          element: <DetailImage />,
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  path: 'detail/:imageId',
+                  element: <DetailImage />,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          path: 'category',
+          element: <Rending />,
+          children: [
+            {
+              path: 'detail/:imageId',
+              element: <DetailImage />,
+            },
+          ],
+        },
+        {
+          path: 'splash',
+          children: [
+            { index: true, element: <Splash /> },
+            {
+              path: 'signin',
+              element: <SignIn />,
+            },
+            {
+              path: 'signup',
+              element: <SignUp />,
+            },
+            {
+              path: 'setprofile',
+              element: <SetInitialProfile />,
+            },
+          ],
+        },
+        {
+          path: 'community',
+          children: [{}],
+        },
+      ],
+    },
+  ]);
+
   return (
     <div className="max-w-screen-md mx-auto">
-      <Router>
-        <Header />
-        <Routes>
-          <Route path="user/*" element={<UserPageRoutes />} />
-          <Route path="category/*" element={<LandingPageRoutes />} />
-          <Route path="community/*" element={<CommunityPageRoutes />} />
-          <Route path="mypage/*" element={<MyPageRoutes />} />
-        </Routes>
-        <Footer />
-      </Router>
+      <RouterProvider router={router} />
     </div>
   );
 }
-
 export default App;
