@@ -60,6 +60,7 @@ function Header() {
             fontColor="text-black"
             fontSize="text-[16px]"
             hoverColor="hover:text-black"
+            onClick={() => handleNavigate('/community')}
           />
           <LinkButton
             text="MY PAGE"
