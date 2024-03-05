@@ -16,9 +16,10 @@ import DetailImage from '@/molecules/DetailImage/DetailImage';
 /* 데이터 */
 import pb from '@/api/pocketbase';
 import { getPbImage } from '@/utils';
-import { useStyleStore } from '@/zustand/useStore';
 import { Link, useLocation, useMatch, useNavigate } from 'react-router-dom';
+import { useAlbumStore, useBoardStore, useStyleStore } from '@/zustand/useStore';
 import { useEffect, useRef } from 'react';
+import { getPbImages } from '@/utils/getPbImage';
 
 function MyPage() {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ function MyPage() {
     isFetching.current = true;
 
     try {
+      /* styles 콜렉션 가져오기 */
       const stylesData = await pb.collection('styles').getFullList();
       const styles = stylesData.map((style) => {
         const imageURL = getPbImage(style);
@@ -40,6 +42,32 @@ function MyPage() {
       });
 
       useStyleStore.getState().setStyles(styles);
+
+      /* album 콜렉션 가져오기 */
+      // const albumData = await pb.collection('album').getFullList();
+      // const albums = albumData.map((album) => {
+      //   const imageURLs = getPbImages({
+      //     collectionId: album.collectionId,
+      //     id: album.id,
+      //     images: album.images,
+      //   });
+      //   return { ...album, images: imageURLs };
+      // });
+      // useAlbumStore.getState().setAlbums(albums);
+      // console.log(albums);
+
+      /* board 콜렉션 가져오기 */
+      const boardData = await pb.collection('board').getFullList();
+      const boards = boardData.map((board) => {
+        const imageURLs = getPbImages({
+          collectionId: board.collectionId,
+          id: board.id,
+          images: board.images,
+        });
+        return { ...board, images: imageURLs };
+      });
+
+      useBoardStore.getState().setBoards(boards);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -56,12 +84,16 @@ function MyPage() {
   const layoutId = myPageImageMatch?.params.imageId;
   const isAlbumDetail = myPageImageMatch != null;
   const styles = useStyleStore((state) => state.styles);
+  const imageSrc = styles.find((style) => style.id === layoutId)?.image;
+  // const albums = useAlbumStore((state) => state.albums);
+  // const imageSrc = albums.find((album) => album.id === layoutId)?.images;
 
   /* 보드 */
   const boardImageMatch = useMatch('/mypage/board/:boardText');
   const boardDetailMatch = useMatch('/mypage/board/:boardText/detail/:imageId');
   const boardlayoutId = boardDetailMatch?.params.imageId;
   const isBoardDetail = boardDetailMatch != null;
+  const boards = useBoardStore((state) => state.boards);
 
   const boardText = boardImageMatch?.params.boardText;
   const onBoardClicked = (boardText) => {
@@ -87,6 +119,7 @@ function MyPage() {
         </div>
       </div>
 
+      {/* 카테고리 바 */}
       <div className="flex justify-evenly pt-2">
         <Link to="/mypage">
           <LinkButton
@@ -142,17 +175,24 @@ function MyPage() {
       {(pathname === '/mypage' || isAlbumDetail) && (
         <div className="flex flex-col items-center mt-8 h-auto">
           <ImageTemplate data={styles} />
+          {/* {albums.map((album) => (
+            <ImageTemplate key={album.id} data={album.images} />
+          ))} */}
         </div>
       )}
-      {myPageImageMatch && <DetailImage layoutId={layoutId} styles={styles} />}
+      {myPageImageMatch && <DetailImage layoutId={layoutId} imageSrc={imageSrc} />}
 
       {/* 보드 */}
       {pathname === '/mypage/board' && !boardImageMatch && !boardDetailMatch && (
         <div className="flex flex-wrap justify-center mt-4 gap-[12px]">
-          <BoardTemplate text={'Simple'} onBoardClick={onBoardClicked} />
-          <BoardTemplate text={'Daily'} onBoardClick={onBoardClicked} />
-          <BoardTemplate text={'Modern'} onBoardClick={onBoardClicked} />
-          <BoardTemplate text={'Vintage'} onBoardClick={onBoardClicked} />
+          {boards.map((board) => (
+            <BoardTemplate
+              key={board.id}
+              text={board.name}
+              images={board.images}
+              onBoardClick={() => onBoardClicked(board.name)}
+            />
+          ))}
         </div>
       )}
 
