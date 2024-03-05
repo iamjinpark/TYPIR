@@ -21,7 +21,7 @@ function Header() {
       className="w-full bg-white flex justify-between items-center p-4 sticky top-0 sm:h-[70px] sm:p-7"
       style={{ zIndex: 15 }}
     >
-      <Logo size="w-[80px] sm:w-[100px]" cursor="cursor-pointer" onClick={() => handleNavigate('/category')} />
+      <Logo size="w-[80px] sm:w-[100px]" cursor="cursor-pointer" onClick={() => handleNavigate('/style')} />
 
       <div className="hidden sm:flex sm:flex-col sm:items-end sm:gap-1">
         <div className="flex items-center">
@@ -47,12 +47,12 @@ function Header() {
 
         <div className="flex gap-5">
           <LinkButton
-            text="CATEGORY"
+            text="STYLE"
             fontFamily="font-serif"
             fontColor="text-black"
             fontSize="text-[16px]"
             hoverColor="hover:text-black"
-            onClick={() => handleNavigate('/category')}
+            onClick={() => handleNavigate('/style')}
           />
           <LinkButton
             text="COMMUNITY"
