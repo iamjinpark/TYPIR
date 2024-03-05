@@ -36,8 +36,8 @@ const BookmarkSaveModal = () => {
           ))}
         </ul>
       </div>   
-      {openInputModal && <BookmarkInputModal onAddBookmark={handleAddBookmark} onClose={closeModal} />}
       <AddBookmark onClick={openModal} />
+      {openInputModal && <BookmarkInputModal onAddBookmark={handleAddBookmark} onClose={closeModal} />}
     </div>
   );
 };
