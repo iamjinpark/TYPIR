@@ -19,6 +19,8 @@ import SignIn from '@/pages/SignIn/SignIn';
 import SignUp from '@/pages/SignUp/SignUp';
 import SetInitialProfile from '@/pages/SetInitialProfile/SetInitialProfile';
 import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
+import Community from '@/pages/Community/Community';
+import CommunityDetail from '@/pages/CommunityDetail/CommunityDetail';
 
 function App() {
   const router = createBrowserRouter([
@@ -134,7 +136,17 @@ function App() {
         },
         {
           path: 'community',
-          children: [{}],
+          children: [
+            { index: true, element: <Community /> },
+            {
+              path: 'detail',
+              element: <CommunityDetail />,
+            },
+            {
+              path: 'detail/:imageId',
+              element: <CommunityDetail />,
+            },
+          ],
         },
       ],
     },
