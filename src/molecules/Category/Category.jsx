@@ -22,6 +22,7 @@ const Category = ({ gap = 'gap-3' }) => {
 
   const categoryImageMatch = useMatch('/category/detail/:imageId');
   const layoutId = categoryImageMatch?.params.imageId;
+  const isStyleDetail = categoryImageMatch != null;
   const styles = useStyleStore((state) => state.styles);
   const imageSrc = styles.find((style) => style.id === layoutId)?.image;
 
@@ -63,7 +64,6 @@ const Category = ({ gap = 'gap-3' }) => {
           </li>
         ))}
       </ul>
-
       <ImageTemplate data={filteredCategoryData} margin="mt-[15px]" />
       {categoryImageMatch && <DetailImage layoutId={layoutId} imageSrc={imageSrc} />}
     </div>
