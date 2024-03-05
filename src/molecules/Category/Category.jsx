@@ -18,7 +18,7 @@ function getPbImageURL(item, fileName = 'images') {
 const Category = ({ gap = 'gap-3' }) => {
   const [data, setData] = useState(null);
   const [searchParams] = useSearchParams();
-  const selectedCategory = searchParams.get('category');
+  const selectedCategory = searchParams.get('category') || 'all';
 
   const categoryImageMatch = useMatch('/category/detail/:imageId');
   const layoutId = categoryImageMatch?.params.imageId;
@@ -52,29 +52,20 @@ const Category = ({ gap = 'gap-3' }) => {
     selectedCategory === 'all' ? data : data.filter((item) => item.category === selectedCategory);
 
   return (
-    <div className="mt-[5px] mb-[15px] w-full">
-      <ul className={`flex flex-row ${gap} font-serif`}>
+    <div className="mt-[5px] mb-[15px] w-full ">
+      <ul className={`flex flex-row ${gap} font-serif sticky`}>
         {CATEGORIES.map((category) => (
           <li
             key={category}
-            className={`cursor-pointer px-[0.5625rem] border border-gray-200 rounded-xl ${selectedCategory === category ? 'bg-black text-white' : 'bg-white text-gray-200'}`}
+            className={` cursor-pointer px-[0.5625rem] border border-gray-200 rounded-xl ${selectedCategory === category ? 'bg-black text-white' : 'bg-white text-gray-200'}`}
           >
             <NavLink to={`/category?category=${category}`}>{category[0].toUpperCase() + category.slice(1)}</NavLink>
           </li>
         ))}
       </ul>
+
       <ImageTemplate data={filteredCategoryData} margin="mt-[15px]" />
       {categoryImageMatch && <DetailImage layoutId={layoutId} imageSrc={imageSrc} />}
-      {/* <ul>
-        {filteredCategoryData.map((categoryItem) => (
-          <li key={categoryItem.id}>
-            <div>
-              <img src={categoryItem.image} alt={categoryItem.content} />
-              <p>{categoryItem.content}</p>
-            </div>
-          </li>
-        ))}
-      </ul> */}
     </div>
   );
 };

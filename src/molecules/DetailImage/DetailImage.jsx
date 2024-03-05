@@ -27,7 +27,7 @@ const DetailImage = ({ layoutId, imageSrc }) => {
         onClick={(e) => e.stopPropagation()}
         layoutId={layoutId}
       >
-        <img src={imageSrc} alt="Detailed View" className="w-full h-full object-cover rounded-2xl" />
+        <img src={imageSrc} alt="이미지 상세보기" className="w-full h-full object-cover rounded-2xl" />
         <div className="absolute bottom-4 right-4">
           <DetailImageButton />
         </div>
