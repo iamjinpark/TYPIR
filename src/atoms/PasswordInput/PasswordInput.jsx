@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 const PasswordInput = ({
   text = '패스워드',
@@ -11,8 +12,8 @@ const PasswordInput = ({
   const [inputValue, setInputValue] = useState('');
   const [isTouched, setIsTouched] = useState(false);
   const [isValid, setIsValid] = useState(true);
-
   const [showPassword, setShowPassword] = useState(false);
+  const [inputId] = useState(uuidv4());
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -57,7 +58,7 @@ const PasswordInput = ({
       <div className="relative w-72">
         <input
           type={showPassword ? 'text' : 'password'}
-          id="passwordInput"
+          id={inputId}
           value={inputValue}
           onChange={handleChange}
           className={`w-full h-11 mt-1 border ${isValid ? 'border-black' : 'border-red-500'} block rounded-2xl px-4 pr-10`} // pr-10을 추가하여 텍스트가 버튼에 가려지지 않도록 함
@@ -80,7 +81,9 @@ const PasswordInput = ({
       <div className="h-1">
         {isTouched && !isValid && (
           <p className="text-red-500 text-xs px-2">
-            {isConfirm ? '비밀번호가 일치하지 않습니다.' : '비밀번호는 특수문자를 포함한 6~16자리여야 합니다.'}
+            {text === '패스워드'
+              ? '비밀번호는 특수문자를 포함한 6~16자리여야 합니다.'
+              : '비밀번호가 일치하지 않습니다.'}
           </p>
         )}
       </div>
