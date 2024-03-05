@@ -16,8 +16,8 @@ import DetailImage from '@/molecules/DetailImage/DetailImage';
 /* 데이터 */
 import pb from '@/api/pocketbase';
 import { getPbImage } from '@/utils';
+import { useStyleStore } from '@/zustand/useStore';
 import { Link, useLocation, useMatch, useNavigate } from 'react-router-dom';
-import { useStylesStore } from '@/zustand/useStore';
 import { useEffect, useRef } from 'react';
 
 function MyPage() {
@@ -39,7 +39,7 @@ function MyPage() {
         return { ...style, image: imageURL };
       });
 
-      useStylesStore.getState().setStyles(styles);
+      useStyleStore.getState().setStyles(styles);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -55,7 +55,7 @@ function MyPage() {
   const myPageImageMatch = useMatch('/mypage/detail/:imageId');
   const layoutId = myPageImageMatch?.params.imageId;
   const isAlbumDetail = myPageImageMatch != null;
-  const styles = useStylesStore((state) => state.styles);
+  const styles = useStyleStore((state) => state.styles);
 
   /* 보드 */
   const boardImageMatch = useMatch('/mypage/board/:boardText');
