@@ -54,7 +54,7 @@ const Category = ({ gap = 'gap-3' }) => {
 
   return (
     <div className="mt-[5px] mb-[15px] w-full ">
-      <ul className={`flex flex-row ${gap} font-serif sticky`}>
+      <ul className={`flex flex-row ${gap} font-serif`}>
         {CATEGORIES.map((category) => (
           <li
             key={category}
