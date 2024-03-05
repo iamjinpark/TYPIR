@@ -9,7 +9,7 @@ import EditProfile from '@/pages/EditProfile/EditProfile';
 import SelectPostImage from '@/pages/SelectPostImage/SelectPostImage';
 
 /* 랜딩 페이지 관련 */
-import Rending from '@/pages/Rending/Rending';
+import Category from '@/molecules/Category/Category';
 import DetailImage from '@/molecules/DetailImage/DetailImage';
 
 /* 커뮤니티 페이지 관련 */
@@ -107,8 +107,8 @@ function App() {
           ],
         },
         {
-          path: 'category',
-          element: <Rending />,
+          path: 'style',
+          element: <Category />,
           children: [
             {
               path: 'detail/:imageId',
@@ -143,7 +143,7 @@ function App() {
               element: <CommunityDetail />,
             },
             {
-              path: 'detail/:imageId',
+              path: 'detail/:postId',
               element: <CommunityDetail />,
             },
           ],
