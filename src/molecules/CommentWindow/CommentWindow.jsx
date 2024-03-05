@@ -42,8 +42,8 @@ const CommentWindow = ({ onAddComment }) => {
   }
 
   return (
-    <div className="fixed bottom-0 w-[320px] h-[64px] bg-white flex items-center">
-      <img src="/images/profile.svg" className="w-[35px] h-[35xpx]"/>
+    <div className="absolute bottom-0 w-[320px] h-[64px] bg-white flex items-center mx-0 sm:mx-[15px]">
+      <img src="/images/profile.svg" className="w-[35px] h-[35xpx] "/>
       <input 
         type="text" 
         value={text}
