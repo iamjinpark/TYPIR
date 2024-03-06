@@ -5,6 +5,7 @@ import Checkbox from '@/atoms/Checkbox/Checkbox';
 import SubmitButton from '@/atoms/SubmitButton/SubmitButton';
 import PocketBase from 'pocketbase';
 import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '@/zustand/useUserStore';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -14,6 +15,7 @@ function LoginForm() {
   const [isFormValid, setIsFormValid] = useState(false);
 
   const navigate = useNavigate();
+  const { setUser } = useUserStore(); // setUser 함수를 직접 구조분해 할당으로 추출
 
   const pb = new PocketBase('https://pocket10.kro.kr');
 
@@ -26,8 +28,23 @@ function LoginForm() {
 
     try {
       const authData = await pb.collection('users').authWithPassword(email, password);
-      alert('로그인 성공: ' + authData.Username);
-      navigate('/category');
+      setUser({
+        userName: authData.record.username,
+        email: email,
+        profile: authData.record.profile,
+        handle: authData.record.handle,
+        isPrivate: authData.record.isPrivate,
+        isProtect: authData.record.isProtect,
+      });
+      console.log(useUserStore.getState().user); // 상태 확인 방법
+      alert('로그인 성공: ' + authData.record.isFirstLogin);
+      console.log(authData);
+      if (authData.record.isFirstLogin) {
+        // isFirstLogin을 false로 바꾸는 코드 추가
+        navigate('/splash/setprofile');
+      } else {
+        navigate('/category');
+      }
     } catch (error) {
       alert('유효하지 않은 이메일 혹은 패스워드입니다.' + error.message);
     }
