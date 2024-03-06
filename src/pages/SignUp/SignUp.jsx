@@ -53,27 +53,23 @@ const SignUp = () => {
     event.preventDefault();
     if (!isFormValid) return;
 
-    // 이메일 중복 확인
-    const emailExists = await checkEmailExists(email); // 이메일 인자 전달 수정
+    const emailExists = await checkEmailExists(email);
 
     if (emailExists) {
       alert('이미 존재하는 이메일 주소입니다. 다른 이메일 주소를 사용해주세요.');
       return;
     }
 
-    // 회원가입 데이터 준비 및 서버로 전송
     const data = {
       username: email.split('@')[0],
       email: email,
       password: password,
       passwordConfirm: password,
       emailVisibility: true,
-      // 기타 필수 데이터 필드
-      handle: 'test', // 예시 값, 실제 애플리케이션에 맞게 조정
+      handle: '',
       isPrivate: false,
       isProtect: false,
       isFirstLogin: true,
-      // 관계형 필드는 실제 관계가 설정된 후에 포함시킬 것
       album: [],
       board: [],
       bookmark: [],
