@@ -112,8 +112,14 @@ function App() {
           children: [
             { index: true, element: <Category /> },
             {
-              path: 'detail/:imageId',
-              element: <DetailImage />,
+              path: 'detail',
+              element: <Category />,
+              children: [
+                {
+                  path: 'detail/:imageId',
+                  element: <DetailImage />,
+                },
+              ],
             },
             {
               path: 'newBoard',
