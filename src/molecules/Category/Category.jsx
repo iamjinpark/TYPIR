@@ -53,19 +53,21 @@ const Category = ({ gap = 'gap-3' }) => {
     selectedCategory === 'all' ? data : data.filter((item) => item.category === selectedCategory);
 
   return (
-    <div className="mt-[5px] mb-[15px] w-full px-6">
-      <ul className={`flex flex-row ${gap} font-serif`}>
-        {CATEGORIES.map((category) => (
-          <li
-            key={category}
-            className={` cursor-pointer px-[0.5625rem] border border-gray-200 rounded-xl ${selectedCategory === category ? 'bg-black text-white' : 'bg-white text-gray-200'}`}
-          >
-            <NavLink to={`/style?category=${category}`}>{category[0].toUpperCase() + category.slice(1)}</NavLink>
-          </li>
-        ))}
-      </ul>
-      <ImageTemplate data={filteredCategoryData} margin="mt-[15px]" />
-      {categoryImageMatch && <DetailImage layoutId={layoutId} imageSrc={imageSrc} />}
+    <div className="template">
+      <div className="mt-[5px] mb-[15px] w-full">
+        <ul className={`flex flex-row ${gap} font-serif`}>
+          {CATEGORIES.map((category) => (
+            <li
+              key={category}
+              className={` cursor-pointer px-[0.5625rem] border border-gray-200 rounded-xl ${selectedCategory === category ? 'bg-black text-white' : 'bg-white text-gray-200'}`}
+            >
+              <NavLink to={`/style?category=${category}`}>{category[0].toUpperCase() + category.slice(1)}</NavLink>
+            </li>
+          ))}
+        </ul>
+        <ImageTemplate data={filteredCategoryData} margin="mt-[15px]" />
+        {categoryImageMatch && <DetailImage layoutId={layoutId} imageSrc={imageSrc} />}
+      </div>
     </div>
   );
 };
