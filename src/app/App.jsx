@@ -21,6 +21,7 @@ import SetInitialProfile from '@/pages/SetInitialProfile/SetInitialProfile';
 import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
 import Community from '@/pages/Community/Community';
 import CommunityDetail from '@/pages/CommunityDetail/CommunityDetail';
+import NewBoard from '@/pages/NewBoard/NewBoard';
 
 function App() {
   const router = createBrowserRouter([
@@ -108,11 +109,15 @@ function App() {
         },
         {
           path: 'style',
-          element: <Category />,
           children: [
+            { index: true, element: <Category /> },
             {
               path: 'detail/:imageId',
               element: <DetailImage />,
+            },
+            {
+              path: 'newBoard',
+              element: <NewBoard />,
             },
           ],
         },
