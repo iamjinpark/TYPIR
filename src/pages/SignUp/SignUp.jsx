@@ -6,8 +6,12 @@ import PasswordInput from '@/atoms/PasswordInput/PasswordInput';
 import SubmitButton from '@/atoms/SubmitButton/SubmitButton';
 import Checkbox from '@/atoms/Checkbox/Checkbox';
 import PocketBase from 'pocketbase';
+import { useNavigate } from 'react-router-dom';
+
+const pb = new PocketBase('https://pocket10.kro.kr');
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -15,8 +19,6 @@ const SignUp = () => {
   const [passwordValid, setPasswordValid] = useState(false);
   const [termsChecked, setTermsChecked] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
-
-  const pb = new PocketBase('https://pocket10.kro.kr');
 
   useEffect(() => {
     const passwordsMatch = password === confirmPassword && confirmPassword !== '';
@@ -38,12 +40,12 @@ const SignUp = () => {
   // 이메일 중복 확인 함수
   const checkEmailExists = async (emailToCheck) => {
     try {
-      const users = await pb.collection('users').getList({ filter: `email="${emailToCheck}"` });
-      console.log(users);
-      return users.total > 0;
+      const userRecords = await pb.collection('users').getList(1, 1, {
+        filter: `email='${emailToCheck}'`,
+      });
+      return userRecords.items.length > 0;
     } catch (error) {
       console.error('Error checking email existence:', error);
-      return false; // 오류가 발생하면 존재하지 않는다고 가정
     }
   };
 
@@ -53,20 +55,24 @@ const SignUp = () => {
 
     // 이메일 중복 확인
     const emailExists = await checkEmailExists(email); // 이메일 인자 전달 수정
+
     if (emailExists) {
       alert('이미 존재하는 이메일 주소입니다. 다른 이메일 주소를 사용해주세요.');
-      return; // 여기서 함수 종료
+      return;
     }
 
     // 회원가입 데이터 준비 및 서버로 전송
     const data = {
-      username: email,
+      username: email.split('@')[0],
       email: email,
       password: password,
+      passwordConfirm: password,
+      emailVisibility: true,
       // 기타 필수 데이터 필드
-      handle: '', // 예시 값, 실제 애플리케이션에 맞게 조정
+      handle: 'test', // 예시 값, 실제 애플리케이션에 맞게 조정
       isPrivate: false,
       isProtect: false,
+      isFirstLogin: true,
       // 관계형 필드는 실제 관계가 설정된 후에 포함시킬 것
       album: [],
       board: [],
@@ -77,10 +83,10 @@ const SignUp = () => {
     try {
       await pb.collection('users').create(data);
       alert('축하합니다! 회원가입 완료되었습니다.');
-      // window.location.href = '/src/pages/login/';
+      navigate('/splash/signin');
     } catch (error) {
       console.error(error);
-      alert('회원가입 중 오류가 발생했습니다. 입력 내용을 확인해주세요.');
+      alert('이미 존재하는 이메일 주소입니다. 다른 이메일 주소를 사용해주세요.');
     }
   };
 
@@ -90,7 +96,9 @@ const SignUp = () => {
       <form onSubmit={handleSubmit} className="w-full flex flex-col items-center">
         <EmailInput
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(inputedEmail) => {
+            setEmail(inputedEmail);
+          }}
           onValidationChange={handleEmailValidationChange}
         />
         <PasswordInput
