@@ -26,8 +26,14 @@ function LoginForm() {
 
     try {
       const authData = await pb.collection('users').authWithPassword(email, password);
-      alert('로그인 성공: ' + authData.Username);
-      navigate('/category');
+      alert('로그인 성공: ' + authData.record.isFirstLogin);
+      console.log(authData);
+      if (authData.record.isFirstLogin) {
+        // isFirstLogin을 false로 바꾸는 코드 추가
+        navigate('/splash/setprofile');
+      } else {
+        navigate('/category');
+      }
     } catch (error) {
       alert('유효하지 않은 이메일 혹은 패스워드입니다.' + error.message);
     }
