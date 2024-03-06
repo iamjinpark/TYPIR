@@ -16,14 +16,14 @@ const DetailImage = ({ layoutId, imageSrc }) => {
   return (
     <div className="fixed max-w-screen-md mx-auto inset-0 bg-black bg-opacity-80 z-20" onClick={() => navigate(-1)}>
       <motion.div
-        className="w-[290px] h-[410px] xs:w-[392px] xs:h-[552px] rounded-2xl"
-        style={{
-          position: 'absolute',
-          top: 80,
-          left: 0,
-          right: 0,
-          margin: '0 auto',
-        }}
+        className="w-[290px] h-[410px] xs:w-[380px] xs:h-[600px] rounded-2xl absolute top-[120px] right-[0px] left-[0px] m-auto xs:top-[120px]"
+        // style={{
+        //   position: 'absolute',
+        //   top: 120,
+        //   left: 0,
+        //   right: 0,
+        //   margin: '0 auto',
+        // }}
         onClick={(e) => e.stopPropagation()}
         layoutId={layoutId}
       >

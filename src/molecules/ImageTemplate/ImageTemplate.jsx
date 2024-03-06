@@ -24,7 +24,8 @@ function ImageTemplate({ boardText, margin = 'mt-[15px]', data = images }) {
   const breakpointColumnsObj = {
     default: 4,
     639: 3,
-    500: 2,
+    // 500: 2,
+    450: 2,
   };
 
   return (
