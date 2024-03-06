@@ -1,59 +1,68 @@
-import { useEffect, useState } from 'react';
-import { NavLink, useSearchParams, useLocation } from 'react-router-dom';
-import { getPbImage } from '@/utils';
-import pb from '@/api/pocketbase';
-import ImageTemplate from '../ImageTemplate/ImageTemplate';
+import pb from "@/api/pocketbase";
+import { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import CommunityImageTemplate from "../CommunityImageTemplate/CommunityImageTemplate";
 
-const CATEGORIES = ['all', 'simple', 'daily', 'vintage'];
+const CATEGORIES = ["all", "simple", "daily", "vintage"]
 
-function getPbImageURL(item, fileName = 'images') {
-  return `${import.meta.env.VITE_PB_URL}/api/files/${item.collectionId}/${item.id}/${item[fileName]}`;
+
+function getPbImageURL (item, fileName = "images") {
+  return `${import.meta.env.VITE_PB_API}/api/files/${item.collectionId}/${item.id}/${item[fileName]}`
 }
 
-async function getData() {
-  const styles = await pb.collection('communityPage').getFullList();
-  console.log(styles)
-
-  const stylesWithImages = styles.map((style) => {
-    const imageURL = getPbImage(style);
-    // console.log(style)
-    return { ...style, image: imageURL };
-  });
-
-  // console.log(stylesWithImages);
-  return stylesWithImages;
-}
-
-const CommunityCategory = ({ gap = 'gap-3' }) => {
-  const [data, setData] = useState(null);
-  const [searchParams] = useSearchParams();
-  const selectedCategory = searchParams.get('category');
+const CommunityCategory = ({ gap = "gap-3" }) => {
+  const [images, setImages] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState("all")
+  const location = useLocation()  // 현재 정보 가져오기
+  const searchParams = new URLSearchParams(location.search) // URLSearchParams 객체 : URL에서 쿼리 파라미터 추출
 
   useEffect(() => {
-    getData().then(setData);
-  }, []);
+    async function fetchImage() {
+      try {
+        const styles = await pb.collection("communityPage").getFullList()
+        const stylesWithImages = styles.map(style => {
+          const imageURL = getPbImageURL(style)
 
-  if (!data) {
-    return <p>로딩 중...</p>;
+          return {...style, image:imageURL}
+        })
+        setImages(stylesWithImages)
+      } catch (err) {
+        console.error("Error fetching images : ", err)
+      }
+    }
+    fetchImage()
+  }, [])
+
+  useEffect(() => {
+    const categoryParam = searchParams.get("category")
+
+    if (categoryParam && CATEGORIES.includes(categoryParam)) {
+      setSelectedCategory(categoryParam)
+    }
+  }, [location.search]) // location.search => URL이 변경될 때마다 쿼리 변경
+
+  const filteredImages = selectedCategory === "all" ? images : images.filter(image => image.category === selectedCategory)
+
+  const handleCategoryClick = category => {
+    setSelectedCategory(category)
   }
 
-  const filteredCategoryData =
-    selectedCategory === 'all' ? data : data.filter((item) => item.category === selectedCategory);
-    
   return (
-    <div className="mt-[5px] mb-[15px] w-full">
-      <ul className={`flex flex-row ${gap} font-serif`}>
-        {CATEGORIES.map((category) => (
-          <li
-            key={category}
-            className={`cursor-pointer px-[0.5625rem] border border-gray-200 rounded-xl ${selectedCategory === category ? 'bg-black text-white' : 'bg-white text-gray-200'}`}
-          >
-            <NavLink to={`/category?category=${category}`}>{category[0].toUpperCase() + category.slice(1)}</NavLink>
+    <div className="template">
+      <div className="mt-[5px] mb-[15px] w-full ">
+      <ul className={`flex flex-row ${gap} font-serif `}>
+        {CATEGORIES.map(category => (
+          <li key={category} className={`cursor-pointer px-[0.5625rem] border border-gray-200 rounded-xl ${selectedCategory === category ? "bg-black text-white" : "bg-white text-gray-200"}`}>
+            <NavLink to={`/community?category=${category}`} onClick={() => handleCategoryClick(category)}>
+              {category[0].toUpperCase() + category.slice(1)}
+            </NavLink>
           </li>
         ))}
       </ul>
-      <ImageTemplate data={filteredCategoryData} margin="mt-[15px]" />
+      <CommunityImageTemplate data={filteredImages}/>
+      </div>
     </div>
   );
 };
+
 export default CommunityCategory;

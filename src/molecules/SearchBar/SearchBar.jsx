@@ -21,10 +21,10 @@ const SearchBar = () => {
   }
 
   return (
-    <div className="px-[16px]">
+    <div className="h-[36px] absolute right-0 mr-2">
       {/* 기본값 => 352 & 뷰포트 660 => 220 & 뷰포트 550 => 아이콘만 */}
       {viewportWidth >= 500 ? (
-        <div className={`flex flex-row relative w-[${viewportWidth >= 660 ? 200 : 180}px] items-center`}>
+        <div className={`flex flex-row relative w-[${viewportWidth >= 660 ? 260 : 180}px] items-center`}>
           <input
             type="text"
             className="w-full h-[36px] border-b-2 pl-[5px] outline-none text-sm"
