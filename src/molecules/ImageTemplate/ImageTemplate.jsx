@@ -8,8 +8,8 @@ function ImageTemplate({ boardText, margin = 'mt-[15px]', data = images }) {
   const location = useLocation();
 
   const onBoxClicked = (imageId) => {
-    if (location.pathname.endsWith('/category')) {
-      navigate(`/category/detail/${imageId}`);
+    if (location.pathname.endsWith('/style')) {
+      navigate(`/style/detail/${imageId}`);
     } else if (location.pathname.endsWith('/mypage')) {
       navigate(`/mypage/detail/${imageId}`);
     } else if (location.pathname.startsWith('/mypage/board')) {
