@@ -116,7 +116,7 @@ function App() {
               element: <Category />,
               children: [
                 {
-                  path: 'detail/:imageId',
+                  path: ':imageId',
                   element: <DetailImage />,
                 },
               ],
