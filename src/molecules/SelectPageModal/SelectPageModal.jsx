@@ -20,7 +20,7 @@ function SelectPageModal() {
         <FontAwesomeIcon icon={faXmark} color="white" onClick={closeModal} />
       </div>
       <div className="h-5/6 flex flex-col gap-6 justify-center items-center">
-        <LinkButton text="CATEGORY" onClick={() => handleNavigate('/category')} />
+        <LinkButton text="CATEGORY" onClick={() => handleNavigate('/style')} />
         <LinkButton text="COMMUNITY" />
         <LinkButton text="MY PAGE" onClick={() => handleNavigate('/mypage')} />
       </div>
