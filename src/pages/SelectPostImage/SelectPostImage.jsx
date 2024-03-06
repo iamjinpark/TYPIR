@@ -1,12 +1,15 @@
-import DetailImage from '@/molecules/DetailImage/DetailImage';
 import LinkButton from '@/atoms/LinkButton/LinkButton';
 import UnderBar from '@/atoms/UnderBar/UnderBar';
+
+import MyImageTemplate from '@/molecules/MyImageTemplate/MyImageTemplate';
+import MyDetailImage from '@/molecules/MyDetailImage/MyDetailImage';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
-import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
-import { useLocation, useMatch, useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useLocation, useMatch, useNavigate, Link } from 'react-router-dom';
+import { useAlbumStore } from '@/zustand/useStore';
+import { useEffect } from 'react';
 
 function SelectPostImage() {
+  const { albums, setAlbums } = useAlbumStore();
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
@@ -15,6 +18,14 @@ function SelectPostImage() {
   const newPostImageMatch = useMatch('/mypage/newpost/detail/:imageId');
   const layoutId = newPostImageMatch?.params.imageId;
   const isAlbumDetail = newPostImageMatch != null;
+
+  useEffect(() => {
+    // 앨범 데이터가 없을 경우 다시 로드
+    if (albums.length === 0) {
+      // 데이터를 다시 로드하는 로직 구현
+      // 예: fetchData().then(data => setAlbums(data));
+    }
+  }, [albums, setAlbums]);
 
   /* 보드 */
   const boardImageMatch = useMatch('/mypage/newpost/board/:boardText');
@@ -62,8 +73,10 @@ function SelectPostImage() {
       {/* 앨범 */}
       {(pathname === '/mypage/newpost' || isAlbumDetail) && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <ImageTemplate />
-          {newPostImageMatch && <DetailImage layoutId={layoutId} />}
+          {albums.map((album) => (
+            <MyImageTemplate key={album.id} images={album.images} />
+          ))}
+          {newPostImageMatch && <MyDetailImage layoutId={layoutId} />}
         </div>
       )}
 
@@ -78,12 +91,10 @@ function SelectPostImage() {
       )}
 
       {(boardImageMatch || isBoardDetail) && (
-        <div className="flex flex-col items-center mt-8 h-auto">
-          <ImageTemplate boardText={boardText} />
-        </div>
+        <div className="flex flex-col items-center mt-8 h-auto">{/* <MyImageTemplate boardText={boardText} /> */}</div>
       )}
 
-      {boardDetailMatch && <DetailImage layoutId={boardlayoutId} />}
+      {boardDetailMatch && <MyDetailImage layoutId={boardlayoutId} />}
     </div>
   );
 }

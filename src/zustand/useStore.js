@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 /* 마이 페이지, 헤더 관련 */
 export const useSelectCategoryStore = create((set) => ({
@@ -25,15 +26,31 @@ export const useToggleStore = create((set) => ({
 }));
 
 /* 포켓베이스 데이터 관련 */
-export const useStyleStore = create((set) => ({
-  styles: [],
-  setStyles: (data) => set({ styles: data }),
+
+/* 이미지 url 저장 */
+export const useImageStore = create((set) => ({
+  selectedImageUrl: null,
+  setSelectedImageUrl: (url) => set({ selectedImageUrl: url }),
 }));
 
+/* 마이 페이지 앨범 */
 export const useAlbumStore = create((set) => ({
   albums: [],
-  setAlbums: (data) => set({ albums: data }),
+  setAlbums: (albums) => set({ albums }),
 }));
+
+/* New Post 앨범 */
+export const usePersistentAlbumStore = create(
+  persist(
+    (set) => ({
+      albums: [],
+      setAlbums: (albums) => set({ albums }),
+    }),
+    {
+      name: 'album-storage', // 로컬 스토리지에 저장될 때 사용할 키
+    },
+  ),
+);
 
 export const useBoardStore = create((set) => ({
   boards: [],
