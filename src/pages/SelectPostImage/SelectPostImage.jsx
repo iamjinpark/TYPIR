@@ -20,12 +20,16 @@ function SelectPostImage() {
   const isAlbumDetail = newPostImageMatch != null;
 
   useEffect(() => {
-    // 앨범 데이터가 없을 경우 다시 로드
-    if (albums.length === 0) {
-      // 데이터를 다시 로드하는 로직 구현
-      // 예: fetchData().then(data => setAlbums(data));
+    localStorage.setItem('albums', JSON.stringify(albums));
+  }, [albums]);
+
+  // 앱이 로드될 때 데이터 읽어오기
+  useEffect(() => {
+    const savedAlbums = localStorage.getItem('albums');
+    if (savedAlbums) {
+      setAlbums(JSON.parse(savedAlbums));
     }
-  }, [albums, setAlbums]);
+  }, []);
 
   /* 보드 */
   const boardImageMatch = useMatch('/mypage/newpost/board/:boardText');
