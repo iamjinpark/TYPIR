@@ -9,19 +9,20 @@ import UnderBar from '@/atoms/UnderBar/UnderBar';
 
 /* 템플릿 */
 import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
+import MyImageTemplate from '@/molecules/MyImageTemplate/MyImageTemplate';
+import MyDetailImage from '@/molecules/MyDetailImage/MyDetailImage';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
 import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
-import DetailImage from '@/molecules/DetailImage/DetailImage';
 
 /* 데이터 */
 import pb from '@/api/pocketbase';
-import { getPbImage } from '@/utils';
 import { Link, useLocation, useMatch, useNavigate } from 'react-router-dom';
-import { useAlbumStore, useBoardStore, useStyleStore } from '@/zustand/useStore';
+import { useAlbumStore, useBoardStore } from '@/zustand/useStore';
 import { useEffect, useRef } from 'react';
-import { getPbImages } from '@/utils/getPbImage';
+import getPbImage, { getPbImages } from '@/utils/getPbImage';
 
 function MyPage() {
+  const { albums, setAlbums } = useAlbumStore();
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
@@ -30,33 +31,31 @@ function MyPage() {
 
   async function getData() {
     if (isFetching.current) return; // 중복 요청 방지
-
     isFetching.current = true;
 
     try {
-      /* styles 콜렉션 가져오기 */
-      const stylesData = await pb.collection('styles').getFullList();
-      const styles = stylesData.map((style) => {
-        const imageURL = getPbImage(style);
-        return { ...style, image: imageURL };
+      // 'album' 콜렉션에서 relation 연결된 'styles' 데이터 가져오기
+      const albumData = await pb.collection('album').getList(1, 50);
+      const albumsWithImages = albumData.items.map(async (album) => {
+        const relationedStyles = await Promise.all(
+          album.images.map(async (imageId) => {
+            const styleRecord = await pb.collection('styles').getOne(imageId);
+            return {
+              id: styleRecord.id,
+              imageUrl: getPbImage(styleRecord),
+            };
+          }),
+        );
+
+        // relationedStyles는 각 스타일 레코드에 대한 이미지 URL을 포함하는 배열입니다.
+        return { ...album, images: relationedStyles };
       });
 
-      useStyleStore.getState().setStyles(styles);
+      // 앨범 데이터를 상태에 저장
+      const resolvedAlbumsWithImages = await Promise.all(albumsWithImages);
+      setAlbums(resolvedAlbumsWithImages);
 
-      /* album 콜렉션 가져오기 */
-      // const albumData = await pb.collection('album').getFullList();
-      // const albums = albumData.map((album) => {
-      //   const imageURLs = getPbImages({
-      //     collectionId: album.collectionId,
-      //     id: album.id,
-      //     images: album.images,
-      //   });
-      //   return { ...album, images: imageURLs };
-      // });
-      // useAlbumStore.getState().setAlbums(albums);
-      // console.log(albums);
-
-      /* board 콜렉션 가져오기 */
+      // 'board' 콜렉션에서 데이터 가져오기
       const boardData = await pb.collection('board').getFullList();
       const boards = boardData.map((board) => {
         const imageURLs = getPbImages({
@@ -67,9 +66,17 @@ function MyPage() {
         return { ...board, images: imageURLs };
       });
 
+      // 데이터 저장
       useBoardStore.getState().setBoards(boards);
+
+      // console.log(albumData.items);
+      // console.log(boards);
+
+      // 최종적으로 필요한 데이터 반환
+      return { albums: albumData.items, boards: boards };
     } catch (error) {
       console.error('Error fetching data:', error);
+      return [];
     } finally {
       isFetching.current = false;
     }
@@ -83,10 +90,6 @@ function MyPage() {
   const myPageImageMatch = useMatch('/mypage/detail/:imageId');
   const layoutId = myPageImageMatch?.params.imageId;
   const isAlbumDetail = myPageImageMatch != null;
-  const styles = useStyleStore((state) => state.styles);
-  const imageSrc = styles.find((style) => style.id === layoutId)?.image;
-  // const albums = useAlbumStore((state) => state.albums);
-  // const imageSrc = albums.find((album) => album.id === layoutId)?.images;
 
   /* 보드 */
   const boardImageMatch = useMatch('/mypage/board/:boardText');
@@ -174,13 +177,12 @@ function MyPage() {
       {/* 앨범 */}
       {(pathname === '/mypage' || isAlbumDetail) && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <ImageTemplate data={styles} />
-          {/* {albums.map((album) => (
-            <ImageTemplate key={album.id} data={album.images} />
-          ))} */}
+          {albums.map((album) => (
+            <MyImageTemplate key={album.id} images={album.images} />
+          ))}
         </div>
       )}
-      {myPageImageMatch && <DetailImage layoutId={layoutId} imageSrc={imageSrc} />}
+      {myPageImageMatch && <MyDetailImage layoutId={layoutId} />}
 
       {/* 보드 */}
       {pathname === '/mypage/board' && !boardImageMatch && !boardDetailMatch && (
@@ -202,7 +204,7 @@ function MyPage() {
         </div>
       )}
 
-      {boardDetailMatch && <DetailImage layoutId={boardlayoutId} />}
+      {boardDetailMatch && <MyDetailImage layoutId={boardlayoutId} />}
 
       {/* 게시물 */}
       {pathname === '/mypage/post' && (
