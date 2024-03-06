@@ -14,17 +14,17 @@ const DetailImageButton = () => {
     <>
       {showModal ? null : (
         <button
-          className="w-[48px] h-[48px] rounded-full bg-black flex justify-center items-center"
+          className="w-[35px] h-[35px] xs:w-[48px] xs:h-[48px]  rounded-full bg-black flex justify-center items-center"
           onClick={openModal}
         >
           <svg
-            height="20"
-            width="20"
+            className="h-[17px] w-[17px] xs:h-[23px] xs:w-[23px] m-auto"
+            // height="20"
+            // width="20"
             viewBox="0 0 24 24"
             aria-hidden="true"
             aria-label=""
             role="img"
-            className="m-auto"
           >
             <path
               fill="white"

@@ -2,6 +2,7 @@ import CloseButton from '@/atoms/CloseButton/CloseButton';
 import ModalButton from '@/atoms/ModalButton/ModalButton';
 import { useState } from 'react';
 import BoardSaveModal from '../BoardSaveModal/BoardSaveModal';
+import ShareModal from '../ShareModal/ShareModal';
 
 const DetailModal = ({ onClose }) => {
   const [showBoardModal, setShowBoardModal] = useState(false);
@@ -11,7 +12,7 @@ const DetailModal = ({ onClose }) => {
     setShowBoardModal(true);
   };
   const openShareModal = () => {
-    setShowBoardModal(true);
+    setShowShareModal(true);
   };
   const closeBoardModal = () => {
     setShowBoardModal(false);
@@ -28,9 +29,10 @@ const DetailModal = ({ onClose }) => {
       <ul className="flex gap-8 xs:gap-12">
         <ModalButton href="#" fileName="savePlus" buttonText="보드에 저장" onClick={openBoardModal} />
         <ModalButton href="#" fileName="write" buttonText="글쓰기" />
-        <ModalButton href="#" fileName="linkCopy" buttonText="공유하기" />
+        <ModalButton href="#" fileName="linkCopy" buttonText="공유하기" onClick={openShareModal} />
       </ul>
       {showBoardModal && <BoardSaveModal onClose={closeBoardModal} text="기존 보드에 추가" />}
+      {showShareModal && <ShareModal onClose={closeShareModal} />}
     </div>
   );
 };
