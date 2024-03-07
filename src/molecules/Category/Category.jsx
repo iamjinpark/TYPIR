@@ -3,8 +3,7 @@ import { NavLink, useSearchParams, useLocation } from 'react-router-dom';
 import { getPbImage } from '@/utils';
 import pb from '@/api/pocketbase';
 import ImageTemplate from '../ImageTemplate/ImageTemplate';
-import UserModal from '../UserModal/UserModal';
-import ShareModal from '../ShareModal/ShareModal';
+import Gallery from '../ImageTemplate/ImageTemplateNew';
 import { useStyleStore } from '@/zustand/useStyleStore';
 import { useMatch } from 'react-router-dom';
 import DetailImage from '../DetailImage/DetailImage';
@@ -52,20 +51,22 @@ const Category = ({ gap = 'gap-3' }) => {
     selectedCategory === 'all' ? data : data.filter((item) => item.category === selectedCategory);
 
   return (
-    <div className="mt-[5px] mb-[15px] w-full">
-      <ul className={`flex flex-row ${gap} font-serif px-4`}>
-        {CATEGORIES.map((category) => (
-          <li
-            key={category}
-            className={` cursor-pointer px-[0.5625rem] border border-gray-200 rounded-xl ${selectedCategory === category ? 'bg-black text-white' : 'bg-white text-gray-200'}`}
-          >
-            <NavLink to={`/style?category=${category}`}>{category[0].toUpperCase() + category.slice(1)}</NavLink>
-          </li>
-        ))}
-      </ul>
-      <ImageTemplate data={filteredCategoryData} />
-      {categoryImageMatch && <DetailImage layoutId={layoutId} imageSrc={imageSrc} />}
-    </div>
+    <>
+      <div className="mt-[5px] mb-[15px] w-full ">
+        <ul className={`flex flex-row ${gap} font-serif px-4`}>
+          {CATEGORIES.map((category) => (
+            <li
+              key={category}
+              className={` cursor-pointer px-[0.5625rem] border border-gray-200 rounded-xl ${selectedCategory === category ? 'bg-black text-white' : 'bg-white text-gray-200'}`}
+            >
+              <NavLink to={`/style?category=${category}`}>{category[0].toUpperCase() + category.slice(1)}</NavLink>
+            </li>
+          ))}
+        </ul>
+        <Gallery data={filteredCategoryData} />
+        {categoryImageMatch && <DetailImage layoutId={layoutId} imageSrc={imageSrc} />}
+      </div>
+    </>
   );
 };
 export default Category;
