@@ -8,7 +8,6 @@ import LinkButton from '@/atoms/LinkButton/LinkButton';
 import UnderBar from '@/atoms/UnderBar/UnderBar';
 
 /* 템플릿 */
-import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
 import MyImageTemplate from '@/molecules/MyImageTemplate/MyImageTemplate';
 import MyDetailImage from '@/molecules/MyDetailImage/MyDetailImage';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
@@ -16,64 +15,77 @@ import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
 
 /* 데이터 */
 import pb from '@/api/pocketbase';
-import { Link, useLocation, useMatch, useNavigate } from 'react-router-dom';
-import { useAlbumStore, useBoardStore } from '@/zustand/useStore';
+import { Link, useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
+import { useAlbumStore, useBoardStore, useFilteredImagesStore } from '@/zustand/useStore';
 import { useEffect, useRef } from 'react';
-import getPbImage, { getPbImages } from '@/utils/getPbImage';
+import getPbImage from '@/utils/getPbImage';
 
 function MyPage() {
   const { albums, setAlbums } = useAlbumStore();
+  const { boards, setBoards } = useBoardStore();
+  const { filteredImages, setFilteredImages } = useFilteredImagesStore();
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
 
   const isFetching = useRef(false);
 
-  async function getData() {
-    if (isFetching.current) return; // 중복 요청 방지
-    isFetching.current = true;
-
-    try {
-      // 'album' 콜렉션에서 relation 연결된 'styles' 데이터 가져오기
-      const albumData = await pb.collection('album').getList(1, 50);
-      const albumsWithImages = albumData.items.map(async (album) => {
+  // 'album' 콜렉션에서 relation 연결된 'styles' 데이터 가져오기
+  async function fetchAlbumsData() {
+    const albumData = await pb.collection('album').getList(1, 50);
+    const albumsWithImages = await Promise.all(
+      albumData.items.map(async (album) => {
         const relationedStyles = await Promise.all(
           album.images.map(async (imageId) => {
             const styleRecord = await pb.collection('styles').getOne(imageId);
             return {
               id: styleRecord.id,
+              category: styleRecord.category,
+              alt: styleRecord.alt,
               imageUrl: getPbImage(styleRecord),
             };
           }),
         );
-
-        // relationedStyles는 각 스타일 레코드에 대한 이미지 URL을 포함하는 배열입니다.
         return { ...album, images: relationedStyles };
-      });
+      }),
+    );
+    return albumsWithImages;
+  }
 
+  // 'board' 콜렉션에서 relation 연결된 'styles' 데이터 가져오기
+  async function fetchBoardsData() {
+    const boardData = await pb.collection('board').getList(1, 50);
+    const boardsWithImages = await Promise.all(
+      boardData.items.map(async (board) => {
+        const relationedStyles = await Promise.all(
+          board.images.map(async (imageId) => {
+            const styleRecord = await pb.collection('styles').getOne(imageId);
+            return {
+              id: styleRecord.id,
+              category: styleRecord.category,
+              alt: styleRecord.alt,
+              imageUrl: getPbImage(styleRecord),
+            };
+          }),
+        );
+        return { ...board, images: relationedStyles };
+      }),
+    );
+    return boardsWithImages;
+  }
+
+  async function getData() {
+    if (isFetching.current) return; // 중복 요청 방지
+    isFetching.current = true;
+
+    try {
       // 앨범 데이터를 상태에 저장
-      const resolvedAlbumsWithImages = await Promise.all(albumsWithImages);
+      const resolvedAlbumsWithImages = await fetchAlbumsData();
       setAlbums(resolvedAlbumsWithImages);
 
-      // 'board' 콜렉션에서 데이터 가져오기
-      const boardData = await pb.collection('board').getFullList();
-      const boards = boardData.map((board) => {
-        const imageURLs = getPbImages({
-          collectionId: board.collectionId,
-          id: board.id,
-          images: board.images,
-        });
-        return { ...board, images: imageURLs };
-      });
-
-      // 데이터 저장
-      useBoardStore.getState().setBoards(boards);
-
-      // console.log(albumData.items);
-      // console.log(boards);
-
-      // 최종적으로 필요한 데이터 반환
-      return { albums: albumData.items, boards: boards };
+      // 보드 데이터 상태에 저장
+      const resolvedBoardsWithImages = await fetchBoardsData();
+      setBoards(resolvedBoardsWithImages);
     } catch (error) {
       console.error('Error fetching data:', error);
       return [];
@@ -96,12 +108,21 @@ function MyPage() {
   const boardDetailMatch = useMatch('/mypage/board/:boardText/detail/:imageId');
   const boardlayoutId = boardDetailMatch?.params.imageId;
   const isBoardDetail = boardDetailMatch != null;
-  const boards = useBoardStore((state) => state.boards);
 
-  const boardText = boardImageMatch?.params.boardText;
   const onBoardClicked = (boardText) => {
     navigate(`/mypage/board/${boardText}`);
   };
+
+  // MyPage 컴포넌트 내에서 필터링 로직
+  const { boardText } = useParams();
+
+  useEffect(() => {
+    // 필터링 로직
+    if (boardText) {
+      const newFilteredImages = boards.flatMap((board) => board.images.filter((image) => image.category === boardText));
+      setFilteredImages(newFilteredImages);
+    }
+  }, [boardText, boards, setFilteredImages]);
 
   return (
     <div className="w-full h-auto min-h-[570px] bg-white mt-4 mb-8">
@@ -121,7 +142,6 @@ function MyPage() {
           </Link>
         </div>
       </div>
-
       {/* 카테고리 바 */}
       <div className="flex justify-evenly pt-2">
         <Link to="/mypage">
@@ -186,21 +206,26 @@ function MyPage() {
 
       {/* 보드 */}
       {pathname === '/mypage/board' && !boardImageMatch && !boardDetailMatch && (
-        <div className="flex flex-wrap justify-center mt-4 gap-[12px]">
-          {boards.map((board) => (
-            <BoardTemplate
-              key={board.id}
-              text={board.name}
-              images={board.images}
-              onBoardClick={() => onBoardClicked(board.name)}
-            />
-          ))}
+        <div className="flex justify-center min-h-[600px]">
+          <div
+            className="grid sm:grid-cols-2 grid-cols-1 gap-[15px] justify-center my-6"
+            style={{ gridAutoRows: 'min-content' }}
+          >
+            {boards.map((board) => (
+              <BoardTemplate
+                key={board.id}
+                text={board.name}
+                images={board.images}
+                onBoardClick={() => onBoardClicked(board.name.toLowerCase())}
+              />
+            ))}
+          </div>
         </div>
       )}
 
       {(boardImageMatch || isBoardDetail) && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <ImageTemplate boardText={boardText} />
+          <MyImageTemplate images={filteredImages} />
         </div>
       )}
 
@@ -212,19 +237,20 @@ function MyPage() {
           <OverlapTemplate text={'All'} />
         </div>
       )}
-
       {/* 북마크 */}
       {pathname === '/mypage/bookmark' && (
-        <>
-          <div className="flex flex-wrap justify-center mt-4 gap-[12px]">
+        <div className="flex justify-center min-h-[600px]">
+          <div
+            className="grid sm:grid-cols-2 grid-cols-1 gap-[15px] justify-center mt-8"
+            style={{ gridAutoRows: 'min-content' }}
+          >
             <div className="flex flex-col items-center h-[210px]">
               <OverlapTemplate text={'All'} />
             </div>
-            <BoardTemplate text={'Daily'} />
-            <BoardTemplate text={'Modern'} />
-            <BoardTemplate text={'Vintage'} />
+            <BoardTemplate images={boards} />
+            <BoardTemplate images={boards} />
           </div>
-        </>
+        </div>
       )}
     </div>
   );
