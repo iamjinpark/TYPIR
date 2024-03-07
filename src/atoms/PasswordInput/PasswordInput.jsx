@@ -71,9 +71,9 @@ const PasswordInput = ({
           style={{ top: '50%', transform: 'translateY(-50%)', marginRight: '10px' }} // 버튼을 인풋 필드 내부 오른쪽 끝에 정렬
         >
           {showPassword ? (
-            <img src="/public/images/icon_eye.svg" alt="보이기" />
+            <img src="/images/icon_eye.svg" alt="보이기" />
           ) : (
-            <img src="/public/images/icon_eye_hidden.svg" alt="숨기기" />
+            <img src="/images/icon_eye_hidden.svg" alt="숨기기" />
           )}
         </button>
       </div>

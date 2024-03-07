@@ -7,7 +7,7 @@ const Splash = () => {
     <div
       className="min-w-[360px] max-w-[768px] h-screen flex flex-col items-center px-15 py-0 m-auto relative"
       style={{
-        backgroundImage: "url('/public/images/splash_bg.png')",
+        backgroundImage: "url('/images/splash_bg.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
