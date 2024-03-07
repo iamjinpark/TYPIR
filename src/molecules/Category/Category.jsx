@@ -22,7 +22,6 @@ const Category = ({ gap = 'gap-3' }) => {
 
   const categoryImageMatch = useMatch('/style/detail/:imageId');
   const layoutId = categoryImageMatch?.params.imageId;
-  const isStyleDetail = categoryImageMatch != null;
   const styles = useStyleStore((state) => state.styles);
   const imageSrc = styles.find((style) => style.id === layoutId)?.image;
 
