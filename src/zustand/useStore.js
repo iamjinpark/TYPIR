@@ -34,25 +34,35 @@ export const useImageStore = create((set) => ({
 }));
 
 /* 마이 페이지 앨범 */
-export const useAlbumStore = create((set) => ({
-  albums: [],
-  setAlbums: (albums) => set({ albums }),
-}));
-
-/* New Post 앨범 */
-export const usePersistentAlbumStore = create(
+export const useAlbumStore = create(
   persist(
     (set) => ({
       albums: [],
       setAlbums: (albums) => set({ albums }),
     }),
     {
-      name: 'album-storage', // 로컬 스토리지에 저장될 때 사용할 키
+      name: 'album-storage', // 세션 스토리지에 저장될 키 이름
+      getStorage: () => sessionStorage, // 세션 스토리지 사용
     },
   ),
 );
 
-export const useBoardStore = create((set) => ({
-  boards: [],
-  setBoards: (data) => set({ boards: data }),
+/* 마이 페이지 보드 */
+export const useBoardStore = create(
+  persist(
+    (set) => ({
+      boards: [],
+      setBoards: (boards) => set({ boards }),
+    }),
+    {
+      name: 'board-storage', // 세션 스토리지에 저장될 키 이름
+      getStorage: () => sessionStorage, // 세션 스토리지 사용
+    },
+  ),
+);
+
+/* 보드 카테고리 필터 */
+export const useFilteredImagesStore = create((set) => ({
+  filteredImages: [],
+  setFilteredImages: (images) => set({ filteredImages: images }),
 }));
