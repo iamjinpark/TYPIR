@@ -19,18 +19,6 @@ function SelectPostImage() {
   const layoutId = newPostImageMatch?.params.imageId;
   const isAlbumDetail = newPostImageMatch != null;
 
-  useEffect(() => {
-    localStorage.setItem('albums', JSON.stringify(albums));
-  }, [albums]);
-
-  // 앱이 로드될 때 데이터 읽어오기
-  useEffect(() => {
-    const savedAlbums = localStorage.getItem('albums');
-    if (savedAlbums) {
-      setAlbums(JSON.parse(savedAlbums));
-    }
-  }, []);
-
   /* 보드 */
   const boardImageMatch = useMatch('/mypage/newpost/board/:boardText');
   const boardDetailMatch = useMatch('/mypage/newpost/board/:boardText/detail/:imageId');
