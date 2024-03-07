@@ -24,7 +24,6 @@ function ImageTemplate({ boardText, margin = 'mt-[15px]', data = images }) {
   const breakpointColumnsObj = {
     default: 4,
     639: 3,
-    // 500: 2,
     450: 2,
   };
 
@@ -32,7 +31,7 @@ function ImageTemplate({ boardText, margin = 'mt-[15px]', data = images }) {
     <ul className={`max-w-screen-md h-auto bg-white ${margin}`}>
       <Masonry
         breakpointCols={breakpointColumnsObj}
-        className="my-masonry-grid flex gap-[12px]"
+        className="my-masonry-grid flex gap-[12px] px-4"
         columnClassName="my-masonry-grid_column flex flex-col items-center"
       >
         {data.map((item) => (
