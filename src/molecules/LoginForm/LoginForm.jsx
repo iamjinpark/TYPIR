@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '@/zustand/useUserStore';
 
 function LoginForm() {
+  const PB_AP = import.meta.env.VITE_PB_API;
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(false);
@@ -17,7 +19,7 @@ function LoginForm() {
   const navigate = useNavigate();
   const { setUser } = useUserStore(); // setUser 함수를 직접 구조분해 할당으로 추출
 
-  const pb = new PocketBase('https://pocket10.kro.kr');
+  const pb = new PocketBase(PB_AP);
 
   useEffect(() => {
     setIsFormValid(isEmailValid && isPasswordValid);
@@ -28,6 +30,7 @@ function LoginForm() {
 
     try {
       const authData = await pb.collection('users').authWithPassword(email, password);
+      //  zustand에 사용자 정보 저장
       setUser({
         userName: authData.record.username,
         email: email,
@@ -36,11 +39,26 @@ function LoginForm() {
         isPrivate: authData.record.isPrivate,
         isProtect: authData.record.isProtect,
       });
+
+      // localStorage에 사용자 정보 저장
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          userName: authData.record.username,
+          email: email,
+          profile: authData.record.profile,
+          handle: authData.record.handle,
+          isPrivate: authData.record.isPrivate,
+          isProtect: authData.record.isProtect,
+        }),
+      );
+
       console.log(useUserStore.getState().user); // 상태 확인 방법
       alert('로그인 성공: ' + authData.record.isFirstLogin);
-      console.log(authData);
+      console.log('Updating isFirstLogin for user ID:', authData.record.id);
       if (authData.record.isFirstLogin) {
         // isFirstLogin을 false로 바꾸는 코드 추가
+        // await pb.collection('users').update(authData.record.id, { isFirstLogin: false });
         navigate('/splash/setprofile');
       } else {
         navigate('/style');
