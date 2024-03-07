@@ -6,6 +6,7 @@ import LinkButton from '@/atoms/LinkButton/LinkButton';
 import { useSelectCategoryStore } from '@/zustand/useStore';
 import { useNavigate } from 'react-router-dom';
 import Bar from '@/atoms/Bar/Bar';
+import { useUserStore } from '@/zustand/useUserStore';
 
 function Header() {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ function Header() {
     navigate(path);
     closeModal();
   };
+
+  const { logoutUser } = useUserStore(); // setUser 함수를 직접 구조분해 할당으로 추출
 
   return (
     <div
@@ -42,6 +45,11 @@ function Header() {
             fontSize="text-[13px]"
             hoverColor="hover:text-black"
             hoverScale=""
+            onClick={() => {
+              logoutUser();
+              localStorage.removeItem('user');
+              navigate('/splash');
+            }}
           />
         </div>
 

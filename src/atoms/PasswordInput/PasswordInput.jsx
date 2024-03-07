@@ -1,3 +1,4 @@
+import { getStaticImage } from '@/utils';
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -71,9 +72,9 @@ const PasswordInput = ({
           style={{ top: '50%', transform: 'translateY(-50%)', marginRight: '10px' }} // 버튼을 인풋 필드 내부 오른쪽 끝에 정렬
         >
           {showPassword ? (
-            <img src="/images/icon_eye.svg" alt="보이기" />
+            <img src={getStaticImage('icon_eye.svg')} alt="보이기" />
           ) : (
-            <img src="/images/icon_eye_hidden.svg" alt="숨기기" />
+            <img src={getStaticImage('icon_eye_hidden.svg')} alt="숨기기" />
           )}
         </button>
       </div>

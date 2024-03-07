@@ -7,4 +7,5 @@ export const useUserStore = create((set) => ({
     set((state) => ({
       user: { ...state.user, ...newUserInfo },
     })),
+  logoutUser: () => set({ user: null }),
 }));
