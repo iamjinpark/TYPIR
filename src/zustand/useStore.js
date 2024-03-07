@@ -47,7 +47,22 @@ export const useAlbumStore = create(
   ),
 );
 
-export const useBoardStore = create((set) => ({
-  boards: [],
-  setBoards: (data) => set({ boards: data }),
+/* 마이 페이지 보드 */
+export const useBoardStore = create(
+  persist(
+    (set) => ({
+      boards: [],
+      setBoards: (boards) => set({ boards }),
+    }),
+    {
+      name: 'board-storage', // 세션 스토리지에 저장될 키 이름
+      getStorage: () => sessionStorage, // 세션 스토리지 사용
+    },
+  ),
+);
+
+/* 보드 카테고리 필터 */
+export const useFilteredImagesStore = create((set) => ({
+  filteredImages: [],
+  setFilteredImages: (images) => set({ filteredImages: images }),
 }));
