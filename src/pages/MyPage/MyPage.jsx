@@ -14,11 +14,10 @@ import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
 import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
 
 /* 데이터 */
-import pb from '@/api/pocketbase';
+import { useEffect, useRef } from 'react';
 import { Link, useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { useAlbumStore, useBoardStore, useFilteredImagesStore } from '@/zustand/useStore';
-import { useEffect, useRef } from 'react';
-import getPbImage from '@/utils/getPbImage';
+import { fetchAlbumsData, fetchBoardsData } from '@/utils/getMyPageData';
 
 function MyPage() {
   const { albums, setAlbums } = useAlbumStore();
@@ -29,50 +28,6 @@ function MyPage() {
   const pathname = location.pathname;
 
   const isFetching = useRef(false);
-
-  // 'album' 콜렉션에서 relation 연결된 'styles' 데이터 가져오기
-  async function fetchAlbumsData() {
-    const albumData = await pb.collection('album').getList(1, 50);
-    const albumsWithImages = await Promise.all(
-      albumData.items.map(async (album) => {
-        const relationedStyles = await Promise.all(
-          album.images.map(async (imageId) => {
-            const styleRecord = await pb.collection('styles').getOne(imageId);
-            return {
-              id: styleRecord.id,
-              category: styleRecord.category,
-              alt: styleRecord.alt,
-              imageUrl: getPbImage(styleRecord),
-            };
-          }),
-        );
-        return { ...album, images: relationedStyles };
-      }),
-    );
-    return albumsWithImages;
-  }
-
-  // 'board' 콜렉션에서 relation 연결된 'styles' 데이터 가져오기
-  async function fetchBoardsData() {
-    const boardData = await pb.collection('board').getList(1, 50);
-    const boardsWithImages = await Promise.all(
-      boardData.items.map(async (board) => {
-        const relationedStyles = await Promise.all(
-          board.images.map(async (imageId) => {
-            const styleRecord = await pb.collection('styles').getOne(imageId);
-            return {
-              id: styleRecord.id,
-              category: styleRecord.category,
-              alt: styleRecord.alt,
-              imageUrl: getPbImage(styleRecord),
-            };
-          }),
-        );
-        return { ...board, images: relationedStyles };
-      }),
-    );
-    return boardsWithImages;
-  }
 
   async function getData() {
     if (isFetching.current) return; // 중복 요청 방지
@@ -233,8 +188,10 @@ function MyPage() {
 
       {/* 게시물 */}
       {pathname === '/mypage/post' && (
-        <div className="flex flex-col items-center mt-4 h-[210px]">
-          <OverlapTemplate text={'All'} />
+        <div className="flex flex-col items-center mt-8 h-auto">
+          {albums.map((album) => (
+            <MyImageTemplate key={album.id} images={album.images} />
+          ))}
         </div>
       )}
       {/* 북마크 */}
