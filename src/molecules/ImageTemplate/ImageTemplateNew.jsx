@@ -1,13 +1,16 @@
-import Masonry from 'react-masonry-component';
-import images from '/src/data/images.json';
+import useResizeUpdateView from '@/hooks/useResizeUpdateView';
 import { motion } from 'framer-motion';
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import { ResponsiveMasonry } from 'react-responsive-masonry';
+import Masonry from 'react-masonry-component';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import images from '/src/data/images.json';
 
-const Gallery = ({ boardText, margin = 'mt-[15px]', data = images, layoutId }) => {
+const ImageTemplate = ({ boardText, margin = 'mt-[15px]', data = images, layoutId }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+
+  // 창 크기 조정에 따라 컴포넌트 리-렌더링
+  useResizeUpdateView();
 
   const onBoxClicked = (imageId) => {
     const category = searchParams.get('category');
@@ -24,38 +27,32 @@ const Gallery = ({ boardText, margin = 'mt-[15px]', data = images, layoutId }) =
     }
   };
 
-  const breakpointColumnsObj = {
-    defalut: 4,
-    639: 3,
-    450: 2,
-  };
-
-  const options = {
-    gutter: 17,
-  };
-
   return (
-    <ResponsiveMasonry columnsCountBreakPoints={{ 768: 4, 639: 3, 450: 2 }}>
-      <Masonry
-        className={`mix-w-[320px] max-w-screen-md h-auto bg-white ${margin} px-4 relative`}
-        elementType={'ul'}
-        options={options}
-      >
-        {data.map((item) => (
-          <motion.li key={item.id} layoutId={item.id + ''}>
-            <button type="button" onClick={() => onBoxClicked(item.id)}>
-              <img
-                src={item.image}
-                alt={item.alt}
-                className={`w-[170px] bg-gray-100 rounded-2xl mb-[15px] cursor-zoom-in`}
-                style={{ height: `${item.height}px` }}
-              />
-            </button>
-          </motion.li>
-        ))}
-      </Masonry>
-    </ResponsiveMasonry>
+    <Masonry
+      elementType="ul"
+      className={`min-w-[320px] max-w-screen-md h-auto bg-white ${margin} px-4 mx-auto relative`}
+      options={{
+        gutter: 15,
+        horizontalOrder: true,
+        itemSelector: '.masonry-item',
+        transitionDuration: 0,
+        fitWidth: true,
+      }}
+    >
+      {data.map((item) => (
+        <motion.li key={item.id} layoutId={item.id} className="masonry-item absolute">
+          <button type="button" onClick={() => onBoxClicked(item.id)}>
+            <img
+              src={item.image}
+              alt={item.alt}
+              className={`w-[150px] xs:w-[180px] bg-gray-100 rounded-2xl mb-[15px] cursor-zoom-in`}
+              style={{ height: `${item.height}px` }}
+            />
+          </button>
+        </motion.li>
+      ))}
+    </Masonry>
   );
 };
 
-export default Gallery;
+export default ImageTemplate;

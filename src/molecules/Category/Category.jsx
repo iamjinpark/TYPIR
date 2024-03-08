@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { NavLink, useSearchParams, useLocation } from 'react-router-dom';
 import { getPbImage } from '@/utils';
 import pb from '@/api/pocketbase';
-import ImageTemplate from '../ImageTemplate/ImageTemplate';
-import Gallery from '../ImageTemplate/ImageTemplateNew';
+// import ImageTemplate from '../ImageTemplate/ImageTemplate';
+import ImageTemplate from '../ImageTemplate/ImageTemplateNew';
 import { useStyleStore } from '@/zustand/useStyleStore';
 import { useMatch } from 'react-router-dom';
 import DetailImage from '../DetailImage/DetailImage';
@@ -63,7 +63,7 @@ const Category = ({ gap = 'gap-3' }) => {
             </li>
           ))}
         </ul>
-        <Gallery data={filteredCategoryData} />
+        <ImageTemplate data={filteredCategoryData} />
         {categoryImageMatch && <DetailImage layoutId={layoutId} imageSrc={imageSrc} />}
       </div>
     </>
