@@ -4,12 +4,14 @@ import UnderBar from '@/atoms/UnderBar/UnderBar';
 import MyImageTemplate from '@/molecules/MyImageTemplate/MyImageTemplate';
 import MyDetailImage from '@/molecules/MyDetailImage/MyDetailImage';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
-import { useLocation, useMatch, useNavigate, Link } from 'react-router-dom';
-import { useAlbumStore } from '@/zustand/useStore';
+import { useLocation, useMatch, useNavigate, useParams, Link } from 'react-router-dom';
+import { useAlbumStore, useBoardStore, useFilteredImagesStore } from '@/zustand/useStore';
 import { useEffect } from 'react';
 
 function SelectPostImage() {
-  const { albums, setAlbums } = useAlbumStore();
+  const { albums } = useAlbumStore();
+  const { boards } = useBoardStore();
+  const { filteredImages, setFilteredImages } = useFilteredImagesStore();
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
@@ -24,11 +26,19 @@ function SelectPostImage() {
   const boardDetailMatch = useMatch('/mypage/newpost/board/:boardText/detail/:imageId');
   const boardlayoutId = boardDetailMatch?.params.imageId;
   const isBoardDetail = boardDetailMatch != null;
+  const { boardText } = useParams();
 
-  const boardText = boardImageMatch?.params.boardText;
   const onBoardClicked = (boardText) => {
     navigate(`/mypage/newpost/board/${boardText}`);
   };
+
+  // 보드 카테고리 필터링
+  useEffect(() => {
+    if (boardText) {
+      const newFilteredImages = boards.flatMap((board) => board.images.filter((image) => image.category === boardText));
+      setFilteredImages(newFilteredImages);
+    }
+  }, [boardText, boards, setFilteredImages]);
 
   return (
     <div className="w-full h-auto min-h-[570px] bg-white mt-2 mb-8">
@@ -74,16 +84,27 @@ function SelectPostImage() {
 
       {/* 보드 */}
       {pathname === '/mypage/newpost/board' && !boardImageMatch && !boardDetailMatch && (
-        <div className="flex flex-wrap justify-center mt-4 gap-[12px]">
-          <BoardTemplate text={'Simple'} onBoardClick={onBoardClicked} />
-          <BoardTemplate text={'Daily'} onBoardClick={onBoardClicked} />
-          <BoardTemplate text={'Modern'} onBoardClick={onBoardClicked} />
-          <BoardTemplate text={'Vintage'} onBoardClick={onBoardClicked} />
+        <div className="flex justify-center min-h-[600px]">
+          <div
+            className="grid sm:grid-cols-2 grid-cols-1 gap-[15px] justify-center my-6"
+            style={{ gridAutoRows: 'min-content' }}
+          >
+            {boards.map((board) => (
+              <BoardTemplate
+                key={board.id}
+                text={board.name}
+                images={board.images}
+                onBoardClick={() => onBoardClicked(board.name.toLowerCase())}
+              />
+            ))}
+          </div>
         </div>
       )}
 
       {(boardImageMatch || isBoardDetail) && (
-        <div className="flex flex-col items-center mt-8 h-auto">{/* <MyImageTemplate boardText={boardText} /> */}</div>
+        <div className="flex flex-col items-center mt-8 h-auto">
+          <MyImageTemplate images={filteredImages} />
+        </div>
       )}
 
       {boardDetailMatch && <MyDetailImage layoutId={boardlayoutId} />}
