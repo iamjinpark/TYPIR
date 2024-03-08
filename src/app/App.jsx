@@ -11,6 +11,7 @@ import SelectPostImage from '@/pages/SelectPostImage/SelectPostImage';
 /* 랜딩 페이지 관련 */
 import Category from '@/molecules/Category/Category';
 import DetailImage from '@/molecules/DetailImage/DetailImage';
+import Landing from '@/pages/Landing/Landing';
 
 /* 커뮤니티 페이지 관련 */
 
@@ -110,10 +111,10 @@ function App() {
         {
           path: 'style',
           children: [
-            { index: true, element: <Category /> },
+            { index: true, element: <Landing /> },
             {
               path: 'detail',
-              element: <Category />,
+              element: <Landing />,
               children: [
                 {
                   path: ':imageId',

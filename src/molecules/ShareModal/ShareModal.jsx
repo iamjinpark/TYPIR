@@ -15,7 +15,7 @@ const ShareModal = ({ onClose }) => {
   };
 
   return (
-    <div className="absolute w-[290px] h-[200px] xs:w-[380px] xs:h-[230px]] border border-black rounded-xl flex justify-center items-center bg-white">
+    <div className="absolute w-[290px] h-[200px] xs:w-[380px] xs:h-[230px] border border-black rounded-xl flex justify-center items-center bg-white">
       <CloseButton onClose={onClose} />
       <ul className="flex gap-16">
         <ModalButton onClick={handleKakaoTalkShare} href="#" fileName="kakaotalk" buttonText="카카오톡" />
