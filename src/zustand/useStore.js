@@ -66,3 +66,17 @@ export const useFilteredImagesStore = create((set) => ({
   filteredImages: [],
   setFilteredImages: (images) => set({ filteredImages: images }),
 }));
+
+/* 마이 페이지 게시물 */
+export const usePostStore = create(
+  persist(
+    (set) => ({
+      posts: [],
+      setPosts: (posts) => set({ posts }),
+    }),
+    {
+      name: 'post-storage', // 세션 스토리지에 저장될 키 이름
+      getStorage: () => sessionStorage, // 세션 스토리지 사용
+    },
+  ),
+);

@@ -1,7 +1,7 @@
-// 'album' 콜렉션에서 relation 연결된 'styles' 데이터 가져오기
 import pb from '@/api/pocketbase';
 import getPbImage from '@/utils/getPbImage';
 
+// 'album' 콜렉션에서 relation 연결된 'styles' 데이터 가져오기
 export async function fetchAlbumsData() {
   const albumData = await pb.collection('album').getList(1, 50);
   const albumsWithImages = await Promise.all(
@@ -43,4 +43,19 @@ export async function fetchBoardsData() {
     }),
   );
   return boardsWithImages;
+}
+
+// 'communityPage' 콜렉션 데이터 가져오기
+export async function fetchPostsData() {
+  const postData = await pb.collection('communityPage').getList(1, 50);
+  const postsWithImages = postData.items.map((post) => ({
+    ...post,
+    imageUrl: getPbImage({
+      collectionId: post.collectionId,
+      id: post.id,
+      image: post.image,
+    }),
+  }));
+
+  return postsWithImages;
 }
