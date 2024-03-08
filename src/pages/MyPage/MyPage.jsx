@@ -8,7 +8,7 @@ import LinkButton from '@/atoms/LinkButton/LinkButton';
 import UnderBar from '@/atoms/UnderBar/UnderBar';
 
 /* 템플릿 */
-import MyImageTemplate from '@/molecules/MyImageTemplate/MyImageTemplate';
+import MyImageTemplateNew from '@/molecules/MyImageTemplate/MyImageTemplateNew';
 import MyDetailImage from '@/molecules/MyDetailImage/MyDetailImage';
 import MyPostTemplate from '@/molecules/MyPostTemplate/MyPostTemplate';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
@@ -16,7 +16,7 @@ import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
 
 /* 데이터 */
 import { useEffect, useRef } from 'react';
-import { Link, useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { useAlbumStore, useBoardStore, useFilteredImagesStore, usePostStore } from '@/zustand/useStore';
 import { fetchAlbumsData, fetchBoardsData, fetchPostsData } from '@/utils/getMyPageData';
 
@@ -68,6 +68,10 @@ function MyPage() {
   const isBoardDetail = boardDetailMatch != null;
   const { boardText } = useParams();
 
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
+
   const onBoardClicked = (boardText) => {
     navigate(`/mypage/board/${boardText}`);
   };
@@ -90,71 +94,64 @@ function MyPage() {
           <HandleText />
         </div>
         <div className="flex gap-4 mt-4">
-          <Link to="/mypage/account">
-            <StrokeButton text="계정 관리" />
-          </Link>
-          <Link to="/mypage/editProfile">
-            <StrokeButton text="프로필 수정" />
-          </Link>
+          <StrokeButton text="계정 관리" onClick={() => handleNavigate('/mypage/account')} />
+          <StrokeButton text="프로필 수정" onClick={() => handleNavigate('/mypage/editProfile')} />
         </div>
       </div>
       {/* 카테고리 바 */}
       <div className="flex justify-evenly pt-2">
-        <Link to="/mypage">
-          <LinkButton
-            text="앨범"
-            fontWeight="font-bold"
-            fontColor="text-content"
-            fontSize="text-[16px]"
-            hoverColor="hover:text-black"
-          >
-            {(pathname === '/mypage' || myPageImageMatch) && <UnderBar layoutId="underBar" margin="mt-1" />}
-          </LinkButton>
-        </Link>
+        <LinkButton
+          text="앨범"
+          fontWeight="font-bold"
+          fontColor="text-content"
+          fontSize="text-[16px]"
+          hoverColor="hover:text-black"
+          onClick={() => handleNavigate('/mypage')}
+        >
+          {(pathname === '/mypage' || myPageImageMatch) && <UnderBar layoutId="underBar" margin="mt-1" />}
+        </LinkButton>
 
-        <Link to="/mypage/board">
-          <LinkButton
-            text="보드"
-            fontWeight="font-bold"
-            fontColor="text-content"
-            fontSize="text-[16px]"
-            hoverColor="hover:text-black"
-          >
-            {(pathname === '/mypage/board' || boardImageMatch || boardDetailMatch) && (
-              <UnderBar layoutId="underBar" margin="mt-1" />
-            )}
-          </LinkButton>
-        </Link>
+        <LinkButton
+          text="보드"
+          fontWeight="font-bold"
+          fontColor="text-content"
+          fontSize="text-[16px]"
+          hoverColor="hover:text-black"
+          onClick={() => handleNavigate('/mypage/board')}
+        >
+          {(pathname === '/mypage/board' || boardImageMatch || boardDetailMatch) && (
+            <UnderBar layoutId="underBar" margin="mt-1" />
+          )}
+        </LinkButton>
 
-        <Link to="/mypage/post">
-          <LinkButton
-            text="게시물"
-            fontWeight="font-bold"
-            fontColor="text-content"
-            fontSize="text-[16px]"
-            hoverColor="hover:text-black"
-          >
-            {pathname === '/mypage/post' && <UnderBar layoutId="underBar" margin="mt-1" />}
-          </LinkButton>
-        </Link>
+        <LinkButton
+          text="게시물"
+          fontWeight="font-bold"
+          fontColor="text-content"
+          fontSize="text-[16px]"
+          hoverColor="hover:text-black"
+          onClick={() => handleNavigate('/mypage/post')}
+        >
+          {pathname === '/mypage/post' && <UnderBar layoutId="underBar" margin="mt-1" />}
+        </LinkButton>
 
-        <Link to="/mypage/bookmark">
-          <LinkButton
-            text="북마크"
-            fontWeight="font-bold"
-            fontColor="text-content"
-            fontSize="text-[16px]"
-            hoverColor="hover:text-black"
-          />
+        <LinkButton
+          text="북마크"
+          fontWeight="font-bold"
+          fontColor="text-content"
+          fontSize="text-[16px]"
+          hoverColor="hover:text-black"
+          onClick={() => handleNavigate('/mypage/bookmark')}
+        >
           {pathname === '/mypage/bookmark' && <UnderBar layoutId="underBar" margin="mt-1" />}
-        </Link>
+        </LinkButton>
       </div>
 
       {/* 앨범 */}
       {(pathname === '/mypage' || isAlbumDetail) && (
         <div className="flex flex-col items-center mt-8 h-auto">
           {albums.map((album) => (
-            <MyImageTemplate key={album.id} images={album.images} />
+            <MyImageTemplateNew key={album.id} images={album.images} />
           ))}
         </div>
       )}
@@ -181,7 +178,7 @@ function MyPage() {
 
       {(boardImageMatch || isBoardDetail) && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyImageTemplate images={filteredImages} />
+          <MyImageTemplateNew images={filteredImages} />
         </div>
       )}
 
