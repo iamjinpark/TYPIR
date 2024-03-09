@@ -23,8 +23,10 @@ const Profile = ({ userName }) => {
       <button onClick={handleOpenModal} className="ml-auto mr-[15px]">
         <img src="/images/plus.svg" className="w-[18px]"/>
       </button>
-        {isOpen && <UserModal onClose={handleCloseModal} />}
-        {/* {isOpen && <WriterModal onClose={handleCloseModal}/>} */}
+        <div className="absolute z-50">
+          {/* {isOpen && <UserModal onClose={handleCloseModal} />} */}
+          {isOpen && <WriterModal onClose={handleCloseModal}/>}
+        </div>
     </div>
   );
 };
