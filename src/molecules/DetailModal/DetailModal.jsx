@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const DetailModal = ({ onClose }) => {
   const [showBoardModal, setShowBoardModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
   const openBoardModal = () => {
     setShowBoardModal(true);
