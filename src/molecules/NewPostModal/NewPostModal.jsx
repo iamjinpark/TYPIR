@@ -3,10 +3,17 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNewPostModalStore } from '@/zustand/useStore';
 import { useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function NewPostModal({ top, right, bottom, bgColor = 'bg-white', border = 'border', showCloseIcon = true }) {
   const { isModalOpen, closeModal } = useNewPostModalStore();
   const modalRef = useRef();
+  const navigate = useNavigate();
+
+  const handleNavigate = (path) => {
+    navigate(path);
+    closeModal();
+  };
 
   useEffect(() => {
     // 모달 외부 클릭 닫기
@@ -64,8 +71,15 @@ function NewPostModal({ top, right, bottom, bgColor = 'bg-white', border = 'bord
             bgColor="bg-black"
             fontColor="text-white"
             fontSize="text-[14px]"
+            onClick={() => handleNavigate('/newstyle')}
           />
-          <StrokeButton text="커뮤니티에 글쓰기" width="w-[220px]" height="h-[50px]" fontSize="text-[14px]" />
+          <StrokeButton
+            text="커뮤니티에 글쓰기"
+            width="w-[220px]"
+            height="h-[50px]"
+            fontSize="text-[14px]"
+            onClick={() => handleNavigate('/mypage/newpost')}
+          />
         </div>
       </div>
     </div>
