@@ -7,8 +7,10 @@ import Comment from "@/molecules/Comment/Comment";
 import CommentWindow from "@/molecules/CommentWindow/CommentWindow";
 import Profile from "@/molecules/Profile/Profile";
 import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import pb from "@/api/pocketbase";
 
-const CommunityDetail = ({ count = 3 }) => {
+const CommunityDetail = ({ imageSrc, count = 3 }) => {
   const [likeCount, setLikeCount] = useState(() => {
     const savedCount = localStorage.getItem("likeCount")
     return savedCount ? parseInt(savedCount) : count;
@@ -43,13 +45,16 @@ const CommunityDetail = ({ count = 3 }) => {
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
 
+  console.log("detailPageImageSrc : ", imageSrc)
+
   return (
     <>
       {isMobile ? (
         <div className="w-[320px] mx-auto relative">
           <Profile />
           <div className="px-[15px] mt-[10px]">
-            <img src="/images/sampleImg.png"/>  {/* DB에서 뿌릴 이미지 */}
+            {/* <img src="/images/sampleImg.png"/>   */}
+            <img src={imageSrc}/>
             <div className="flex justify-between my-[10px]">
               <HeartButton onClick={(change) => handleLikeChange(change)} />
               <BookmarkButton />
