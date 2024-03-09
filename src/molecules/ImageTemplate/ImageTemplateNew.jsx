@@ -13,7 +13,7 @@ const ImageTemplate = ({ boardText, margin = 'mt-[15px]', data = images, layoutI
   useResizeUpdateView();
 
   const onBoxClicked = (imageId) => {
-    const category = searchParams.get('category');
+    const category = searchParams.get('category') || 'all';
     if (location.pathname.endsWith('/style')) {
       navigate(`/style/detail/${imageId}?category=${category}`); //습의 시간 가지기!
     } else if (location.pathname.endsWith('/mypage')) {

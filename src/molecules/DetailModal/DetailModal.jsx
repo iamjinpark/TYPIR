@@ -3,12 +3,12 @@ import ModalButton from '@/atoms/ModalButton/ModalButton';
 import { useState } from 'react';
 import BoardSaveModal from '../BoardSaveModal/BoardSaveModal';
 import ShareModal from '../ShareModal/ShareModal';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const DetailModal = ({ onClose }) => {
+const DetailModal = ({ onClose, item }) => {
   const [showBoardModal, setShowBoardModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
   const openBoardModal = () => {
     setShowBoardModal(true);
@@ -23,11 +23,9 @@ const DetailModal = ({ onClose }) => {
     setShowShareModal(false);
   };
 
-  const moveToNewBoard = () => {
+  const moveToNewBoard = (imageId) => {
     navigate('/style/newBoard');
   };
-
-  const handleSaveBoard = () => {};
 
   return (
     <div className="relative w-[290px] h-[200px] top-[16px] left-[16px] xs:w-[380px] xs:h-[230px] xs:top-[16px] xs:left-[16px] border border-black rounded-xl flex justify-center items-center bg-white ">
