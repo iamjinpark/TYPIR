@@ -1,43 +1,59 @@
 import { useEffect, useState } from "react";
 
-const CommentWindow = ({ onAddComment }) => {
+const CommentWindow = ({ onAddComment, imageId }) => {
   const [text, setText] = useState("")
 
   // const [comments, setComments] = useState([])
-  const [comments, setComments] = useState(() => {
-    const savedComment = localStorage.getItem("comments")
-    return savedComment ? JSON.parse(savedComment) : []
-  })
+  // const [comments, setComments] = useState(() => {
+  //   const savedComment = localStorage.getItem("comments")
+  //   return savedComment ? JSON.parse(savedComment) : []
+  // })
 
-  const handleInputChange = (e) => {
+  // const handleInputChange = (e) => {
+  //   setText(e.target.value)
+  // }
+
+  // const handleAddComment = () => {
+  //   if (text.trim() !== "") {
+  //     const newComment = {
+  //       userName: "User", // DB에서 받아오기
+  //       text: text,
+  //       daysAgo: "방금 전",
+  //     };
+  //     onAddComment(newComment)
+  //     setComments(prev => [...prev, newComment])
+  //     setText("")
+
+  //     localStorage.setItem("comments", JSON.stringify([...comments, newComment]))
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   const savedComments = localStorage.getItem("comments")
+  //   if (savedComments) {
+  //     setComments(JSON.parse(savedComments))
+  //   }
+  // }, [])
+
+  // const handleEnterPress = (e) => {
+  //   if (e.key === "Enter") {
+  //     handleAddComment()
+  //   }
+  // }
+
+  const handleInputChange = e => {
     setText(e.target.value)
   }
 
-  const handleAddComment = () => {
-    if (text.trim() !== "") {
+  const handleEnterPress = e => {
+    if (e.key === "Enter" && text.trim() !== "") {
       const newComment = {
-        userName: "User", // DB에서 받아오기
+        userName : "User",
         text: text,
-        daysAgo: "방금 전",
-      };
-      onAddComment(newComment)
-      setComments(prev => [...prev, newComment])
+        time: new Date().toISOString(),
+      }
+      onAddComment(newComment, imageId)
       setText("")
-
-      localStorage.setItem("comments", JSON.stringify([...comments, newComment]))
-    }
-  }
-
-  useEffect(() => {
-    const savedComments = localStorage.getItem("comments")
-    if (savedComments) {
-      setComments(JSON.parse(savedComments))
-    }
-  }, [])
-
-  const handleEnterPress = (e) => {
-    if (e.key === "Enter") {
-      handleAddComment()
     }
   }
 

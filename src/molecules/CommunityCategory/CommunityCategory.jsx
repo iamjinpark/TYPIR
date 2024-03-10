@@ -24,14 +24,7 @@ const CommunityCategory = ({ gap = 'gap-3' }) => {
 
   const imageSrc = styleData?.image; // 이미지
   const context = styleData?.context; // 텍스트
-
-  // console.log("categoryImageMatch : ", categoryImageMatch)
-  // console.log("layoutId : ", layoutId)
-  // console.log("styles : ", styles)
-  // console.log("styleData : ", styleData)
-
-  // console.log("imageSrc : ", imageSrc)
-  // console.log("context : ", context)
+  const imageId = styleData?.imageId; // 아이디
 
   useEffect(() => {
     async function fetchImage() {
@@ -68,7 +61,7 @@ const CommunityCategory = ({ gap = 'gap-3' }) => {
   };
 
   return (
-    <div className="template bg-blue-200">
+    <div className="template">
       <div className="mt-[5px] mb-[15px] w-full ">
         <ul className={`flex flex-row ${gap} font-serif `}>
           {CATEGORIES.map((category) => (
@@ -84,7 +77,7 @@ const CommunityCategory = ({ gap = 'gap-3' }) => {
         </ul>
         <CommunityImageTemplate data={filteredImages} />
         {/* <CommunityDetail imageSrc={imageSrc}/> */}
-        {categoryImageMatch && <CommunityDetail imageSrc={imageSrc} context={context} />}
+        {categoryImageMatch && <CommunityDetail imageSrc={imageSrc} context={context} imageId={imageId}/>}
       </div>
     </div>
   );

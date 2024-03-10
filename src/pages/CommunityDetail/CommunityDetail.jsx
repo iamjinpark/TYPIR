@@ -8,37 +8,66 @@ import CommentWindow from '@/molecules/CommentWindow/CommentWindow';
 import Profile from '@/molecules/Profile/Profile';
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import pb from '@/api/pocketbase';
 
-const CommunityDetail = ({ context, count = 3 }) => {
+const CommunityDetail = () => {
   const location = useLocation();
   const imageSrc = location.state?.imageSrc;
+  const context = location.state?.context;
+  const imageId = location.state?.imageId
 
-  console.log('커뮤니티 디테일 실행 확인');
-  console.log('DetailImageSrc : ', imageSrc);
-  const [likeCount, setLikeCount] = useState(() => {
-    const savedCount = localStorage.getItem('likeCount');
-    return savedCount ? parseInt(savedCount) : count;
-  });
+  console.log("location : ", location)
+  console.log("imageSrc : ", imageSrc)
+  console.log("context : ", context)
+  console.log("imageId : ", imageId)
 
-  const [comment, setComment] = useState(() => {
-    const savedComment = localStorage.getItem('comments');
-    return savedComment ? JSON.parse(savedComment) : [];
-  });
+  const [comment, setComment] = useState([])
+  const [likeCount, setLikeCount] = useState(0)
 
-  const handleLikeChange = (change) => {
-    setLikeCount((prevCount) => prevCount + change);
-  };
-
-  const handleAddComment = (newComment) => {
-    const updatedComment = [...comment, newComment];
-    setComment(updatedComment);
-    localStorage.setItem('comments', JSON.stringify(updatedComment));
-  };
-
+  // 댓글 & 좋아요
   useEffect(() => {
-    localStorage.setItem('likeCount', likeCount.toString());
-  }, [likeCount]);
+    const allComments = JSON.parse(localStorage.getItem("comment") || "{}")
+    const allLikes = JSON.parse(localStorage.getItem("like") || "{}")
+
+    // 댓글
+    if (allComments[imageId]) {
+      setComment(allComments[imageId])
+    } else {
+      setComment([])
+    }
+
+    // 좋아요
+    if (allLikes[imageId]) {
+      setLikeCount(allLikes[imageId])
+    } else {
+      setLikeCount(0)
+    }
+  }, [imageId])
+
+  // 댓글 추가
+  const handleAddComment = newComment => {
+    const allComments = JSON.parse(localStorage.getItem("comment") || "{}")
+    const imageComment = allComments[imageId] || []
+    const updatedComment = [...imageComment, newComment]
+
+    allComments[imageId] = updatedComment
+    localStorage.setItem("comment", JSON.stringify(allComments))
+    setComment(updatedComment)
+  }
+
+  // 좋아요
+  const handleLikeChange = (change) => {
+    setLikeCount(prevCount => {
+      const newCount = prevCount + change
+      const like = JSON.parse(localStorage.getItem("like") || "{}")
+
+      like[imageId] = newCount
+      localStorage.setItem("like", JSON.stringify(like))
+
+      return newCount
+    })
+  }
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,9 +77,6 @@ const CommunityDetail = ({ context, count = 3 }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
-
-  console.log('detailPageImageSrc : ', imageSrc);
 
   return (
     <>
@@ -59,16 +85,16 @@ const CommunityDetail = ({ context, count = 3 }) => {
           <Profile />
           <div className="px-[15px] mt-[10px]">
             {/* <img src="/images/sampleImg.png"/>   */}
-            <img src={imageSrc} className="rounded-l-2xl w-full h-full object-cover" />
+            <img src={imageSrc} />
             <div className="flex justify-between my-[10px]">
-              <HeartButton onClick={(change) => handleLikeChange(change)} />
+              <HeartButton onClick={() => handleLikeChange(1)} />
               <BookmarkButton />
             </div>
             <div className="flex justify-between mb-[10px]">
               <HeartCount count={likeCount} />
               <CommentCount count={comment.length} />
             </div>
-            <TextContents fontSize="14" text={context} />
+            <TextContents text={context} />
             <div className="overflow-y-auto max-h-[160px]">
               <div className="w-full h-px bg-[#C4C4C4] my-[10px]"></div>
               {comment.map((comment, index) => (
@@ -77,7 +103,6 @@ const CommunityDetail = ({ context, count = 3 }) => {
                   key={index}
                   userName={comment.userName}
                   text={comment.text}
-                  time={comment.time}
                 />
               ))}
             </div>
@@ -97,7 +122,7 @@ const CommunityDetail = ({ context, count = 3 }) => {
               {/* DB에서 뿌릴 텍스트 */}
             </div>
             <div className="flex justify-between mx-[15px]">
-              <HeartButton onClick={(val) => handleLikeChange(val)} />
+              <HeartButton onClick={() => handleLikeChange(1)} />
               <BookmarkButton />
             </div>
             <div className="flex justify-between mx-15px my-2">
@@ -116,7 +141,7 @@ const CommunityDetail = ({ context, count = 3 }) => {
                 />
               ))}
             </div>
-            <CommentWindow onAddComment={handleAddComment} />
+            <CommentWindow onAddComment={handleAddComment} imageId={imageId}/>
           </div>
         </div>
       )}

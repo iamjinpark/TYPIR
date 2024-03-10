@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Masonry from 'react-masonry-css';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
-function CommunityImageTemplate({ boardText, margin = 'mt-[15px]', data = images, imageSrc }) {
+function CommunityImageTemplate({ boardText, margin = 'mt-[15px]', data = images, imageSrc, context }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -13,7 +13,7 @@ function CommunityImageTemplate({ boardText, margin = 'mt-[15px]', data = images
   const onBoxClicked = (imageId) => {
     const image = data.find((item) => item.id === imageId);
     if (location.pathname.endsWith('/community')) {
-      navigate(`/community/detail/${imageId}`, { state: { imageSrc: image.image } });
+      navigate(`/community/detail/${imageId}`, { state: { imageSrc: image.image, context: image.context, imageId: image.id} });
     }
   };
 
