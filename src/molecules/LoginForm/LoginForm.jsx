@@ -6,9 +6,12 @@ import SubmitButton from '@/atoms/SubmitButton/SubmitButton';
 import PocketBase from 'pocketbase';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '@/zustand/useUserStore';
+import MessageModal from '../MessageModal/MessageModal';
+import { useMessageModalStore } from '@/zustand/useStore';
 
 function LoginForm() {
   const PB_AP = import.meta.env.VITE_PB_API;
+  const pb = new PocketBase(PB_AP);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +22,7 @@ function LoginForm() {
   const navigate = useNavigate();
   const { setUser } = useUserStore(); // setUser 함수를 직접 구조분해 할당으로 추출
 
-  const pb = new PocketBase(PB_AP);
+  const { isModalOpen, openModal, closeModal } = useMessageModalStore();
 
   useEffect(() => {
     setIsFormValid(isEmailValid && isPasswordValid);
@@ -54,7 +57,6 @@ function LoginForm() {
       );
 
       console.log(useUserStore.getState().user); // 상태 확인 방법
-      alert('로그인 성공: ' + authData.record.isFirstLogin);
       console.log('Updating isFirstLogin for user ID:', authData.record.id);
       if (authData.record.isFirstLogin) {
         // isFirstLogin을 false로 바꾸는 코드 추가
@@ -64,7 +66,7 @@ function LoginForm() {
         navigate('/style');
       }
     } catch (error) {
-      alert('유효하지 않은 이메일 혹은 패스워드입니다.' + error.message);
+      openModal();
     }
   };
 
@@ -86,6 +88,7 @@ function LoginForm() {
       />
       <Checkbox className="mb-[44px] mt-[16px]" />
       <SubmitButton isFormValid={isFormValid} />
+      {isModalOpen && <MessageModal text="유효하지 않은 이메일 혹은 패스워드입니다." closeModal={closeModal} />}
     </form>
   );
 }
