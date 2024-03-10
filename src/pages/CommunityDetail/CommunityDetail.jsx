@@ -10,7 +10,9 @@ import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import pb from "@/api/pocketbase";
 
-const CommunityDetail = ({ imageSrc, count = 3 }) => {
+const CommunityDetail = ({ imageSrc, context, count = 3 }) => {
+  console.log("커뮤니티 디테일 실행 확인")
+  console.log("DetailImageSrc : ", imageSrc)
   const [likeCount, setLikeCount] = useState(() => {
     const savedCount = localStorage.getItem("likeCount")
     return savedCount ? parseInt(savedCount) : count;
@@ -50,7 +52,7 @@ const CommunityDetail = ({ imageSrc, count = 3 }) => {
   return (
     <>
       {isMobile ? (
-        <div className="w-[320px] mx-auto relative">
+        <div className="w-[320px] mx-auto relative" >
           <Profile />
           <div className="px-[15px] mt-[10px]">
             {/* <img src="/images/sampleImg.png"/>   */}
@@ -63,7 +65,7 @@ const CommunityDetail = ({ imageSrc, count = 3 }) => {
               <HeartCount count={likeCount} />
               <CommentCount count={comment.length} />
             </div>
-            <TextContents fontSize="14" text="this is content this is content✨"/>
+            <TextContents fontSize="14" text={context}/>
             <div className="overflow-y-auto max-h-[160px]">
               <div className="w-full h-px bg-[#C4C4C4] my-[10px]"></div>
               {comment.map((comment, index) => (
@@ -77,12 +79,12 @@ const CommunityDetail = ({ imageSrc, count = 3 }) => {
       ) : (
         <div className="flex gap-3 w-[100%] sm:w-[768px] h-[480px] justify-center items-center mt-5">
           <div className="w-[100%] sm:w-[350px] h-[480px] flex items-center justify-center ">
-            <img className="rounded-l-2xl w-full h-full" src="/images/test2.jpg" /> {/*DB에서 뿌릴 이미지*/}
+            <img className="rounded-l-2xl w-full h-full" src={imageSrc} /> {/*DB에서 뿌릴 이미지*/}
           </div>
           <div className="w-[100%] sm:w-[350px] h-[480px] relative flex flex-col">
             <Profile />
             <div className="px-[15px] my-[30px] w-[100%] sm:w-[350px] h-[90px]">
-              <TextContents text="this is content this is content this is content ✨" />{" "}
+              <TextContents text={context} />
               {/* DB에서 뿌릴 텍스트 */}
             </div>
             <div className="flex justify-between mx-[15px]">

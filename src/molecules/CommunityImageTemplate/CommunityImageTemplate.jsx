@@ -9,7 +9,7 @@ function CommunityImageTemplate({ boardText, margin = 'mt-[15px]', data = images
 
   // console.log("data : ", data)
 
-  const onBoxClicked = (imageId, imageUrl) => {
+  const onBoxClicked = (imageId) => {
 
     if (location.pathname.endsWith('/category')) {
       navigate(`/category/detail/${imageId}`);

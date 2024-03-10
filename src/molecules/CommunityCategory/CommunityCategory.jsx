@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { NavLink, useLocation, useMatch, useNavigate } from "react-router-dom";
 import CommunityImageTemplate from "../CommunityImageTemplate/CommunityImageTemplate";
 import CommunityDetail from "@/pages/CommunityDetail/CommunityDetail";
-import { useStyleStore } from '@/zustand/useStyleStore';
+import { useCommunityStore } from "@/zustand/useCommunityStore";
 
 const CATEGORIES = ["all", "simple", "daily", "vintage"]
 
@@ -18,15 +18,21 @@ const CommunityCategory = ({ gap = "gap-3" }) => {
   const searchParams = new URLSearchParams(location.search) // URLSearchParams 객체 : URL에서 쿼리 파라미터 추출
 
 
-  const categoryImageMatch = useMatch('/community/detail/:imageId');
-  const layoutId = categoryImageMatch?.params.imageId;
-  const styles = useStyleStore((state) => state.styles);
-  const imageSrc = styles.find((style) => style.id === layoutId)?.image;
+  const categoryImageMatch = useMatch('/community/detail/:imageId')
+  const layoutId = categoryImageMatch?.params.imageId
+  const styles = useCommunityStore((state) => state.styles)
+  const styleData = styles.find((style) => style.id === layoutId)
+
+  const imageSrc = styleData?.image // 이미지
+  const context = styleData?.context  // 텍스트
   
   console.log("categoryImageMatch : ", categoryImageMatch)
   console.log("layoutId : ", layoutId)
   console.log("styles : ", styles)
+  console.log("styleData : ", styleData)
+
   console.log("imageSrc : ", imageSrc)
+  console.log("context : ", context)
 
   useEffect(() => {
     async function fetchImage() {
@@ -35,9 +41,10 @@ const CommunityCategory = ({ gap = "gap-3" }) => {
         const stylesWithImages = styles.map(style => {
           const imageURL = getPbImageURL(style)
           
-          return {...style, image:imageURL}
+          return {...style, image:imageURL, context:style.context}
         })
-        useStyleStore.getState().setStyles(stylesWithImages)
+        useCommunityStore.getState().setStyles(stylesWithImages)
+
         setImages(stylesWithImages)
       } catch (err) {
         console.error("Error fetching images : ", err)
@@ -45,6 +52,8 @@ const CommunityCategory = ({ gap = "gap-3" }) => {
     }
     fetchImage()
   }, [])
+
+  
 
   useEffect(() => {
     const categoryParam = searchParams.get("category")
@@ -62,7 +71,7 @@ const CommunityCategory = ({ gap = "gap-3" }) => {
 
 
   return (
-    <div className="template">
+    <div className="template bg-blue-200">
       <div className="mt-[5px] mb-[15px] w-full ">
       <ul className={`flex flex-row ${gap} font-serif `}>
         {CATEGORIES.map(category => (
@@ -75,7 +84,7 @@ const CommunityCategory = ({ gap = "gap-3" }) => {
       </ul>
       <CommunityImageTemplate data={filteredImages} />
       {/* <CommunityDetail imageSrc={imageSrc}/> */}
-      {categoryImageMatch && <CommunityDetail imageSrc={imageSrc}/>}
+      {categoryImageMatch && <CommunityDetail imageSrc={imageSrc} context={context}/>}
       </div>
     </div>
   );
