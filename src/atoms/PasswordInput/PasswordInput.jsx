@@ -46,8 +46,8 @@ const PasswordInput = ({
   const handleChange = (e) => {
     setInputValue(e.target.value);
     setIsTouched(true);
-    if (onChange) {
-      onChange(e); // 상위 컴포넌트로 변경 이벤트 전파
+    if (typeof onChange === 'function') {
+      onChange(e);
     }
   };
 
