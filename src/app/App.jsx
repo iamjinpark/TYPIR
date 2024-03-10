@@ -23,6 +23,7 @@ import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
 import Community from '@/pages/Community/Community';
 import CommunityDetail from '@/pages/CommunityDetail/CommunityDetail';
 import NewBoard from '@/pages/NewBoard/NewBoard';
+import NewStyle from '@/pages/NewStyle/NewStyle';
 
 function App() {
   const router = createBrowserRouter([
@@ -91,22 +92,30 @@ function App() {
                     {
                       path: ':boardText',
                       element: <ImageTemplate />,
-                      children: [
-                        {
-                          path: 'detail/:imageId',
-                          element: <DetailImage />,
-                        },
-                      ],
+                      // children: [
+                      //   {
+                      //     path: 'detail/:imageId',
+                      //     element: <DetailImage />,
+                      //   },
+                      // ],
                     },
                   ],
                 },
-                {
-                  path: 'detail/:imageId',
-                  element: <DetailImage />,
-                },
+                // {
+                //   path: 'detail/:imageId',
+                //   element: <DetailImage />,
+                // },
               ],
             },
+            {
+              path: 'newpost/newBoard',
+              element: <NewBoard />,
+            },
           ],
+        },
+        {
+          path: 'newstyle',
+          element: <NewStyle />,
         },
         {
           path: 'style',

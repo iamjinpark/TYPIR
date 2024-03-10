@@ -3,12 +3,14 @@ import TextContents from '../TextContents/TextContents';
 function CommonInput({
   width = 'w-[290px]',
   height = 'h-[45px]',
+  bgColor = 'bg-white',
   border = 'rounded-2xl',
   borderColor = 'border-content',
   text = 'label',
   onChange,
   value,
   placeholder = '',
+  disabled = false,
 }) {
   return (
     <div>
@@ -17,7 +19,8 @@ function CommonInput({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`${width} ${height} border ${border} ${borderColor} px-2 `}
+        disabled={disabled}
+        className={`${width} ${height} ${bgColor} border ${border} ${borderColor} px-2 `}
       ></input>
     </div>
   );
