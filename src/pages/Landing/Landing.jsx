@@ -4,12 +4,12 @@ import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
 import { useMatch } from 'react-router-dom';
 import { useStyleStore } from '@/zustand/useStyleStore';
 
-const Rending = () => {
+const Landing = () => {
   return (
-    <div className="template">
+    <div className="">
       <Category />
     </div>
   );
 };
 
-export default Rending;
+export default Landing;

@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import DetailImageFile from '../DetailImageFile/DetailImageFile';
 
 const FileInput = () => {
   const [image, setImage] = useState(null); // 단일 이미지 상태 관리
@@ -35,6 +36,7 @@ const FileInput = () => {
           </svg>
         </div>
       )}
+      <DetailImageFile />
     </div>
   );
 };

@@ -1,23 +1,37 @@
+import Logo from '@/atoms/Logo/Logo';
+import Bar from '@/atoms/Bar/Bar';
+import LinkButton from '@/atoms/LinkButton/LinkButton';
+import NewPostModal from '../NewPostModal/NewPostModal';
+import SelectPageModal from '../SelectPageModal/SelectPageModal';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import SelectPageModal from '../SelectPageModal/SelectPageModal';
-import Logo from '@/atoms/Logo/Logo';
-import LinkButton from '@/atoms/LinkButton/LinkButton';
-import { useSelectCategoryStore } from '@/zustand/useStore';
 import { useNavigate } from 'react-router-dom';
-import Bar from '@/atoms/Bar/Bar';
+import { useNewPostModalStore, useProfileStore, useSelectCategoryStore } from '@/zustand/useStore';
 import { useUserStore } from '@/zustand/useUserStore';
 
 function Header() {
+  const { logoutUser } = useUserStore();
   const navigate = useNavigate();
-  const { isModalOpen, openModal, closeModal } = useSelectCategoryStore();
+
+  /* SelectPage 모달 상태관리 */
+  const {
+    isModalOpen: isCategoryModalOpen,
+    openModal: openCategoryModal,
+    closeModal: closeCategoryModal,
+  } = useSelectCategoryStore();
+
+  /* NewPost 모달 상태관리 */
+  const {
+    isModalOpen: isNewPostModalOpen,
+    openModal: openNewPostModal,
+    closeModal: closeNewPostModal,
+  } = useNewPostModalStore();
 
   const handleNavigate = (path) => {
     navigate(path);
-    closeModal();
+    closeCategoryModal();
+    closeNewPostModal();
   };
-
-  const { logoutUser } = useUserStore(); // setUser 함수를 직접 구조분해 할당으로 추출
 
   return (
     <div
@@ -35,7 +49,9 @@ function Header() {
             fontSize="text-[13px]"
             hoverColor="hover:text-black"
             hoverScale=""
-            onClick={() => handleNavigate('/mypage/newpost')}
+            onClick={() => {
+              openNewPostModal();
+            }}
           />
           <Bar color="bg-black" />
           <LinkButton
@@ -81,8 +97,9 @@ function Header() {
         </div>
       </div>
 
-      <FontAwesomeIcon icon={faBars} size="lg" onClick={openModal} className="sm:hidden" />
-      {isModalOpen && <SelectPageModal />}
+      <FontAwesomeIcon icon={faBars} size="lg" onClick={openCategoryModal} className="sm:hidden" />
+      {isCategoryModalOpen && <SelectPageModal />}
+      {isNewPostModalOpen && <NewPostModal top="top-[35px]" right="right-[25px]" />}
     </div>
   );
 }

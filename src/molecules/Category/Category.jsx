@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import { NavLink, useSearchParams, useLocation } from 'react-router-dom';
 import { getPbImage } from '@/utils';
 import pb from '@/api/pocketbase';
-import ImageTemplate from '../ImageTemplate/ImageTemplate';
-import UserModal from '../UserModal/UserModal';
-import ShareModal from '../ShareModal/ShareModal';
+// import ImageTemplate from '../ImageTemplate/ImageTemplate';
+import ImageTemplate from '../ImageTemplate/ImageTemplateNew';
 import { useStyleStore } from '@/zustand/useStyleStore';
 import { useMatch } from 'react-router-dom';
 import DetailImage from '../DetailImage/DetailImage';
@@ -22,7 +21,6 @@ const Category = ({ gap = 'gap-3' }) => {
 
   const categoryImageMatch = useMatch('/style/detail/:imageId');
   const layoutId = categoryImageMatch?.params.imageId;
-  const isStyleDetail = categoryImageMatch != null;
   const styles = useStyleStore((state) => state.styles);
   const imageSrc = styles.find((style) => style.id === layoutId)?.image;
 
@@ -53,9 +51,9 @@ const Category = ({ gap = 'gap-3' }) => {
     selectedCategory === 'all' ? data : data.filter((item) => item.category === selectedCategory);
 
   return (
-    <div className="template">
-      <div className="mt-[5px] mb-[15px] w-full">
-        <ul className={`flex flex-row ${gap} font-serif`}>
+    <>
+      <div className="mt-[5px] mb-[15px] w-full ">
+        <ul className={`flex flex-row ${gap} font-serif px-4`}>
           {CATEGORIES.map((category) => (
             <li
               key={category}
@@ -65,10 +63,10 @@ const Category = ({ gap = 'gap-3' }) => {
             </li>
           ))}
         </ul>
-        <ImageTemplate data={filteredCategoryData} margin="mt-[15px]" />
+        <ImageTemplate data={filteredCategoryData} />
         {categoryImageMatch && <DetailImage layoutId={layoutId} imageSrc={imageSrc} />}
       </div>
-    </div>
+    </>
   );
 };
 export default Category;

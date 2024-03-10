@@ -1,17 +1,18 @@
-import Masonry from 'react-masonry-css';
 import images from '/src/data/images.json';
 import { motion } from 'framer-motion';
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import Masonry from 'react-masonry-css';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
-function ImageTemplate({ boardText, margin = 'mt-[15px]', data = images }) {
+function CommunityImageTemplate({ boardText, margin = 'mt-[15px]', data = images }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
+
+  // console.log("data : ", data)
 
   const onBoxClicked = (imageId) => {
-    const category = searchParams.get('category');
-    if (location.pathname.endsWith('/style')) {
-      navigate(`/style/detail/${imageId}?category=${category}`); //습의 시간 가지기!
+
+    if (location.pathname.endsWith('/category')) {
+      navigate(`/category/detail/${imageId}`);
     } else if (location.pathname.endsWith('/mypage')) {
       navigate(`/mypage/detail/${imageId}`);
     } else if (location.pathname.startsWith('/mypage/board')) {
@@ -20,36 +21,43 @@ function ImageTemplate({ boardText, margin = 'mt-[15px]', data = images }) {
       navigate(`/mypage/newpost/detail/${imageId}`);
     } else if (location.pathname.includes('/newpost/board')) {
       navigate(`/mypage/newpost/board/${boardText}/detail/${imageId}`);
+    } else if (location.pathname.endsWith('/community')) {
+      console.log(`Navigating to post with ID: ${imageId}`)
+      navigate(`/community/detail/${imageId}`)
     }
+
   };
 
   const breakpointColumnsObj = {
     default: 4,
     639: 3,
-    450: 2,
+    500: 2,
   };
 
   return (
     <ul className={`max-w-screen-md h-auto bg-white ${margin}`}>
       <Masonry
         breakpointCols={breakpointColumnsObj}
-        className="my-masonry-grid flex gap-[12px] px-4"
+        className="my-masonry-grid flex gap-[12px]"
         columnClassName="my-masonry-grid_column flex flex-col items-center"
       >
         {data.map((item) => (
-          <motion.li key={item.id} layoutId={item.id + ''}>
-            <button type="button" onClick={() => onBoxClicked(item.id)}>
+          <motion.li key={item.id} layoutId={item.id + ''} >
+            <div className='mb-[15px] flex flex-col justify-center items-center'>
               <img
                 src={item.image}
                 alt={item.alt}
-                className={`w-[170px] bg-gray-100 rounded-2xl mb-[15px] cursor-zoom-in`}
+                className={`w-[200px] h-[270px] object-cover bg-gray-100 rounded-2xl cursor-zoom-in`}
                 style={{ height: `${item.height}px` }}
+                onClick={() => onBoxClicked(item.id)}
               />
-            </button>
+
+              <p className='w-[170px] text-center my-1 truncate font-serif'>{item.title}</p>
+            </div>
           </motion.li>
         ))}
       </Masonry>
     </ul>
   );
 }
-export default ImageTemplate;
+export default CommunityImageTemplate;

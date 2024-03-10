@@ -1,25 +1,24 @@
 import CommunityCategory from "@/molecules/CommunityCategory/CommunityCategory";
 import SearchBar from "@/molecules/SearchBar/SearchBar";
-import { useMatch } from "react-router-dom";
-import CommunityDetail from "../CommunityDetail/CommunityDetail";
-import ImageTemplate from "@/molecules/ImageTemplate/ImageTemplate";
+import { Outlet, useMatch } from "react-router-dom";
 
 const Community = () => {
-  const categoryImageMatch = useMatch("/category/detail/:imageId")
-  const layoutId = categoryImageMatch?.params.imageId
 
-
+  // const isDetailPage = useMatch("/community/detail/:imageId")
 
   return (
-    <div>
-      <div className="flex justify-center">
-        <CommunityCategory />
+    <>
+      <div className="flex relative bg-red-200">
         <SearchBar />
+        {/* {!isDetailPage && <CommunityCategory />} */}
+        <CommunityCategory />
+        <Outlet />
       </div>
-      {categoryImageMatch ? <CommunityDetail layoutId={layoutId} /> : null}
-      <ImageTemplate />
-    </div>
+    </>
   );
 };
 
 export default Community;
+
+// 주석을 해제하면 ui 유지 O 사진 연동 X
+// 현재 코드에서는 ui 유지 X 사진 연동 O
