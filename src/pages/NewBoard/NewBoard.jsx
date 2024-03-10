@@ -8,6 +8,7 @@ import DetailImageFile from '@/molecules/DetailImageFile/DetailImageFile';
 import CategoryButton from '@/molecules/CategoryButton/CategoryButton';
 import { useLocation } from 'react-router-dom';
 import { useBoardInputStore } from '@/zustand/useStyleStore';
+import StrokeButton from '@/atoms/StrokeButton/StrokeButton';
 
 const NewBoard = () => {
   const location = useLocation();
@@ -51,7 +52,7 @@ const NewBoard = () => {
           <div className="flex-1"></div>
         </div>
       </div>
-      <form className="  gap-[10px] xs:flex flex-row xs:gap-[50px] xs:mx-auto">
+      <div className="  gap-[10px] xs:flex flex-row xs:gap-[50px] xs:mx-auto">
         <FileInput imageSrc={imageSrc} />
 
         <div className="flex flex-col gap-2 xs:gap-4 justify-center">
@@ -69,8 +70,10 @@ const NewBoard = () => {
           <CommonTextarea value={content} onChange={handleContentChange} className="xs:h-[220px]" />
           <div className="flex flex-row justify-center gap-[30px] mt-[15px]">
             {/* 취소 버튼 */}
-            <CommonButton
-              fontSize="text-[14px]"
+            <StrokeButton
+              width="w-[70px]"
+              height="h-[30px]"
+              fontSize="text-[12px]"
               bgColor="bg-white"
               fontColor="text-black"
               text="취소"
@@ -80,7 +83,7 @@ const NewBoard = () => {
             <CommonButton fontSize="text-[14px]" onClick={handleSave} />
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

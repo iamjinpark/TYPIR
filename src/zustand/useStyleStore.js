@@ -40,3 +40,8 @@ export const useBoardInputStore = create((set) => ({
   setTitle: (title) => set({ title }),
   setContent: (content) => set({ content }),
 }));
+
+export const useCategoryStore = create((set) => ({
+  selectedCategory: 'all',
+  setSelectedCategory: (category) => set({ selectedCategory: category }),
+}));
