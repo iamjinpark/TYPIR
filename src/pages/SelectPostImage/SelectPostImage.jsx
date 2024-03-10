@@ -2,12 +2,10 @@ import LinkButton from '@/atoms/LinkButton/LinkButton';
 import UnderBar from '@/atoms/UnderBar/UnderBar';
 
 import MyImageTemplateNew from '@/molecules/MyImageTemplate/MyImageTemplateNew';
-import MyDetailImage from '@/molecules/MyDetailImage/MyDetailImage';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
 import { useLocation, useMatch, useNavigate, useParams, Link } from 'react-router-dom';
 import { useAlbumStore, useBoardStore, useFilteredImagesStore } from '@/zustand/useStore';
 import { useEffect } from 'react';
-import NewBoard from '../NewBoard/NewBoard';
 
 function SelectPostImage() {
   const { albums } = useAlbumStore();
@@ -17,25 +15,14 @@ function SelectPostImage() {
   const location = useLocation();
   const pathname = location.pathname;
 
-  /* 앨범 */
-  // const newPostImageMatch = useMatch('/mypage/newpost/detail/:imageId');
-  const newPostImageMatch = useMatch('/mypage/newpost/newBoard');
-  const layoutId = newPostImageMatch?.params.imageId;
-  const isAlbumDetail = newPostImageMatch != null;
-
-  console.log('newPostImageMatch:', newPostImageMatch);
-
-  /* 보드 */
-  const boardImageMatch = useMatch('/mypage/newpost/board/:boardText');
-  const boardDetailMatch = useMatch('/mypage/newpost/board/:boardText/detail/:imageId');
-  const boardlayoutId = boardDetailMatch?.params.imageId;
-  const isBoardDetail = boardDetailMatch != null;
+  const boardMatch = useMatch('/mypage/newpost/board/:boardText');
   const { boardText } = useParams();
 
   const onBoardClicked = (boardText) => {
     navigate(`/mypage/newpost/board/${boardText}`);
   };
 
+  /* 카테고리 바 경로 이동 */
   const handleNavigate = (path) => {
     navigate(path);
   };
@@ -60,7 +47,7 @@ function SelectPostImage() {
           hoverColor="hover:text-black"
           onClick={() => handleNavigate('/mypage/newpost')}
         >
-          {(pathname === '/mypage/newpost' || newPostImageMatch) && <UnderBar layoutId="post-underBar" margin="mt-1" />}
+          {pathname === '/mypage/newpost' && <UnderBar layoutId="post-underBar" margin="mt-1" />}
         </LinkButton>
 
         <LinkButton
@@ -71,25 +58,21 @@ function SelectPostImage() {
           hoverColor="hover:text-black"
           onClick={() => handleNavigate('/mypage/newpost/board')}
         >
-          {(pathname === '/mypage/newpost/board' || boardImageMatch || boardDetailMatch) && (
-            <UnderBar layoutId="post-underBar" margin="mt-1" />
-          )}
+          {(pathname === '/mypage/newpost/board' || boardMatch) && <UnderBar layoutId="post-underBar" margin="mt-1" />}
         </LinkButton>
       </div>
 
       {/* 앨범 */}
-      {(pathname === '/mypage/newpost' || isAlbumDetail) && (
+      {pathname === '/mypage/newpost' && (
         <div className="flex flex-col items-center mt-8 h-auto">
           {albums.map((album) => (
             <MyImageTemplateNew key={album.id} images={album.images} />
           ))}
-
-          {newPostImageMatch && <NewBoard layoutId={layoutId} />}
         </div>
       )}
 
       {/* 보드 */}
-      {pathname === '/mypage/newpost/board' && !boardImageMatch && !boardDetailMatch && (
+      {pathname === '/mypage/newpost/board' && (
         <div className="flex justify-center min-h-[600px]">
           <div
             className="grid sm:grid-cols-2 grid-cols-1 gap-[15px] justify-center my-6"
@@ -107,13 +90,11 @@ function SelectPostImage() {
         </div>
       )}
 
-      {(boardImageMatch || isBoardDetail) && (
+      {boardMatch && (
         <div className="flex flex-col items-center mt-8 h-auto">
           <MyImageTemplateNew images={filteredImages} />
         </div>
       )}
-
-      {boardDetailMatch && <MyDetailImage layoutId={boardlayoutId} />}
     </div>
   );
 }
