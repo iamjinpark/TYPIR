@@ -7,9 +7,6 @@ function CommunityImageTemplate({ boardText, margin = 'mt-[15px]', data = images
   const navigate = useNavigate();
   const location = useLocation();
 
-  // console.log("data : ", data)
-  console.log(imageSrc);
-
   const onBoxClicked = (imageId) => {
     const image = data.find((item) => item.id === imageId);
     if (location.pathname.endsWith('/community')) {
