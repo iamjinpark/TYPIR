@@ -6,8 +6,12 @@ import Backward from '@/atoms/Backward/Backward';
 import TextContents from '@/atoms/TextContents/TextContents';
 import DetailImageFile from '@/molecules/DetailImageFile/DetailImageFile';
 import CategoryButton from '@/molecules/CategoryButton/CategoryButton';
+import { useLocation } from 'react-router-dom';
 
 const NewBoard = () => {
+  const location = useLocation();
+  const imageSrc = location.state?.imageSrc;
+
   return (
     <div className="template">
       <div className="w-full flex flex-row justify-start items-center gap-8">
@@ -25,7 +29,7 @@ const NewBoard = () => {
         </div>
       </div>
       <div className="  gap-[10px] xs:flex flex-row xs:gap-[50px] xs:mx-auto">
-        <FileInput />
+        <FileInput imageSrc={imageSrc} />
 
         <div className="flex flex-col gap-2 xs:gap-4 justify-center">
           <CategoryButton />

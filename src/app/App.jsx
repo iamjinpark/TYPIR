@@ -132,7 +132,7 @@ function App() {
               ],
             },
             {
-              path: 'newBoard',
+              path: 'newBoard/:imageId',
               element: <NewBoard />,
             },
           ],
