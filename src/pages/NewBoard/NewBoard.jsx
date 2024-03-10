@@ -7,10 +7,33 @@ import TextContents from '@/atoms/TextContents/TextContents';
 import DetailImageFile from '@/molecules/DetailImageFile/DetailImageFile';
 import CategoryButton from '@/molecules/CategoryButton/CategoryButton';
 import { useLocation } from 'react-router-dom';
+import { useBoardInputStore } from '@/zustand/useStyleStore';
 
 const NewBoard = () => {
   const location = useLocation();
   const imageSrc = location.state?.imageSrc;
+
+  const { title, content, setTitle, setContent } = useBoardInputStore();
+
+  // 제목 상태 업데이트
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
+
+  // 내용 상태 업데이트
+  const handleContentChange = (e) => {
+    setContent(e.target.value);
+  };
+
+  const handleCancel = () => {
+    // 취소 버튼을 클릭할 때 수행할 작업
+    console.log('취소');
+  };
+
+  const handleSave = () => {
+    // 저장 버튼을 클릭할 때 수행할 작업
+    console.log('pb로 데이터 전송');
+  };
 
   return (
     <div className="template">
@@ -28,19 +51,36 @@ const NewBoard = () => {
           <div className="flex-1"></div>
         </div>
       </div>
-      <div className="  gap-[10px] xs:flex flex-row xs:gap-[50px] xs:mx-auto">
+      <form className="  gap-[10px] xs:flex flex-row xs:gap-[50px] xs:mx-auto">
         <FileInput imageSrc={imageSrc} />
 
         <div className="flex flex-col gap-2 xs:gap-4 justify-center">
           <CategoryButton />
-          <CommonInput text="" placeholder="제목" border="rounded-2xl" borderColor="border-gray-200" />
-          <CommonTextarea className="xs:h-[220px]" />
+          {/* 제목 입력(input) 컴포넌트 */}
+          <CommonInput
+            text=""
+            value={title}
+            onChange={handleTitleChange}
+            placeholder="제목"
+            border="rounded-2xl"
+            borderColor="border-gray-200"
+          />
+          {/* 내용 입력(input) 컴포넌트 */}
+          <CommonTextarea value={content} onChange={handleContentChange} className="xs:h-[220px]" />
           <div className="flex flex-row justify-center gap-[30px] mt-[15px]">
-            <CommonButton fontSize="text-[14px]" bgColor="bg-white" fontColor="text-black" text="취소" />
-            <CommonButton fontSize="text-[14px]" />
+            {/* 취소 버튼 */}
+            <CommonButton
+              fontSize="text-[14px]"
+              bgColor="bg-white"
+              fontColor="text-black"
+              text="취소"
+              onClick={handleCancel}
+            />
+            {/* 저장 버튼 */}
+            <CommonButton fontSize="text-[14px]" onClick={handleSave} />
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

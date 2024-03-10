@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react';
 import DetailImageFile from '../DetailImageFile/DetailImageFile';
+import { useFileInputStore } from '@/zustand/useStyleStore';
 
 const FileInput = ({ imageSrc }) => {
-  const [image, setImage] = useState(null); // 단일 이미지 상태 관리
-  const [preview, setPreview] = useState(''); // 미리보기 URL 상태 관리
+  const { image, preview, setImage, setPreview } = useFileInputStore();
+
   const fileInputRef = useRef(null);
 
   const handleAddImage = (event) => {
