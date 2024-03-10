@@ -29,7 +29,7 @@ const DetailImage = ({ layoutId, imageSrc }) => {
       >
         <img src={imageSrc} alt="이미지 상세보기" className="w-full h-full object-cover rounded-2xl" />
         <div className="absolute bottom-4 right-4">
-          <DetailImageButton />
+          <DetailImageButton imageSrc={imageSrc} />
         </div>
       </motion.div>
     </div>

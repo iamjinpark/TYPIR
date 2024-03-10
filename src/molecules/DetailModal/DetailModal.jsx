@@ -3,9 +3,9 @@ import ModalButton from '@/atoms/ModalButton/ModalButton';
 import { useState } from 'react';
 import BoardSaveModal from '../BoardSaveModal/BoardSaveModal';
 import ShareModal from '../ShareModal/ShareModal';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 
-const DetailModal = ({ onClose, item }) => {
+const DetailModal = ({ onClose, item, imageSrc }) => {
   const [showBoardModal, setShowBoardModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const navigate = useNavigate();
@@ -23,8 +23,13 @@ const DetailModal = ({ onClose, item }) => {
     setShowShareModal(false);
   };
 
+  const ImageMatch = useMatch('/style/detail/:imageId/?');
+  const layoutId = ImageMatch?.params.imageId;
+
   const moveToNewBoard = (imageId) => {
-    navigate('/style/newBoard');
+    if (location.pathname.startsWith('/style/detail')) {
+      navigate(`/style/newBoard/${imageId}`, { state: { imageSrc } });
+    }
   };
 
   return (
@@ -32,7 +37,12 @@ const DetailModal = ({ onClose, item }) => {
       <CloseButton onClose={onClose} />
       <ul className="flex gap-8 xs:gap-12">
         <ModalButton href="#" fileName="savePlus" buttonText="보드에 저장" onClick={openBoardModal} />
-        <ModalButton href="#" fileName="write" buttonText="글쓰기" onClick={moveToNewBoard} />
+        <ModalButton
+          fileName="write"
+          buttonText="글쓰기"
+          onClick={() => moveToNewBoard(layoutId)}
+          imageSrc={imageSrc}
+        />
         <ModalButton href="#" fileName="linkCopy" buttonText="공유하기" onClick={openShareModal} />
       </ul>
       {showBoardModal && <BoardSaveModal onClose={closeBoardModal} text="기존 보드에 추가" />}

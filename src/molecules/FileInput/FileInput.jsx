@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import DetailImageFile from '../DetailImageFile/DetailImageFile';
 
-const FileInput = () => {
+const FileInput = ({ imageSrc }) => {
   const [image, setImage] = useState(null); // 단일 이미지 상태 관리
   const [preview, setPreview] = useState(''); // 미리보기 URL 상태 관리
   const fileInputRef = useRef(null);
@@ -36,7 +36,7 @@ const FileInput = () => {
           </svg>
         </div>
       )}
-      <DetailImageFile />
+      <DetailImageFile imageSrc={imageSrc} />
     </div>
   );
 };

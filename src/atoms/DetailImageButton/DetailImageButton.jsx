@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import DetailModal from '@/molecules/DetailModal/DetailModal';
 
-const DetailImageButton = () => {
+const DetailImageButton = ({ imageSrc }) => {
   const [showModal, setShowModal] = useState(false);
   const openModal = () => {
     setShowModal(true);
@@ -33,7 +33,7 @@ const DetailImageButton = () => {
           </svg>
         </button>
       )}
-      {showModal && <DetailModal onClose={closeModal} />}
+      {showModal && <DetailModal onClose={closeModal} imageSrc={imageSrc} />}
     </>
   );
 };
