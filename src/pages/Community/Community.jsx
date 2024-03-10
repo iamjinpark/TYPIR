@@ -1,9 +1,8 @@
-import CommunityCategory from "@/molecules/CommunityCategory/CommunityCategory";
-import SearchBar from "@/molecules/SearchBar/SearchBar";
-import { Outlet, useMatch } from "react-router-dom";
+import CommunityCategory from '@/molecules/CommunityCategory/CommunityCategory';
+import SearchBar from '@/molecules/SearchBar/SearchBar';
+import { Outlet, useMatch } from 'react-router-dom';
 
 const Community = () => {
-
   // const isDetailPage = useMatch("/community/detail/:imageId")
 
   return (
@@ -12,7 +11,7 @@ const Community = () => {
         <SearchBar />
         {/* {!isDetailPage && <CommunityCategory />} */}
         <CommunityCategory />
-        <Outlet />
+        {/* <Outlet /> */}
       </div>
     </>
   );
