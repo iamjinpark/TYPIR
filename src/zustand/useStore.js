@@ -20,6 +20,12 @@ export const useDetailModalStore = create((set) => ({
   closeModal: () => set({ isModalOpen: false }),
 }));
 
+export const useMessageModalStore = create((set) => ({
+  isModalOpen: false,
+  openModal: () => set({ isModalOpen: true }),
+  closeModal: () => set({ isModalOpen: false }),
+}));
+
 export const useToggleStore = create((set) => ({
   isToggled: false,
   toggle: () => set((state) => ({ isToggled: !state.isToggled })),
