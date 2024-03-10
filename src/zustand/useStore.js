@@ -29,6 +29,12 @@ export const useDetailModalStore = create((set) => ({
   closeModal: () => set({ isModalOpen: false }),
 }));
 
+export const useMessageModalStore = create((set) => ({
+  isModalOpen: false,
+  openModal: () => set({ isModalOpen: true }),
+  closeModal: () => set({ isModalOpen: false }),
+}));
+
 /* 파일 선택 */
 export const useFileStore = create((set) => ({
   selectedFile: null,

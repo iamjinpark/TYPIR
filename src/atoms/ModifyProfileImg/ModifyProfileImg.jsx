@@ -14,10 +14,20 @@ const ModifyProfileImg = () => {
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      fileInputRef.current.click();
+    }
+  };
+
   return (
     <div
       className="w-32 h-32 bg-gray-300 flex flex-col items-center justify-center relative rounded-full cursor-pointer overflow-hidden"
       onClick={() => fileInputRef.current.click()}
+      tabIndex="0"
+      onKeyDown={handleKeyDown}
+      role="button"
+      aria-label="Change profile image"
     >
       <input type="file" ref={fileInputRef} onChange={handleAddImage} className="hidden" accept="image/*" />
       {preview ? (

@@ -7,6 +7,8 @@ import SubmitButton from '@/atoms/SubmitButton/SubmitButton';
 import Checkbox from '@/atoms/Checkbox/Checkbox';
 import PocketBase from 'pocketbase';
 import { useNavigate } from 'react-router-dom';
+import { useMessageModalStore } from '@/zustand/useStore';
+import MessageModal from '@/molecules/MessageModal/MessageModal';
 
 const pb = new PocketBase('https://pocket10.kro.kr');
 
@@ -19,6 +21,9 @@ const SignUp = () => {
   const [passwordValid, setPasswordValid] = useState(false);
   const [termsChecked, setTermsChecked] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+
+  const [modalMessage, setModalMessage] = useState('');
+  const { isModalOpen, openModal, closeModal } = useMessageModalStore();
 
   useEffect(() => {
     const passwordsMatch = password === confirmPassword && confirmPassword !== '';
@@ -35,6 +40,13 @@ const SignUp = () => {
   const handleEmailValidationChange = (isValid) => {
     setEmailValid(isValid);
     // 추가 작업 가능
+  };
+
+  const handleCloseModalAndNavigate = () => {
+    closeModal(); // 먼저 모달을 닫음
+    if (modalMessage === '축하합니다! 회원가입 완료되었습니다.') {
+      navigate('/splash/signin'); // 회원가입 성공 메시지인 경우에만 페이지 이동
+    }
   };
 
   // 이메일 중복 확인 함수
@@ -56,7 +68,8 @@ const SignUp = () => {
     const emailExists = await checkEmailExists(email);
 
     if (emailExists) {
-      alert('이미 존재하는 이메일 주소입니다. 다른 이메일 주소를 사용해주세요.');
+      setModalMessage('이미 존재하는 이메일 주소입니다. 다른 이메일 주소를 사용해주세요.');
+      openModal();
       return;
     }
 
@@ -78,11 +91,12 @@ const SignUp = () => {
 
     try {
       await pb.collection('users').create(data);
-      alert('축하합니다! 회원가입 완료되었습니다.');
-      navigate('/splash/signin');
+      setModalMessage('축하합니다! 회원가입 완료되었습니다.');
+      openModal();
     } catch (error) {
       console.error(error);
-      alert('이미 존재하는 이메일 주소입니다. 다른 이메일 주소를 사용해주세요.');
+      setModalMessage('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
+      openModal();
     }
   };
 
@@ -118,6 +132,7 @@ const SignUp = () => {
           onChange={(e) => setTermsChecked(e.target.checked)}
         />
         <SubmitButton isFormValid={isFormValid} text="회원가입" className="mt-31px" />
+        {isModalOpen && <MessageModal text={modalMessage} closeModal={handleCloseModalAndNavigate} />}
       </form>
       <AccountActionLink text="로그인" />
     </div>
