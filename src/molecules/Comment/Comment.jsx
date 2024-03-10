@@ -1,7 +1,6 @@
 import TimeForToday from "@/atoms/TimeForToday/TimeForToday";
 
 const Comment = ({ userName, text, time }) => {
-  console.log(time)
   return (
     <div className="flex items-center mb-[10px] mx-0 sm:mx-[15px]">
       <img src="/images/profile.svg" className="w-[35px] h-[35px]"/>
