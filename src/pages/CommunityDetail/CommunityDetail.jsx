@@ -53,19 +53,29 @@ const CommunityDetail = () => {
     localStorage.setItem("comment", JSON.stringify(allComments))
     setComment(updatedComment)
   }
+  
+  const handleLikeChange = (change, imageId) => {
+    console.log("handleLikeChange")
+    setLikeCount(prev => {
+      const allLikes = JSON.parse(localStorage.getItem("like") || "{}")
+      const count = (allLikes[imageId] || 0) + change 
+      
+      allLikes[imageId] = Math.max(0, count)
 
-  // 좋아요
-  const handleLikeChange = (change) => {
-    setLikeCount(prevCount => {
-      const newCount = prevCount + change
-      const like = JSON.parse(localStorage.getItem("like") || "{}")
-
-      like[imageId] = newCount
-      localStorage.setItem("like", JSON.stringify(like))
-
-      return newCount
+      return allLikes[imageId]
     })
+    const localStorageKey = `isClickedHeart_${imageId}`
+    const isClickedHeart = change > 0
+    localStorage.setItem(localStorageKey, JSON.stringify(isClickedHeart))
+    console.log("click2")
   }
+
+  useEffect(() => {
+    const allLikes = JSON.parse(localStorage.getItem("like") || "{}")
+    allLikes[imageId] = likeCount
+    localStorage.setItem("like", JSON.stringify(allLikes))
+  }, [likeCount, imageId])
+
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
 
@@ -87,7 +97,7 @@ const CommunityDetail = () => {
             {/* <img src="/images/sampleImg.png"/>   */}
             <img src={imageSrc} />
             <div className="flex justify-between my-[10px]">
-              <HeartButton onClick={() => handleLikeChange(1)} />
+              <HeartButton imageId={imageId} onClick={handleLikeChange}/>
               <BookmarkButton />
             </div>
             <div className="flex justify-between mb-[10px]">
@@ -122,7 +132,7 @@ const CommunityDetail = () => {
               {/* DB에서 뿌릴 텍스트 */}
             </div>
             <div className="flex justify-between mx-[15px]">
-              <HeartButton onClick={() => handleLikeChange(1)} />
+              <HeartButton imageId={imageId} onClick={handleLikeChange}/>
               <BookmarkButton />
             </div>
             <div className="flex justify-between mx-15px my-2">

@@ -1,45 +1,18 @@
+import { fetchUserProfile } from "@/utils/fetchUserProfile";
 import { useEffect, useState } from "react";
 
 const CommentWindow = ({ onAddComment, imageId }) => {
   const [text, setText] = useState("")
+  const [user, setUser] = useState(null)
 
-  // const [comments, setComments] = useState([])
-  // const [comments, setComments] = useState(() => {
-  //   const savedComment = localStorage.getItem("comments")
-  //   return savedComment ? JSON.parse(savedComment) : []
-  // })
-
-  // const handleInputChange = (e) => {
-  //   setText(e.target.value)
-  // }
-
-  // const handleAddComment = () => {
-  //   if (text.trim() !== "") {
-  //     const newComment = {
-  //       userName: "User", // DB에서 받아오기
-  //       text: text,
-  //       daysAgo: "방금 전",
-  //     };
-  //     onAddComment(newComment)
-  //     setComments(prev => [...prev, newComment])
-  //     setText("")
-
-  //     localStorage.setItem("comments", JSON.stringify([...comments, newComment]))
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   const savedComments = localStorage.getItem("comments")
-  //   if (savedComments) {
-  //     setComments(JSON.parse(savedComments))
-  //   }
-  // }, [])
-
-  // const handleEnterPress = (e) => {
-  //   if (e.key === "Enter") {
-  //     handleAddComment()
-  //   }
-  // }
+  useEffect(() => {
+    async function loadUserProfile() {
+      const profile = await fetchUserProfile()
+      setUser(profile)
+      console.log("profile : ", profile)
+    }
+    loadUserProfile()
+  }, [])
 
   const handleInputChange = e => {
     setText(e.target.value)
@@ -59,7 +32,8 @@ const CommentWindow = ({ onAddComment, imageId }) => {
 
   return (
     <div className="absolute bottom-0 w-[320px] h-[54px] bg-white flex items-center mx-0 sm:mx-[15px]">
-      <img src="/images/profile.svg" className="w-[35px] h-[35xpx] "/>
+      {/* <img src="/images/profile.svg" className="w-[35px] h-[35xpx] "/> */}
+      {/* {user && <img src={user.}/>} */}
       <input 
         type="text" 
         value={text}
