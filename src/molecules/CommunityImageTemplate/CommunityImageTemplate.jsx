@@ -3,29 +3,18 @@ import { motion } from 'framer-motion';
 import Masonry from 'react-masonry-css';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
-function CommunityImageTemplate({ boardText, margin = 'mt-[15px]', data = images }) {
+function CommunityImageTemplate({ boardText, margin = 'mt-[15px]', data = images, imageSrc }) {
   const navigate = useNavigate();
   const location = useLocation();
 
   // console.log("data : ", data)
+  console.log(imageSrc);
 
   const onBoxClicked = (imageId) => {
-
-    if (location.pathname.endsWith('/category')) {
-      navigate(`/category/detail/${imageId}`);
-    } else if (location.pathname.endsWith('/mypage')) {
-      navigate(`/mypage/detail/${imageId}`);
-    } else if (location.pathname.startsWith('/mypage/board')) {
-      navigate(`/mypage/board/${boardText}/detail/${imageId}`);
-    } else if (location.pathname.endsWith('/newpost')) {
-      navigate(`/mypage/newpost/detail/${imageId}`);
-    } else if (location.pathname.includes('/newpost/board')) {
-      navigate(`/mypage/newpost/board/${boardText}/detail/${imageId}`);
-    } else if (location.pathname.endsWith('/community')) {
-      console.log(`Navigating to post with ID: ${imageId}`)
-      navigate(`/community/detail/${imageId}`)
+    const image = data.find((item) => item.id === imageId);
+    if (location.pathname.endsWith('/community')) {
+      navigate(`/community/detail/${imageId}`, { state: { imageSrc: image.image } });
     }
-
   };
 
   const breakpointColumnsObj = {
@@ -42,8 +31,8 @@ function CommunityImageTemplate({ boardText, margin = 'mt-[15px]', data = images
         columnClassName="my-masonry-grid_column flex flex-col items-center"
       >
         {data.map((item) => (
-          <motion.li key={item.id} layoutId={item.id + ''} >
-            <div className='mb-[15px] flex flex-col justify-center items-center'>
+          <motion.li key={item.id} layoutId={item.id + ''}>
+            <div className="mb-[15px] flex flex-col justify-center items-center">
               <img
                 src={item.image}
                 alt={item.alt}
@@ -52,7 +41,7 @@ function CommunityImageTemplate({ boardText, margin = 'mt-[15px]', data = images
                 onClick={() => onBoxClicked(item.id)}
               />
 
-              <p className='w-[170px] text-center my-1 truncate font-serif'>{item.title}</p>
+              <p className="w-[170px] text-center my-1 truncate font-serif">{item.title}</p>
             </div>
           </motion.li>
         ))}
