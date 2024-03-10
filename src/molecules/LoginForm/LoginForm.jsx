@@ -35,6 +35,7 @@ function LoginForm() {
       const authData = await pb.collection('users').authWithPassword(email, password);
       //  zustand에 사용자 정보 저장
       setUser({
+        id: authData.record.id,
         userName: authData.record.username,
         email: email,
         profile: authData.record.profile,
@@ -47,6 +48,7 @@ function LoginForm() {
       localStorage.setItem(
         'user',
         JSON.stringify({
+          id: authData.record.id,
           userName: authData.record.username,
           email: email,
           profile: authData.record.profile,
