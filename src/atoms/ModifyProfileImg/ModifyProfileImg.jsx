@@ -1,16 +1,17 @@
+import { useUserStore } from '@/zustand/useUserStore';
 import React, { useState, useRef } from 'react';
 
 const ModifyProfileImg = () => {
-  const [image, setImage] = useState(null);
   const [preview, setPreview] = useState('');
   const fileInputRef = useRef(null);
+  const setImageInStore = useUserStore((state) => state.setImage);
 
   const handleAddImage = (event) => {
     const file = event.target.files[0];
     if (file) {
       const newImage = URL.createObjectURL(file);
-      setImage(file);
       setPreview(newImage);
+      setImageInStore(file);
     }
   };
 
