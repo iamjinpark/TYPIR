@@ -3,14 +3,15 @@ import UnderBar from '@/atoms/UnderBar/UnderBar';
 
 import MyImageTemplateNew from '@/molecules/MyImageTemplate/MyImageTemplateNew';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
-import { useLocation, useMatch, useNavigate, useParams, Link } from 'react-router-dom';
-import { useAlbumStore, useBoardStore, useFilteredImagesStore } from '@/zustand/useStore';
+import { useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
+import { useAlbumStore, useBoardStore, useFilteredBoardsStore } from '@/zustand/useStore';
 import { useEffect } from 'react';
 
 function SelectPostImage() {
   const { albums } = useAlbumStore();
   const { boards } = useBoardStore();
-  const { filteredImages, setFilteredImages } = useFilteredImagesStore();
+  const { filteredImages, setFilteredImages } = useFilteredBoardsStore();
+
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
@@ -27,13 +28,21 @@ function SelectPostImage() {
     navigate(path);
   };
 
-  // 보드 카테고리 필터링
+  /* 보드 필터 */
+  const currentBoard = boardMatch?.params.boardText;
+  let boardsToShow = [];
+
+  if (boardMatch) {
+    const selectedCategoryData = filteredImages.find(
+      (category) => category.name.toLowerCase() === currentBoard.toLowerCase(),
+    );
+    boardsToShow = selectedCategoryData?.images || []; // 이미지가 없는 경우 빈 배열을 할당
+  }
+
   useEffect(() => {
-    if (boardText) {
-      const newFilteredImages = boards.flatMap((board) => board.images.filter((image) => image.category === boardText));
-      setFilteredImages(newFilteredImages);
-    }
-  }, [boardText, boards, setFilteredImages]);
+    const boardsToShow = boards.filter((board) => board.name !== 'All');
+    useFilteredBoardsStore.setState({ filteredImages: boardsToShow });
+  }, [boards]);
 
   return (
     <div className="w-full h-auto min-h-[570px] bg-white mt-2 mb-8">
@@ -92,7 +101,7 @@ function SelectPostImage() {
 
       {boardMatch && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyImageTemplateNew images={filteredImages} />
+          <MyImageTemplateNew images={boardsToShow} />
         </div>
       )}
     </div>
