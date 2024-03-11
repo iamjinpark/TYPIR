@@ -48,13 +48,6 @@ const NewBoard = ({ imageId, category }) => {
     formData.append('category', `${selectedCategory}`);
     formData.append('context', `${context}`);
 
-    // const data = {
-    //   userId: userId,
-    //   title: `${title}`,
-    //   category: `${selectedCategory}`,
-    //   context: `${context}`,
-    // };
-
     await pb.collection('communityPage').create(formData);
     navigate('/community');
     setTitle('');
