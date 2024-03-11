@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-// 스타일 이미지
+// 스타일 페이지 이미지
 export const useStyleStore = create((set) => ({
   styles: [],
   setStyles: (data) => set({ styles: data }),
@@ -34,14 +34,17 @@ export const useBoardInputStore = create((set) => ({
   image: null,
   preview: '',
   title: '',
-  content: '',
+  context: '',
+  selectedCategory: 'all',
   setImage: (image) => set({ image }),
   setPreview: (preview) => set({ preview }),
   setTitle: (title) => set({ title }),
-  setContent: (content) => set({ content }),
-}));
-
-export const useCategoryStore = create((set) => ({
-  selectedCategory: 'all',
+  setContent: (context) => set({ context }),
   setSelectedCategory: (category) => set({ selectedCategory: category }),
 }));
+
+// 4. 카테고리
+// export const useCategoryStore = create((set) => ({
+//   selectedCategory: 'all',
+//   setSelectedCategory: (category) => set({ selectedCategory: category }),
+// }));

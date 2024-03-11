@@ -10,18 +10,17 @@ const DetailModal = ({ onClose, item, imageSrc }) => {
   const navigate = useNavigate();
   const { showBoardModal, showShareModal, setShowBoardModal, setShowShareModal } = useDetailModalStore();
 
+  // 보드 모달
   const openBoardModal = () => {
     setShowBoardModal(true);
   };
-
-  const openShareModal = () => {
-    setShowShareModal(true);
-  };
-
   const closeBoardModal = () => {
     setShowBoardModal(false);
   };
-
+  // 공유 모달
+  const openShareModal = () => {
+    setShowShareModal(true);
+  };
   const closeShareModal = () => {
     setShowShareModal(false);
   };

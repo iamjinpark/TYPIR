@@ -2,8 +2,8 @@ import { useState, useRef } from 'react';
 import DetailImageFile from '../DetailImageFile/DetailImageFile';
 import { useFileInputStore } from '@/zustand/useStyleStore';
 
-const FileInput = ({ imageSrc }) => {
-  const { image, preview, setImage, setPreview } = useFileInputStore();
+const FileInput = ({ imageSrc, image, setImage, preview, setPreview }) => {
+  // const { image, preview, setImage, setPreview } = useFileInputStore();
 
   const fileInputRef = useRef(null);
 
