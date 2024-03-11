@@ -33,7 +33,9 @@ const EmailInput = ({ className, onValidationChange, onChange }) => {
         value={email}
         onChange={(e) => {
           setEmail(e.target.value);
-          onChange(e.target.value);
+          if (onChange) {
+            onChange(e.target.value);
+          }
         }}
         className={`w-72 h-11 mt-1 border ${isValid ? 'border-black' : 'border-red-500'} block rounded-2xl px-4`}
         placeholder="email@example.com"
