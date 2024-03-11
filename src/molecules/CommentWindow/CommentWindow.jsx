@@ -1,39 +1,52 @@
-import { fetchUserProfile } from "@/utils/fetchUserProfile";
+import pb from "@/api/pocketbase";
 import { useEffect, useState } from "react";
 
-const CommentWindow = ({ onAddComment, imageId }) => {
+const CommentWindow = ({ onAddComment, profileImage, userData }) => {
   const [text, setText] = useState("")
-  const [user, setUser] = useState(null)
 
-  useEffect(() => {
-    async function loadUserProfile() {
-      const profile = await fetchUserProfile()
-      setUser(profile)
-      console.log("profile : ", profile)
-    }
-    loadUserProfile()
-  }, [])
+  // const [comments, setComments] = useState([])
+  const [comments, setComments] = useState(() => {
+    const savedComment = localStorage.getItem("comments")
+    return savedComment ? JSON.parse(savedComment) : []
+  })
 
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     setText(e.target.value)
   }
 
-  const handleEnterPress = e => {
-    if (e.key === "Enter" && text.trim() !== "") {
+  const handleAddComment = () => {
+    if (text.trim() !== "") {
       const newComment = {
-        userName : "User",
+        profileImg: profileImage,
+        userName: userData.userName, // DB에서 받아오기
         text: text,
-        time: new Date().toISOString(),
-      }
-      onAddComment(newComment, imageId)
+        daysAgo: "방금 전",
+      };
+      onAddComment(newComment)
+      setComments(prev => [...prev, newComment])
       setText("")
+
+      localStorage.setItem("comments", JSON.stringify([...comments, newComment]))
     }
   }
 
+  useEffect(() => {
+    const savedComments = localStorage.getItem("comments")
+    if (savedComments) {
+      setComments(JSON.parse(savedComments))
+    }
+  }, [])
+
+  const handleEnterPress = (e) => {
+    if (e.key === "Enter") {
+      handleAddComment()
+    }
+  }
+
+
   return (
     <div className="absolute bottom-0 w-[320px] h-[54px] bg-white flex items-center mx-0 sm:mx-[15px]">
-      {/* <img src="/images/profile.svg" className="w-[35px] h-[35xpx] "/> */}
-      {/* {user && <img src={user.}/>} */}
+      <img src={profileImage} className="w-[30px] h-[30px] rounded-full"/>
       <input 
         type="text" 
         value={text}

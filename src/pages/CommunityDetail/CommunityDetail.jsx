@@ -23,6 +23,31 @@ const CommunityDetail = () => {
   const [comment, setComment] = useState([])
   const [likeCount, setLikeCount] = useState(0)
 
+  const [user, setUser] = useState(null)
+  const [profileImage, setProfileImage] = useState("")
+  console.log("커뮤니티디테일유저 : ", user)
+
+  useEffect(() => {
+    const userDataJSON = localStorage.getItem("user")
+    
+    if (userDataJSON) {
+      const userData = JSON.parse(userDataJSON)
+      
+      setUser({
+        profile : userData.profile,
+        userName : userData.userName,
+        userId : userData.id
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      setProfileImage(`https://pocket10.kro.kr/api/files/_pb_users_auth_/${user.userId}/${user.profile}`)
+    }
+  }, [user])
+  console.log("profileImage : ", profileImage)
+
   // 댓글 & 좋아요
   useEffect(() => {
     const allComments = JSON.parse(localStorage.getItem("comment") || "{}")
@@ -111,12 +136,13 @@ const CommunityDetail = () => {
                 <Comment
                   onAddComment={handleAddComment}
                   key={index}
-                  userName={comment.userName}
+                  userData={user}
+                  profileImage={profileImage}
                   text={comment.text}
                 />
               ))}
             </div>
-            <CommentWindow onAddComment={handleAddComment} />
+            <CommentWindow onAddComment={handleAddComment} profileImage={profileImage} userData={user}/>
           </div>
           <div className="w-[320px] h-[55px]"></div>
         </div>
@@ -145,13 +171,14 @@ const CommunityDetail = () => {
                 <Comment
                   onAddComment={handleAddComment}
                   key={index}
-                  userName={comment.userName}
+                  userData={user}
+                  profileImage={profileImage}
                   text={comment.text}
                   time={comment.time}
                 />
               ))}
             </div>
-            <CommentWindow onAddComment={handleAddComment} imageId={imageId}/>
+            <CommentWindow onAddComment={handleAddComment} imageId={imageId} profileImage={profileImage} userData={user}/>
           </div>
         </div>
       )}
