@@ -4,20 +4,22 @@ import { useState } from 'react';
 import BoardSaveModal from '../BoardSaveModal/BoardSaveModal';
 import ShareModal from '../ShareModal/ShareModal';
 import { useNavigate, useMatch } from 'react-router-dom';
+import { useDetailModalStore } from '@/zustand/useStyleStore';
 
 const DetailModal = ({ onClose, item, imageSrc }) => {
-  const [showBoardModal, setShowBoardModal] = useState(false);
-  const [showShareModal, setShowShareModal] = useState(false);
   const navigate = useNavigate();
+  const { showBoardModal, showShareModal, setShowBoardModal, setShowShareModal } = useDetailModalStore();
 
+  // 보드 모달
   const openBoardModal = () => {
     setShowBoardModal(true);
   };
-  const openShareModal = () => {
-    setShowShareModal(true);
-  };
   const closeBoardModal = () => {
     setShowBoardModal(false);
+  };
+  // 공유 모달
+  const openShareModal = () => {
+    setShowShareModal(true);
   };
   const closeShareModal = () => {
     setShowShareModal(false);
