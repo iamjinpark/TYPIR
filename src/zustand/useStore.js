@@ -98,6 +98,14 @@ export const useFilteredBoardsStore = create((set) => ({
 export const usePostStore = create((set) => ({
   posts: [],
   setPosts: (posts) => set({ posts }),
+  userPosts: [],
+  setUserPosts: (userPosts) => set({ userPosts }),
+}));
+
+/* 게시물 작성자 필터 */
+export const useUserStore = create((set) => ({
+  userId: '',
+  setUserId: (userId) => set({ userId }),
 }));
 
 /* 마이 페이지 북마크 */

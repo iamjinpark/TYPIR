@@ -11,24 +11,28 @@ import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
 
 /* 데이터 */
 import pb from '@/api/pocketbase';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { fetchAlbumsData, fetchBoardsData, fetchBookmarksData, fetchPostsData } from '@/utils/getMyPageData';
 import {
   useAlbumStore,
   useBoardStore,
+  useFilteredBoardsStore,
   usePostStore,
+  useUserStore,
   useBookmarkStore,
   useAllBookmarkStore,
   useCustomBookmarkStore,
-  useFilteredBoardsStore,
 } from '@/zustand/useStore';
 
 function MyPage() {
   const { albums, setAlbums } = useAlbumStore();
+  /* 보드 스토어 */
   const { boards, setBoards } = useBoardStore();
   const { filteredImages, setFilteredImages } = useFilteredBoardsStore();
-  const { posts, setPosts } = usePostStore();
+  /* 게시물 스토어 */
+  const { posts, setPosts, userPosts, setUserPosts } = usePostStore();
+  const { userId, setUserId } = useUserStore();
   /* 북마크 스토어 */
   const { bookmarks, setBookmarks } = useBookmarkStore();
   const { allImages, setAllImages } = useAllBookmarkStore();
@@ -58,8 +62,8 @@ function MyPage() {
         useFilteredBoardsStore.setState({ filteredImages });
         /* 게시물 */
       } else if (path === '/mypage/post') {
-        const postData = await fetchPostsData();
-        setPosts(postData);
+        const posts = await fetchPostsData();
+        setPosts(posts);
         /* 북마크 */
       } else if (path === '/mypage/bookmark') {
         const bookmarks = await fetchBookmarksData();
@@ -76,6 +80,8 @@ function MyPage() {
     } finally {
       isFetching.current = false;
     }
+    const posts = await fetchPostsData();
+    console.log(posts.map((post) => post.username));
   }
   useEffect(() => {
     fetchData(pathname);
@@ -111,6 +117,17 @@ function MyPage() {
     const boardsToShow = boards.filter((board) => board.name !== 'All');
     useFilteredBoardsStore.setState({ filteredImages: boardsToShow });
   }, [boards]);
+
+  /* 게시물 필터 */
+  useEffect(() => {
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+
+    if (user && posts.length > 0) {
+      const filteredPosts = posts.filter((post) => post.username === user.id);
+      setUserPosts(filteredPosts);
+    }
+  }, [posts]);
 
   /* 북마크 필터 */
   const currentCategory = bookmarkBoardMatch?.params.boardText;
@@ -181,7 +198,7 @@ function MyPage() {
       {/* 게시물 */}
       {pathname === '/mypage/post' && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyPostTemplateNew key={posts} images={posts} title={posts} />
+          <MyPostTemplateNew key={userPosts} images={userPosts} title={userPosts} />
         </div>
       )}
 
