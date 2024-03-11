@@ -36,19 +36,26 @@ const NewBoard = ({ imageId, category }) => {
   async function handleSave(e) {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem('user'));
-    const userId = user.id;
+    const userName = user.id;
     const formData = new FormData();
-    const imageTest = formData.append('image', image);
-    console.log(imageTest);
 
-    const data = {
-      userId: userId,
-      title: `${title}`,
-      category: `${selectedCategory}`,
-      context: `${context}`,
-    };
+    const blob = await fetch(preview).then((res) => res.blob());
+    const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+    formData.append('image', file);
+    formData.append('username', userName);
+    formData.append('title', `${title}`);
+    formData.append('category', `${selectedCategory}`);
+    formData.append('context', `${context}`);
 
-    await pb.collection('communityPage').create(data);
+    // const data = {
+    //   userId: userId,
+    //   title: `${title}`,
+    //   category: `${selectedCategory}`,
+    //   context: `${context}`,
+    // };
+
+    await pb.collection('communityPage').create(formData);
+    navigate('/community');
   }
 
   return (
@@ -68,7 +75,7 @@ const NewBoard = ({ imageId, category }) => {
         </div>
       </div>
       <form className="  gap-[10px] xs:flex flex-row xs:gap-[50px] xs:mx-auto">
-        <FileInput imageSrc={imageSrc} />
+        <FileInput imageSrc={imageSrc} image={image} setImage={setImage} preview={preview} setPreview={setPreview} />
 
         <div className="flex flex-col gap-2 xs:gap-4 justify-center">
           <CategoryButton selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />

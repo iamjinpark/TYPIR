@@ -7,6 +7,7 @@ import ImageTemplate from '../ImageTemplate/ImageTemplateNew';
 import { useStyleStore } from '@/zustand/useStyleStore';
 import { useMatch } from 'react-router-dom';
 import DetailImage from '../DetailImage/DetailImage';
+import LoadingSpinner from '@/atoms/LoadingSpinner/LoadingSpinner';
 
 const CATEGORIES = ['all', 'simple', 'daily', 'vintage'];
 
@@ -26,7 +27,7 @@ const Category = ({ gap = 'gap-3' }) => {
 
   async function getData() {
     try {
-      const styles = await pb.collection('styles').getFullList();
+      const styles = await pb.collection('styles').getFullList({ sort: '-created' });
       const stylesWithImages = styles.map((style) => {
         const imageURL = getPbImage(style);
         return { ...style, image: imageURL };
@@ -45,7 +46,7 @@ const Category = ({ gap = 'gap-3' }) => {
     getData().then(setData);
   }, []);
   if (!data) {
-    return <p>로딩 중...</p>;
+    return <LoadingSpinner />;
   }
   const filteredCategoryData =
     selectedCategory === 'all' ? data : data.filter((item) => item.category === selectedCategory);
