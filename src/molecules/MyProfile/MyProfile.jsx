@@ -17,7 +17,6 @@ export default function MyProfile() {
   };
 
   useEffect(() => {
-    // LocalStorage에서 프로필 정보를 불러와 Zustand 스토어에 저장
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setProfiles([JSON.parse(storedUser)]);
@@ -25,16 +24,14 @@ export default function MyProfile() {
   }, [setProfiles]);
 
   if (profiles.length === 0) {
-    // 프로필 정보가 없는 경우
     return <div>Loading...</div>;
   }
 
-  const profile = profiles[0]; // 첫 번째 프로필 정보 사용
+  const profile = profiles[0];
   const imageUrl = getPbImage({
-    collectionId: '_pb_users_auth_', // 적절한 컬렉션 ID
-    // id: profile.id, // profile 객체에 id 속성이 있다고 가정
-    id: '7celmvekv3wfnm7', // profile 객체에 id 속성이 있다고 가정
-    image: profile.profile, // profile.profile이 이미지 파일명이라고 가정
+    collectionId: '_pb_users_auth_',
+    id: profile.id,
+    image: profile.profile,
   });
 
   return (

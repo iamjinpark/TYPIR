@@ -2,51 +2,47 @@ import LinkButton from '@/atoms/LinkButton/LinkButton';
 import UnderBar from '@/atoms/UnderBar/UnderBar';
 
 import MyImageTemplateNew from '@/molecules/MyImageTemplate/MyImageTemplateNew';
-import MyDetailImage from '@/molecules/MyDetailImage/MyDetailImage';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
-import { useLocation, useMatch, useNavigate, useParams, Link } from 'react-router-dom';
-import { useAlbumStore, useBoardStore, useFilteredImagesStore } from '@/zustand/useStore';
+import { useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
+import { useAlbumStore, useBoardStore, useFilteredBoardsStore } from '@/zustand/useStore';
 import { useEffect } from 'react';
-import NewBoard from '../NewBoard/NewBoard';
 
 function SelectPostImage() {
   const { albums } = useAlbumStore();
   const { boards } = useBoardStore();
-  const { filteredImages, setFilteredImages } = useFilteredImagesStore();
+  const { filteredImages, setFilteredImages } = useFilteredBoardsStore();
+
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
 
-  /* 앨범 */
-  // const newPostImageMatch = useMatch('/mypage/newpost/detail/:imageId');
-  const newPostImageMatch = useMatch('/mypage/newpost/newBoard');
-  const layoutId = newPostImageMatch?.params.imageId;
-  const isAlbumDetail = newPostImageMatch != null;
-
-  console.log('newPostImageMatch:', newPostImageMatch);
-
-  /* 보드 */
-  const boardImageMatch = useMatch('/mypage/newpost/board/:boardText');
-  const boardDetailMatch = useMatch('/mypage/newpost/board/:boardText/detail/:imageId');
-  const boardlayoutId = boardDetailMatch?.params.imageId;
-  const isBoardDetail = boardDetailMatch != null;
+  const boardMatch = useMatch('/mypage/newpost/board/:boardText');
   const { boardText } = useParams();
 
   const onBoardClicked = (boardText) => {
     navigate(`/mypage/newpost/board/${boardText}`);
   };
 
+  /* 카테고리 바 경로 이동 */
   const handleNavigate = (path) => {
     navigate(path);
   };
 
-  // 보드 카테고리 필터링
+  /* 보드 필터 */
+  const currentBoard = boardMatch?.params.boardText;
+  let boardsToShow = [];
+
+  if (boardMatch) {
+    const selectedCategoryData = filteredImages.find(
+      (category) => category.name.toLowerCase() === currentBoard.toLowerCase(),
+    );
+    boardsToShow = selectedCategoryData?.images || []; // 이미지가 없는 경우 빈 배열을 할당
+  }
+
   useEffect(() => {
-    if (boardText) {
-      const newFilteredImages = boards.flatMap((board) => board.images.filter((image) => image.category === boardText));
-      setFilteredImages(newFilteredImages);
-    }
-  }, [boardText, boards, setFilteredImages]);
+    const boardsToShow = boards.filter((board) => board.name !== 'All');
+    useFilteredBoardsStore.setState({ filteredImages: boardsToShow });
+  }, [boards]);
 
   return (
     <div className="w-full h-auto min-h-[570px] bg-white mt-2 mb-8">
@@ -60,7 +56,7 @@ function SelectPostImage() {
           hoverColor="hover:text-black"
           onClick={() => handleNavigate('/mypage/newpost')}
         >
-          {(pathname === '/mypage/newpost' || newPostImageMatch) && <UnderBar layoutId="post-underBar" margin="mt-1" />}
+          {pathname === '/mypage/newpost' && <UnderBar layoutId="post-underBar" margin="mt-1" />}
         </LinkButton>
 
         <LinkButton
@@ -71,25 +67,21 @@ function SelectPostImage() {
           hoverColor="hover:text-black"
           onClick={() => handleNavigate('/mypage/newpost/board')}
         >
-          {(pathname === '/mypage/newpost/board' || boardImageMatch || boardDetailMatch) && (
-            <UnderBar layoutId="post-underBar" margin="mt-1" />
-          )}
+          {(pathname === '/mypage/newpost/board' || boardMatch) && <UnderBar layoutId="post-underBar" margin="mt-1" />}
         </LinkButton>
       </div>
 
       {/* 앨범 */}
-      {(pathname === '/mypage/newpost' || isAlbumDetail) && (
+      {pathname === '/mypage/newpost' && (
         <div className="flex flex-col items-center mt-8 h-auto">
           {albums.map((album) => (
             <MyImageTemplateNew key={album.id} images={album.images} />
           ))}
-
-          {newPostImageMatch && <NewBoard layoutId={layoutId} />}
         </div>
       )}
 
       {/* 보드 */}
-      {pathname === '/mypage/newpost/board' && !boardImageMatch && !boardDetailMatch && (
+      {pathname === '/mypage/newpost/board' && (
         <div className="flex justify-center min-h-[600px]">
           <div
             className="grid sm:grid-cols-2 grid-cols-1 gap-[15px] justify-center my-6"
@@ -107,13 +99,11 @@ function SelectPostImage() {
         </div>
       )}
 
-      {(boardImageMatch || isBoardDetail) && (
+      {boardMatch && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyImageTemplateNew images={filteredImages} />
+          <MyImageTemplateNew images={boardsToShow} />
         </div>
       )}
-
-      {boardDetailMatch && <MyDetailImage layoutId={boardlayoutId} />}
     </div>
   );
 }

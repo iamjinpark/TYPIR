@@ -1,30 +1,38 @@
-/* UI */
-import ProfileImage from '@/atoms/ProfileImage/ProfileImage';
-import ProfileUserName from '@/atoms/ProfileUserName/ProfileUserName';
-import HandleLogo from '@/atoms/HandleLogo/HandleLogo';
-import HandleText from '@/atoms/HandleText/HandleText';
-import StrokeButton from '@/atoms/StrokeButton/StrokeButton';
-import LinkButton from '@/atoms/LinkButton/LinkButton';
-import UnderBar from '@/atoms/UnderBar/UnderBar';
+/* UI 컴포넌트 */
+import MyProfile from '@/molecules/MyProfile/MyProfile';
+import MyPageCategoryBar from '@/molecules/MyPageCategoryBar/MyPageCategoryBar';
 
 /* 템플릿 */
 import MyImageTemplateNew from '@/molecules/MyImageTemplate/MyImageTemplateNew';
 import MyDetailImage from '@/molecules/MyDetailImage/MyDetailImage';
-import MyPostTemplate from '@/molecules/MyPostTemplate/MyPostTemplate';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
+import MyPostTemplateNew from '@/molecules/MyPostTemplate/MyPostTemplateNew';
 import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
 
 /* 데이터 */
+import pb from '@/api/pocketbase';
 import { useEffect, useRef } from 'react';
 import { useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
-import { useAlbumStore, useBoardStore, useFilteredImagesStore, usePostStore } from '@/zustand/useStore';
-import { fetchAlbumsData, fetchBoardsData, fetchPostsData } from '@/utils/getMyPageData';
+import { fetchAlbumsData, fetchBoardsData, fetchBookmarksData, fetchPostsData } from '@/utils/getMyPageData';
+import {
+  useAlbumStore,
+  useBoardStore,
+  usePostStore,
+  useBookmarkStore,
+  useAllBookmarkStore,
+  useCustomBookmarkStore,
+  useFilteredBoardsStore,
+} from '@/zustand/useStore';
 
 function MyPage() {
   const { albums, setAlbums } = useAlbumStore();
   const { boards, setBoards } = useBoardStore();
-  const { filteredImages, setFilteredImages } = useFilteredImagesStore();
+  const { filteredImages, setFilteredImages } = useFilteredBoardsStore();
   const { posts, setPosts } = usePostStore();
+  /* 북마크 스토어 */
+  const { bookmarks, setBookmarks } = useBookmarkStore();
+  const { allImages, setAllImages } = useAllBookmarkStore();
+  const { customImages, setCustomImages } = useCustomBookmarkStore();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,120 +40,106 @@ function MyPage() {
 
   const isFetching = useRef(false);
 
-  async function getData() {
+  async function fetchData(path) {
     if (isFetching.current) return;
     isFetching.current = true;
 
     try {
-      const resolvedAlbumsWithImages = await fetchAlbumsData();
-      setAlbums(resolvedAlbumsWithImages);
+      if (path === '/mypage') {
+        /* 앨범 */
+        const resolvedAlbumsWithImages = await fetchAlbumsData();
+        setAlbums(resolvedAlbumsWithImages);
+        /* 보드 */
+      } else if (path === '/mypage/board') {
+        const boards = await fetchBoardsData();
+        setBoards(boards);
 
-      const resolvedBoardsWithImages = await fetchBoardsData();
-      setBoards(resolvedBoardsWithImages);
+        const filteredImages = boards.filter((b) => b.name !== 'All');
+        useFilteredBoardsStore.setState({ filteredImages });
+        /* 게시물 */
+      } else if (path === '/mypage/post') {
+        const postData = await fetchPostsData();
+        setPosts(postData);
+        /* 북마크 */
+      } else if (path === '/mypage/bookmark') {
+        const bookmarks = await fetchBookmarksData();
+        setBookmarks(bookmarks);
 
-      const postData = await fetchPostsData();
-      setPosts(postData); // 게시물 데이터를 상태에 저장
+        const allImages = bookmarks.find((b) => b.name === 'All')?.images || [];
+        const customImages = bookmarks.filter((b) => b.name !== 'All');
+
+        useAllBookmarkStore.setState({ allImages });
+        useCustomBookmarkStore.setState({ customImages });
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
       isFetching.current = false;
     }
   }
-
   useEffect(() => {
-    getData();
-  }, []);
+    fetchData(pathname);
+  }, [pathname]);
 
   /* 앨범 */
-  const myPageImageMatch = useMatch('/mypage/detail/:imageId');
-  const layoutId = myPageImageMatch?.params.imageId;
-  const isAlbumDetail = myPageImageMatch != null;
+  const myPageDetailMatch = useMatch('/mypage/detail/:imageId');
+  const layoutId = myPageDetailMatch?.params.imageId;
+  const isAlbumDetail = myPageDetailMatch != null;
 
   /* 보드 */
-  const boardImageMatch = useMatch('/mypage/board/:boardText');
+  const boardMatch = useMatch('/mypage/board/:boardText');
   const boardDetailMatch = useMatch('/mypage/board/:boardText/detail/:imageId');
   const boardlayoutId = boardDetailMatch?.params.imageId;
   const isBoardDetail = boardDetailMatch != null;
-  const { boardText } = useParams();
 
-  const handleNavigate = (path) => {
-    navigate(path);
-  };
+  /* 북마크 */
+  const bookmarkAllMatch = useMatch('/mypage/bookmark/field/all');
+  const bookmarkBoardMatch = useMatch('/mypage/bookmark/:boardText');
+
+  /* 보드 필터 */
+  const currentBoard = boardMatch?.params.boardText;
+  let boardsToShow = [];
+
+  if (boardMatch) {
+    const selectedCategoryData = filteredImages.find(
+      (category) => category.name.toLowerCase() === currentBoard.toLowerCase(),
+    );
+    boardsToShow = selectedCategoryData?.images || []; // 이미지가 없는 경우 빈 배열을 할당
+  }
+
+  useEffect(() => {
+    const boardsToShow = boards.filter((board) => board.name !== 'All');
+    useFilteredBoardsStore.setState({ filteredImages: boardsToShow });
+  }, [boards]);
+
+  /* 북마크 필터 */
+  const currentCategory = bookmarkBoardMatch?.params.boardText;
+  let imagesToShow;
+  if (bookmarkAllMatch) {
+    imagesToShow = allImages;
+  } else if (bookmarkBoardMatch) {
+    const selectedCategoryData = customImages.find(
+      (category) => category.name.toLowerCase() === currentCategory.toLowerCase(),
+    );
+    imagesToShow = selectedCategoryData?.images || [];
+  }
 
   const onBoardClicked = (boardText) => {
-    navigate(`/mypage/board/${boardText}`);
+    if (location.pathname.endsWith('/mypage/board')) {
+      navigate(`/mypage/board/${boardText}`);
+    } else if (location.pathname.endsWith('/mypage/bookmark')) {
+      navigate(`/mypage/bookmark/${boardText}`);
+    }
   };
 
-  // 보드 카테고리 필터링
-  useEffect(() => {
-    if (boardText) {
-      const newFilteredImages = boards.flatMap((board) => board.images.filter((image) => image.category === boardText));
-      setFilteredImages(newFilteredImages);
-    }
-  }, [boardText, boards, setFilteredImages]);
+  const onOverlapClicked = () => {
+    navigate(`/mypage/bookmark/field/all`);
+  };
 
   return (
     <div className="w-full h-auto min-h-[570px] bg-white mt-4 mb-8">
-      <div className="flex flex-col items-center p-3">
-        <ProfileImage editable={false} />
-        <ProfileUserName />
-        <div className="flex gap-1">
-          <HandleLogo />
-          <HandleText />
-        </div>
-        <div className="flex gap-4 mt-4">
-          <StrokeButton text="계정 관리" onClick={() => handleNavigate('/mypage/account')} />
-          <StrokeButton text="프로필 수정" onClick={() => handleNavigate('/mypage/editProfile')} />
-        </div>
-      </div>
-      {/* 카테고리 바 */}
-      <div className="flex justify-evenly pt-2">
-        <LinkButton
-          text="앨범"
-          fontWeight="font-bold"
-          fontColor="text-content"
-          fontSize="text-[16px]"
-          hoverColor="hover:text-black"
-          onClick={() => handleNavigate('/mypage')}
-        >
-          {(pathname === '/mypage' || myPageImageMatch) && <UnderBar layoutId="underBar" margin="mt-1" />}
-        </LinkButton>
-
-        <LinkButton
-          text="보드"
-          fontWeight="font-bold"
-          fontColor="text-content"
-          fontSize="text-[16px]"
-          hoverColor="hover:text-black"
-          onClick={() => handleNavigate('/mypage/board')}
-        >
-          {(pathname === '/mypage/board' || boardImageMatch || boardDetailMatch) && (
-            <UnderBar layoutId="underBar" margin="mt-1" />
-          )}
-        </LinkButton>
-
-        <LinkButton
-          text="게시물"
-          fontWeight="font-bold"
-          fontColor="text-content"
-          fontSize="text-[16px]"
-          hoverColor="hover:text-black"
-          onClick={() => handleNavigate('/mypage/post')}
-        >
-          {pathname === '/mypage/post' && <UnderBar layoutId="underBar" margin="mt-1" />}
-        </LinkButton>
-
-        <LinkButton
-          text="북마크"
-          fontWeight="font-bold"
-          fontColor="text-content"
-          fontSize="text-[16px]"
-          hoverColor="hover:text-black"
-          onClick={() => handleNavigate('/mypage/bookmark')}
-        >
-          {pathname === '/mypage/bookmark' && <UnderBar layoutId="underBar" margin="mt-1" />}
-        </LinkButton>
-      </div>
+      <MyProfile />
+      <MyPageCategoryBar />
 
       {/* 앨범 */}
       {(pathname === '/mypage' || isAlbumDetail) && (
@@ -155,10 +149,10 @@ function MyPage() {
           ))}
         </div>
       )}
-      {myPageImageMatch && <MyDetailImage layoutId={layoutId} />}
+      {myPageDetailMatch && <MyDetailImage layoutId={layoutId} />}
 
       {/* 보드 */}
-      {pathname === '/mypage/board' && !boardImageMatch && !boardDetailMatch && (
+      {pathname === '/mypage/board' && !boardMatch && (
         <div className="flex justify-center min-h-[600px]">
           <div
             className="grid sm:grid-cols-2 grid-cols-1 gap-[15px] justify-center my-6"
@@ -176,9 +170,9 @@ function MyPage() {
         </div>
       )}
 
-      {(boardImageMatch || isBoardDetail) && (
+      {(boardMatch || isBoardDetail) && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyImageTemplateNew images={filteredImages} />
+          <MyImageTemplateNew images={boardsToShow} />
         </div>
       )}
 
@@ -187,7 +181,7 @@ function MyPage() {
       {/* 게시물 */}
       {pathname === '/mypage/post' && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyPostTemplate key={posts} images={posts} title={posts} />
+          <MyPostTemplateNew key={posts} images={posts} title={posts} />
         </div>
       )}
 
@@ -198,18 +192,29 @@ function MyPage() {
             className="grid sm:grid-cols-2 grid-cols-1 gap-[15px] justify-center my-6"
             style={{ gridAutoRows: 'min-content' }}
           >
-            <div className="flex flex-col items-center h-[210px] mt-2">
-              <OverlapTemplate text={'All'} />
+            <div className="flex flex-col items-center h-[210px]">
+              <OverlapTemplate text={'All'} images={allImages} onClick={onOverlapClicked} />
             </div>
-            {boards.map((board) => (
+            {customImages.map((bookmark) => (
               <BoardTemplate
-                key={board.id}
-                text={board.name}
-                images={board.images}
-                onBoardClick={() => onBoardClicked(board.name.toLowerCase())}
+                key={bookmark.id}
+                text={bookmark.name}
+                images={bookmark.images}
+                onBoardClick={() => onBoardClicked(bookmark.name.toLowerCase())}
               />
             ))}
           </div>
+        </div>
+      )}
+
+      {bookmarkAllMatch && (
+        <div className="flex flex-col items-center mt-8 h-auto">
+          <MyPostTemplateNew images={allImages} />
+        </div>
+      )}
+      {bookmarkBoardMatch && (
+        <div className="flex flex-col items-center mt-8 h-auto">
+          <MyPostTemplateNew images={imagesToShow} />
         </div>
       )}
     </div>

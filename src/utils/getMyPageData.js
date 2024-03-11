@@ -25,24 +25,38 @@ export async function fetchAlbumsData() {
 
 // 'board' 콜렉션에서 relation 연결된 'styles' 데이터 가져오기
 export async function fetchBoardsData() {
-  const boardData = await pb.collection('board').getList(1, 50);
-  const boardsWithImages = await Promise.all(
-    boardData.items.map(async (board) => {
-      const relationedStyles = await Promise.all(
-        board.images.map(async (imageId) => {
-          const styleRecord = await pb.collection('styles').getOne(imageId);
-          return {
-            id: styleRecord.id,
-            category: styleRecord.category,
-            alt: styleRecord.alt,
-            imageUrl: getPbImage(styleRecord),
-          };
-        }),
-      );
-      return { ...board, images: relationedStyles };
-    }),
-  );
-  return boardsWithImages;
+  try {
+    const boardData = await pb.collection('board').getList(1, 50);
+    const boardsWithImages = await Promise.all(
+      boardData.items.map(async (board) => {
+        const images = await Promise.all(
+          board.images.map(async (imageId) => {
+            try {
+              const styleRecord = await pb.collection('styles').getOne(imageId);
+              return {
+                id: styleRecord.id,
+                category: styleRecord.category,
+                alt: styleRecord.alt,
+                imageUrl: getPbImage(styleRecord),
+              };
+            } catch (error) {
+              console.error(`Error fetching image ${imageId}:`, error);
+              return null;
+            }
+          }),
+        );
+
+        return {
+          ...board,
+          images: images.filter((img) => img !== null),
+        };
+      }),
+    );
+    return boardsWithImages;
+  } catch (error) {
+    console.error('Error fetching boards:', error);
+    return [];
+  }
 }
 
 // 'communityPage' 콜렉션 데이터 가져오기
@@ -58,4 +72,25 @@ export async function fetchPostsData() {
   }));
 
   return postsWithImages;
+}
+
+// 'bookmark' 콜렉션에서 relation 연결된 'community' 데이터 가져오기
+export async function fetchBookmarksData() {
+  const bookmarkData = await pb.collection('bookmark').getList(1, 50);
+  const bookmarksWithImages = await Promise.all(
+    bookmarkData.items.map(async (bookmark) => {
+      const relationedPostsPromises = bookmark.images.map((imageId) => pb.collection('communityPage').getOne(imageId));
+
+      const relationedPosts = await Promise.all(relationedPostsPromises);
+      const formattedPosts = relationedPosts.map((postRecord) => ({
+        id: postRecord.id,
+        category: postRecord.category,
+        title: postRecord.title,
+        imageUrl: getPbImage(postRecord),
+      }));
+
+      return { ...bookmark, images: formattedPosts };
+    }),
+  );
+  return bookmarksWithImages;
 }

@@ -9,7 +9,8 @@ import { useProfileStore } from '@/zustand/useStore';
 import { useEffect } from 'react';
 
 const isSpecialCharPresent = (string) => {
-  return /[^a-zA-Z0-9_ㄱ-힣]/.test(string); // 영문자, 숫자, 언더스코어 이외의 문자가 있는지 체크
+  return /[^a-zA-Z0-9_ㄱ-힣]/.test(string);
+  // 영문자, 숫자, 한글, 언더스코어 이외의 문자가 있는지 체크
 };
 
 function EditProfile() {
@@ -36,8 +37,7 @@ function EditProfile() {
       setImageUrl(
         getPbImage({
           collectionId: '_pb_users_auth_',
-          // id: user.id,
-          id: '7celmvekv3wfnm7',
+          id: user.id,
           image: user.profile,
         }),
       );

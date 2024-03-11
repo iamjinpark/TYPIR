@@ -1,24 +1,30 @@
 import TextContents from '@/atoms/TextContents/TextContents';
-import images from '/src/data/images.json';
 
-function BoardItem({ content, zIndex, translateX }) {
+function BoardItem({ imageSrc, zIndex, translateX }) {
   return (
     <div
       className="bg-gray-100 w-[120px] h-[170px] overflow-hidden rounded-2xl absolute border border-white"
       style={{ transform: `translateX(${translateX}px)`, zIndex: zIndex }}
     >
-      {content}
+      <img src={imageSrc} className="w-full h-full object-cover" />
     </div>
   );
 }
 
-function OverlapTemplate({ text }) {
+function OverlapTemplate({ text, images, onClick }) {
   return (
     <div>
-      <TextContents text={text} fontFamily="font-serif" fontWeight="font-bold" fontSize="text-[18px]" padding="p-2" />
-      <div className="w-[280px] relative">
-        {images.slice(0, 5).map((image, index) => (
-          <BoardItem key={image.id} {...image} zIndex={5 - index} translateX={index * 40} />
+      <TextContents
+        text={text}
+        fontFamily="font-serif"
+        fontWeight="font-bold"
+        fontSize="text-[18px]"
+        padding="p-2"
+        margin="mt-2"
+      />
+      <div className="w-[280px] relative" onClick={onClick}>
+        {images.slice(0, 5).map(({ id, imageUrl }, index) => (
+          <BoardItem key={id} imageSrc={imageUrl} zIndex={5 - index} translateX={index * 40} />
         ))}
       </div>
     </div>
