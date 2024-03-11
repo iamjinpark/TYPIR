@@ -10,16 +10,14 @@ import MyPostTemplateNew from '@/molecules/MyPostTemplate/MyPostTemplateNew';
 import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
 
 /* 데이터 */
-import pb from '@/api/pocketbase';
-import { useEffect, useRef, useMemo } from 'react';
-import { useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { fetchAlbumsData, fetchBoardsData, fetchBookmarksData, fetchPostsData } from '@/utils/getMyPageData';
 import {
   useAlbumStore,
   useBoardStore,
   useFilteredBoardsStore,
   usePostStore,
-  useUserStore,
   useBookmarkStore,
   useAllBookmarkStore,
   useCustomBookmarkStore,
@@ -29,10 +27,9 @@ function MyPage() {
   const { albums, setAlbums } = useAlbumStore();
   /* 보드 스토어 */
   const { boards, setBoards } = useBoardStore();
-  const { filteredImages, setFilteredImages } = useFilteredBoardsStore();
+  const { boardsToShow, setBoardsToShow } = useFilteredBoardsStore();
   /* 게시물 스토어 */
   const { posts, setPosts, userPosts, setUserPosts } = usePostStore();
-  const { userId, setUserId } = useUserStore();
   /* 북마크 스토어 */
   const { bookmarks, setBookmarks } = useBookmarkStore();
   const { allImages, setAllImages } = useAllBookmarkStore();
@@ -81,7 +78,6 @@ function MyPage() {
       isFetching.current = false;
     }
     const posts = await fetchPostsData();
-    console.log(posts.map((post) => post.username));
   }
   useEffect(() => {
     fetchData(pathname);
@@ -103,20 +99,23 @@ function MyPage() {
   const bookmarkBoardMatch = useMatch('/mypage/bookmark/:boardText');
 
   /* 보드 필터 */
-  const currentBoard = boardMatch?.params.boardText;
-  let boardsToShow = [];
-
-  if (boardMatch) {
-    const selectedCategoryData = filteredImages.find(
-      (category) => category.name.toLowerCase() === currentBoard.toLowerCase(),
-    );
-    boardsToShow = selectedCategoryData?.images || []; // 이미지가 없는 경우 빈 배열을 할당
-  }
-
   useEffect(() => {
-    const boardsToShow = boards.filter((board) => board.name !== 'All');
-    useFilteredBoardsStore.setState({ filteredImages: boardsToShow });
-  }, [boards]);
+    if (boardMatch) {
+      // 선택된 보드 카테고리에 따라 이미지를 필터링
+      const selectedCategoryData = boards.find(
+        (board) => board.name.toLowerCase() === boardMatch.params.boardText.toLowerCase(),
+      );
+      setBoardsToShow(selectedCategoryData?.images || []);
+    } else if (boardDetailMatch) {
+      // 선택된 이미지의 카테고리에 따라 이미지를 필터링
+      const imageId = boardDetailMatch.params.imageId;
+      const boardForImage = boards.find((board) => board.images.some((image) => image.id === imageId));
+      setBoardsToShow(boardForImage?.images || []);
+    } else {
+      // 모든 이미지를 포함하는 'boardsToShow'를 설정
+      setBoardsToShow(boards.flatMap((board) => board.images));
+    }
+  }, [boards, boardMatch, boardDetailMatch, setBoardsToShow]);
 
   /* 게시물 필터 */
   useEffect(() => {
@@ -169,7 +168,7 @@ function MyPage() {
       {myPageDetailMatch && <MyDetailImage layoutId={layoutId} />}
 
       {/* 보드 */}
-      {pathname === '/mypage/board' && !boardMatch && (
+      {pathname === '/mypage/board' && !boardMatch && !boardDetailMatch && (
         <div className="flex justify-center min-h-[600px]">
           <div
             className="grid sm:grid-cols-2 grid-cols-1 gap-[15px] justify-center my-6"

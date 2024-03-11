@@ -68,8 +68,8 @@ export const useAlbumStore = create(
       setAlbums: (albums) => set({ albums }),
     }),
     {
-      name: 'album-storage', // 세션 스토리지에 저장될 키 이름
-      getStorage: () => sessionStorage, // 세션 스토리지 사용
+      name: 'album-storage',
+      getStorage: () => sessionStorage,
     },
   ),
 );
@@ -90,8 +90,8 @@ export const useBoardStore = create(
 
 /* 보드 필터 */
 export const useFilteredBoardsStore = create((set) => ({
-  filteredImages: [],
-  setFilteredImages: (boards) => set({ filteredImages: boards }),
+  boardsToShow: [],
+  setBoardsToShow: (boards) => set({ boardsToShow: boards }),
 }));
 
 /* 마이 페이지 게시물 */
@@ -100,12 +100,6 @@ export const usePostStore = create((set) => ({
   setPosts: (posts) => set({ posts }),
   userPosts: [],
   setUserPosts: (userPosts) => set({ userPosts }),
-}));
-
-/* 게시물 작성자 필터 */
-export const useUserStore = create((set) => ({
-  userId: '',
-  setUserId: (userId) => set({ userId }),
 }));
 
 /* 마이 페이지 북마크 */
