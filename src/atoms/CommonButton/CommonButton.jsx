@@ -8,6 +8,7 @@ function CommonButton({
   margin = 'm-0',
   text = '저장',
   onClick,
+  restProps,
 }) {
   return (
     <button className={`${width} ${height} ${border} ${bgColor} ${fontColor} ${fontSize} ${margin}`} onClick={onClick}>
