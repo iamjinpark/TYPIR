@@ -1,6 +1,7 @@
 import { useState } from "react";
 import UserModal from "../UserModal/UserModal";
 import WriterModal from "../WriterModal/WriterModal";
+import { useEffect } from "react";
 
 const Profile = ({ userName }) => {
 
@@ -14,9 +15,7 @@ const Profile = ({ userName }) => {
 
   const handleCloseModal = () => {
     setIsOpen(false)
-  }
-
-  
+  }  
 
   return (
     <div className="relative flex items-center justify-center pt-2">
