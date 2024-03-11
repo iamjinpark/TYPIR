@@ -27,7 +27,7 @@ import {
 function MyPage() {
   const { albums, setAlbums } = useAlbumStore();
   const { boards, setBoards } = useBoardStore();
-  const { filteredBoards, setFilteredBoards } = useFilteredBoardsStore();
+  const { filteredImages, setFilteredImages } = useFilteredBoardsStore();
   const { posts, setPosts } = usePostStore();
   /* 북마크 스토어 */
   const { bookmarks, setBookmarks } = useBookmarkStore();
@@ -46,14 +46,21 @@ function MyPage() {
 
     try {
       if (path === '/mypage') {
+        /* 앨범 */
         const resolvedAlbumsWithImages = await fetchAlbumsData();
         setAlbums(resolvedAlbumsWithImages);
+        /* 보드 */
       } else if (path === '/mypage/board') {
-        const resolvedBoardsWithImages = await fetchBoardsData();
-        setBoards(resolvedBoardsWithImages);
+        const boards = await fetchBoardsData();
+        setBoards(boards);
+
+        const filteredImages = boards.filter((b) => b.name !== 'All');
+        useFilteredBoardsStore.setState({ filteredImages });
+        /* 게시물 */
       } else if (path === '/mypage/post') {
         const postData = await fetchPostsData();
         setPosts(postData);
+        /* 북마크 */
       } else if (path === '/mypage/bookmark') {
         const bookmarks = await fetchBookmarksData();
         setBookmarks(bookmarks);
@@ -84,19 +91,28 @@ function MyPage() {
   const boardDetailMatch = useMatch('/mypage/board/:boardText/detail/:imageId');
   const boardlayoutId = boardDetailMatch?.params.imageId;
   const isBoardDetail = boardDetailMatch != null;
-  const { boardText } = useParams();
 
   /* 북마크 */
   const bookmarkAllMatch = useMatch('/mypage/bookmark/field/all');
-  const bookmarkAllDetailMatch = useMatch('/mypage/bookmark/field/all/detail/:imageId');
-  // const bookmarkAlllayoutId = bookmarkAllDetailMatch?.params.imageId;
-  // const isBookmarkAllDetail = bookmarkAllDetailMatch != null;
-
   const bookmarkBoardMatch = useMatch('/mypage/bookmark/:boardText');
-  const bookmarkDetailMatch = useMatch('/mypage/bookmark/:boardText/detail/:imageId');
-  // const bookmarklayoutId = bookmarkDetailMatch?.params.imageId;
-  // const isBookmarkDetail = bookmarkDetailMatch != null;
 
+  /* 보드 필터 */
+  const currentBoard = boardMatch?.params.boardText;
+  let boardsToShow = [];
+
+  if (boardMatch) {
+    const selectedCategoryData = filteredImages.find(
+      (category) => category.name.toLowerCase() === currentBoard.toLowerCase(),
+    );
+    boardsToShow = selectedCategoryData?.images || []; // 이미지가 없는 경우 빈 배열을 할당
+  }
+
+  useEffect(() => {
+    const boardsToShow = boards.filter((board) => board.name !== 'All');
+    useFilteredBoardsStore.setState({ filteredImages: boardsToShow });
+  }, [boards]);
+
+  /* 북마크 필터 */
   const currentCategory = bookmarkBoardMatch?.params.boardText;
   let imagesToShow;
   if (bookmarkAllMatch) {
@@ -120,15 +136,6 @@ function MyPage() {
     navigate(`/mypage/bookmark/field/all`);
   };
 
-  /*  보드 카테고리 필터링 */
-  useEffect(() => {
-    if (boardText) {
-      const selectedBoardImages =
-        boards.find((board) => board.name.toLowerCase() === boardText.toLowerCase())?.images || [];
-      setFilteredBoards(selectedBoardImages);
-    }
-  }, [boardText, boards, setFilteredBoards]);
-
   return (
     <div className="w-full h-auto min-h-[570px] bg-white mt-4 mb-8">
       <MyProfile />
@@ -145,7 +152,7 @@ function MyPage() {
       {myPageDetailMatch && <MyDetailImage layoutId={layoutId} />}
 
       {/* 보드 */}
-      {pathname === '/mypage/board' && !boardMatch && !boardDetailMatch && (
+      {pathname === '/mypage/board' && !boardMatch && (
         <div className="flex justify-center min-h-[600px]">
           <div
             className="grid sm:grid-cols-2 grid-cols-1 gap-[15px] justify-center my-6"
@@ -165,7 +172,7 @@ function MyPage() {
 
       {(boardMatch || isBoardDetail) && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyImageTemplateNew images={filteredBoards} />
+          <MyImageTemplateNew images={boardsToShow} />
         </div>
       )}
 
@@ -179,7 +186,7 @@ function MyPage() {
       )}
 
       {/* 북마크 */}
-      {pathname === '/mypage/bookmark' && !bookmarkBoardMatch && !bookmarkDetailMatch && (
+      {pathname === '/mypage/bookmark' && (
         <div className="flex justify-center min-h-[600px]">
           <div
             className="grid sm:grid-cols-2 grid-cols-1 gap-[15px] justify-center my-6"

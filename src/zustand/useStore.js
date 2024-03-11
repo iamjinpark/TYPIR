@@ -90,8 +90,8 @@ export const useBoardStore = create(
 
 /* 보드 필터 */
 export const useFilteredBoardsStore = create((set) => ({
-  filteredBoards: [],
-  setFilteredBoards: (boards) => set({ filteredBoards: boards }),
+  filteredImages: [],
+  setFilteredImages: (boards) => set({ filteredImages: boards }),
 }));
 
 /* 마이 페이지 게시물 */
