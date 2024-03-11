@@ -5,21 +5,21 @@ import SubmitButton from '@/atoms/SubmitButton/SubmitButton';
 import AccountPageTitle from '@/atoms/AccountPageTitle/AccountPageTitle';
 import { useRef } from 'react';
 import { useUserStore } from '@/zustand/useUserStore';
-import { useNavigate } from 'react-router-dom'; // React Router v6에서 사용
+import { useNavigate } from 'react-router-dom';
 import PocketBase from 'pocketbase';
 
 function SetInitialProfile() {
-  const [nickname, setNickname] = useState('');
+  const [username, setUsername] = useState('');
   const [handle, setHandle] = useState('');
   const [image, setImage] = useState(null);
   const { updateUser } = useUserStore();
 
-  const navigate = useNavigate(); // useNavigate 훅을 사용해 navigate 함수를 가져옴
+  const navigate = useNavigate();
 
   const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-  const updatedUser = { ...storedUser, nickname, handle, image };
+  const updatedUser = { ...storedUser, username, handle, image };
 
-  const isNameValid = /^[a-zA-Z]+$/.test(nickname) && nickname.length >= 3 && nickname.length <= 16;
+  const isNameValid = /^[a-zA-Z]+$/.test(username) && username.length >= 3 && username.length <= 16;
   const isHandleValid = /^[a-zA-Z]+$/.test(handle) && handle.length >= 3 && handle.length <= 16;
 
   const pb = new PocketBase('https://pocket10.kro.kr');
@@ -38,15 +38,15 @@ function SetInitialProfile() {
       return;
     }
 
-    updateUser({ nickname, handle, image });
+    updateUser({ username, handle, image });
     localStorage.setItem('user', JSON.stringify(updatedUser));
 
     try {
       const userData = {
-        nickname: nickname,
+        username: username,
         handle: handle,
-        //  이미지 있으면(if) 추가
       };
+      console.log(userData);
       await pb.collection('users').update(userId, userData);
       console.log('데이터 저장 중...');
       navigate('/style');
@@ -62,12 +62,12 @@ function SetInitialProfile() {
       <div className="mb-1">
         <CommonInput
           text="닉네임"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           placeholder="커뮤니티에서 사용할 닉네임"
         />
         <div className="text-red-500 text-xs h-1">
-          {!isNameValid && nickname.length > 0 && '3글자 이상, 16글자 이하의 영문이어야 합니다.'}
+          {!isNameValid && username.length > 0 && '3글자 이상, 16글자 이하의 영문이어야 합니다.'}
         </div>
       </div>
       <div className="mb-2">

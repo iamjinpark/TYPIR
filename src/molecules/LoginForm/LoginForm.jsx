@@ -62,7 +62,7 @@ function LoginForm() {
       console.log('Updating isFirstLogin for user ID:', authData.record.id);
       if (authData.record.isFirstLogin) {
         // isFirstLogin을 false로 바꾸는 코드 추가
-        // await pb.collection('users').update(authData.record.id, { isFirstLogin: false });
+        await pb.collection('users').update(authData.record.id, { isFirstLogin: false });
         navigate('/splash/setprofile');
       } else {
         navigate('/style');
