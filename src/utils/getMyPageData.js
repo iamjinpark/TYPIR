@@ -59,3 +59,24 @@ export async function fetchPostsData() {
 
   return postsWithImages;
 }
+
+// 'bookmark' 콜렉션에서 relation 연결된 'community' 데이터 가져오기
+export async function fetchBookmarksData() {
+  const bookmarkData = await pb.collection('bookmark').getList(1, 50);
+  const bookmarksWithImages = await Promise.all(
+    bookmarkData.items.map(async (bookmark) => {
+      const relationedPostsPromises = bookmark.images.map((imageId) => pb.collection('communityPage').getOne(imageId));
+
+      const relationedPosts = await Promise.all(relationedPostsPromises);
+      const formattedPosts = relationedPosts.map((postRecord) => ({
+        id: postRecord.id,
+        category: postRecord.category,
+        title: postRecord.title,
+        imageUrl: getPbImage(postRecord),
+      }));
+
+      return { ...bookmark, images: formattedPosts };
+    }),
+  );
+  return bookmarksWithImages;
+}

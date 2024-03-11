@@ -23,6 +23,7 @@ import CommunityDetail from '@/pages/CommunityDetail/CommunityDetail';
 import SignIn from '@/pages/SignIn/SignIn';
 import SignUp from '@/pages/SignUp/SignUp';
 import SetInitialProfile from '@/pages/SetInitialProfile/SetInitialProfile';
+import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
 
 function App() {
   const router = createBrowserRouter([
@@ -85,16 +86,22 @@ function App() {
               element: <MyPage />,
               children: [
                 {
+                  path: 'field/all',
+                  element: <MyPage />,
+                },
+                {
                   path: ':boardText',
-                  element: <MyImageTemplateNew />,
-                  children: [
-                    {
-                      path: 'detail/:imageId',
-                      element: <DetailImage />,
-                    },
-                  ],
+                  element: <MyPage />,
                 },
               ],
+            },
+            {
+              path: 'bookmark/field/all/detail/:imageId',
+              element: <CommunityDetail />,
+            },
+            {
+              path: 'bookmark/:boardText/detail/:imageId',
+              element: <CommunityDetail />,
             },
             {
               path: 'newpost',
