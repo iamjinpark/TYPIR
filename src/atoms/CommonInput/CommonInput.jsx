@@ -6,6 +6,7 @@ function CommonInput({
   bgColor = 'bg-white',
   border = 'rounded-2xl',
   borderColor = 'border-content',
+  margin,
   text = 'label',
   onChange,
   value,
@@ -20,7 +21,7 @@ function CommonInput({
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}
-        className={`${width} ${height} ${bgColor} border ${border} ${borderColor} px-2 `}
+        className={`${width} ${height} ${bgColor} border ${border} ${borderColor} ${margin} px-2 `}
       ></input>
     </div>
   );
