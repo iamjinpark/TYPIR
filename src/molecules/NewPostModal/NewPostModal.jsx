@@ -66,8 +66,8 @@ function NewPostModal({ top, right, bottom, bgColor = 'bg-white', border = 'bord
         <div className="h-full flex flex-col justify-center gap-2 mb-7">
           <StrokeButton
             text="새 스타일 만들기"
-            width="w-[220px]"
-            height="h-[50px]"
+            width="w-[210px]"
+            height="h-[45px]"
             bgColor="bg-black"
             fontColor="text-white"
             fontSize="text-[14px]"
@@ -75,8 +75,8 @@ function NewPostModal({ top, right, bottom, bgColor = 'bg-white', border = 'bord
           />
           <StrokeButton
             text="커뮤니티에 글쓰기"
-            width="w-[220px]"
-            height="h-[50px]"
+            width="w-[210px]"
+            height="h-[45px]"
             fontSize="text-[14px]"
             onClick={() => handleNavigate('/mypage/newpost')}
           />
