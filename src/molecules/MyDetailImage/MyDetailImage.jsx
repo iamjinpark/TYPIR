@@ -18,10 +18,11 @@ const MyDetailImage = ({ layoutId }) => {
   return (
     <div className="fixed max-w-screen-md mx-auto inset-0 bg-black bg-opacity-80 z-20" onClick={() => navigate(-1)}>
       <motion.div
-        className="w-[290px] h-[410px] xs:w-[392px] xs:h-[552px] rounded-2xl"
+        /* xs: 450px, sm: 639px */
+        className="w-[290px] h-[510px] xs:w-[380px] xs:h-[600px] rounded-2xl"
         style={{
           position: 'absolute',
-          top: 80,
+          top: 120,
           left: 0,
           right: 0,
           margin: '0 auto',
@@ -31,7 +32,7 @@ const MyDetailImage = ({ layoutId }) => {
       >
         <img src={selectedImageUrl} alt="Detailed View" className="w-full h-full object-cover rounded-2xl" />
         <div className="absolute bottom-4 right-4">
-          <DetailImageButton />
+          <DetailImageButton imageSrc={selectedImageUrl} />
         </div>
       </motion.div>
     </div>

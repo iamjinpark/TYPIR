@@ -1,50 +1,51 @@
-import Masonry from 'react-masonry-css';
+import Masonry from 'react-masonry-component';
+import useResizeUpdateView from '@/hooks/useResizeUpdateView';
 import { motion } from 'framer-motion';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useImageStore } from '@/zustand/useStore';
 
-function MyImageTemplate({ boardText, margin, images }) {
+function MyImageTemplate({ images }) {
   const navigate = useNavigate();
   const location = useLocation();
   const setSelectedImageUrl = useImageStore((state) => state.setSelectedImageUrl);
 
-  const onBoxClicked = (imageId, imageUrl) => {
+  // 창 크기 조정에 따라 컴포넌트 리-렌더링
+  useResizeUpdateView();
+
+  const onBoxClicked = (imageId, imageUrl, category) => {
     if (location.pathname.endsWith('/mypage')) {
       navigate(`/mypage/detail/${imageId}`);
     } else if (location.pathname.startsWith('/mypage/board')) {
-      navigate(`/mypage/board/${boardText}/detail/${imageId}`);
+      navigate(`/mypage/board/${category}/detail/${imageId}`);
     } else if (location.pathname.endsWith('/newpost')) {
-      navigate(`/mypage/newpost/detail/${imageId}`);
+      navigate(`/mypage/newpost/newBoard/${imageId}`, { state: { imageSrc: imageUrl } });
     } else if (location.pathname.includes('/newpost/board')) {
-      navigate(`/mypage/newpost/board/${boardText}/detail/${imageId}`);
+      navigate(`/mypage/newpost/newBoard/${imageId}`, { state: { imageSrc: imageUrl } });
     }
     setSelectedImageUrl(imageUrl);
   };
 
-  const breakpointColumnsObj = {
-    default: 4,
-    639: 3,
-    450: 2,
-  };
-
   return (
-    <ul className={`max-w-screen-md h-auto bg-white ${margin}`}>
-      <Masonry
-        breakpointCols={breakpointColumnsObj}
-        className="my-masonry-grid flex gap-[12px]"
-        columnClassName="my-masonry-grid_column min-w-[170px] flex flex-col items-center"
-      >
-        {images.map(({ id, imageUrl }, index) => (
-          <motion.li key={id} layoutId={id}>
-            <img
-              src={imageUrl}
-              className="w-[170px] bg-gray-100 rounded-2xl mb-[15px] cursor-zoom-in"
-              onClick={() => onBoxClicked(id, imageUrl)}
-            />
-          </motion.li>
-        ))}
-      </Masonry>
-    </ul>
+    <Masonry
+      elementType="ul"
+      className={`min-w-[320px] min-h-[600px] max-w-screen-md h-auto bg-white relative`}
+      options={{
+        gutter: 15,
+        horizontalOrder: true,
+        itemSelector: '.masonry-item',
+        transitionDuration: 0,
+        fitWidth: true,
+      }}
+    >
+      {images.map(({ id, alt, imageUrl, category }, index) => (
+        <motion.li key={id} layoutId={id} className="masonry-item absolute" style={{ margin: '-2px' }}>
+          <button type="button" onClick={() => onBoxClicked(id, imageUrl, category)}>
+            <img src={imageUrl} alt={alt} className={`w-[170px] bg-gray-100 rounded-2xl mb-[15px] cursor-zoom-in`} />
+          </button>
+        </motion.li>
+      ))}
+    </Masonry>
   );
 }
+
 export default MyImageTemplate;
