@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import { useNewPostModalStore, useProfileStore, useSelectCategoryStore } from '@/zustand/useStore';
 import { useUserStore } from '@/zustand/useUserStore';
+import pb from '@/api/pocketbase';
 
 function Header() {
   const { logoutUser } = useUserStore();
@@ -64,6 +65,7 @@ function Header() {
             onClick={() => {
               logoutUser();
               localStorage.removeItem('user');
+              pb.authStore.clear();
               navigate('/splash');
             }}
           />
