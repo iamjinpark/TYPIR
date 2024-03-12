@@ -9,7 +9,10 @@ import EditProfile from '@/pages/EditProfile/EditProfile';
 import NewStyle from '@/pages/NewStyle/NewStyle';
 import NewBoard from '@/pages/NewBoard/NewBoard';
 import SelectPostImage from '@/pages/SelectPostImage/SelectPostImage';
-import MyImageTemplateNew from '@/molecules/MyImageTemplate/MyImageTemplateNew';
+import MyImageTemplate from '@/molecules/MyImageTemplate/MyImageTemplate';
+import MyDetailImage from '@/molecules/MyDetailImage/MyDetailImage';
+import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
+import MyPostTemplate from '@/molecules/MyPostTemplate/MyPostTemplate';
 
 /* 랜딩 페이지 관련 */
 import Landing from '@/pages/Landing/Landing';
@@ -23,7 +26,6 @@ import CommunityDetail from '@/pages/CommunityDetail/CommunityDetail';
 import SignIn from '@/pages/SignIn/SignIn';
 import SignUp from '@/pages/SignUp/SignUp';
 import SetInitialProfile from '@/pages/SetInitialProfile/SetInitialProfile';
-import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
 
 function App() {
   const router = createBrowserRouter([
@@ -53,7 +55,7 @@ function App() {
               children: [
                 {
                   path: ':imageId',
-                  element: <DetailImage />,
+                  element: <MyDetailImage />,
                 },
               ],
             },
@@ -63,11 +65,11 @@ function App() {
               children: [
                 {
                   path: ':boardText',
-                  element: <MyImageTemplateNew />,
+                  element: <MyImageTemplate />,
                   children: [
                     {
                       path: 'detail/:imageId',
-                      element: <DetailImage />,
+                      element: <MyDetailImage />,
                     },
                   ],
                 },
@@ -87,11 +89,11 @@ function App() {
               children: [
                 {
                   path: 'field/all',
-                  element: <MyPage />,
+                  element: <MyPostTemplate />,
                 },
                 {
                   path: ':boardText',
-                  element: <MyPage />,
+                  element: <MyPostTemplate />,
                 },
               ],
             },
@@ -109,11 +111,11 @@ function App() {
               children: [
                 {
                   path: 'board',
-                  element: <SelectPostImage />,
+                  element: <BoardTemplate />,
                   children: [
                     {
                       path: ':boardText',
-                      element: <MyImageTemplateNew />,
+                      element: <MyImageTemplate />,
                     },
                   ],
                 },
