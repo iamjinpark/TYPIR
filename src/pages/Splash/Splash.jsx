@@ -17,8 +17,8 @@ const Splash = () => {
 
       <div className="relative z-10 w-full h-full">
         <div className="absolute top-[90px] left-[34px] md:top-[120px] md:left-[50px]">
-          <Logo size="w-203pxr" color="white" />
-          <div className="text-white mt-4 text-2xl">
+          <Logo size="w-[200px] xs:w-[250px]" color="white" />
+          <div className="text-white mt-4 ml-3 mobile:text-[24px] xs:text-[28px] font-serif">
             <p>Turn</p>
             <p>Your Pinterest</p>
             <p>Into</p>
