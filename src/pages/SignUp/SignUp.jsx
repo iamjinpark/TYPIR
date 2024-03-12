@@ -28,26 +28,21 @@ const SignUp = () => {
     setIsFormValid(emailValid && passwordValid && passwordsMatch && termsChecked);
   }, [emailValid, passwordValid, password, confirmPassword, termsChecked]);
 
-  // 비밀번호 유효성 검사 결과 처리 함수
   const handlePasswordValidationChange = (isValid) => {
     setPasswordValid(isValid);
-    // 추가 작업 가능, 예를 들어 상태 업데이트나 경고 메시지 표시 등
   };
 
-  // 이메일 유효성 검사 결과 처리 함수
   const handleEmailValidationChange = (isValid) => {
     setEmailValid(isValid);
-    // 추가 작업 가능
   };
 
   const handleCloseModalAndNavigate = () => {
-    closeModal(); // 먼저 모달을 닫음
+    closeModal();
     if (modalMessage === '축하합니다!\n회원가입 완료되었습니다.') {
-      navigate('/splash/signin'); // 회원가입 성공 메시지인 경우에만 페이지 이동
+      navigate('/splash/signin');
     }
   };
 
-  // 이메일 중복 확인 함수
   const checkEmailExists = async (emailToCheck) => {
     try {
       const userRecords = await pb.collection('users').getList(1, 1, {
@@ -108,28 +103,29 @@ const SignUp = () => {
             setEmail(inputedEmail);
           }}
           onValidationChange={handleEmailValidationChange}
+          className="mt-10px"
         />
         <PasswordInput
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           onValidationChange={handlePasswordValidationChange}
-          className="mt-18px"
+          className="mt-20px"
         />
         <PasswordInput
           text="패스워드 확인"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="mt-18px"
+          className="mt-20px"
           isConfirm={true}
           password={password}
           onValidationChange={(isValid) => setPasswordValid(isValid && password === confirmPassword)}
         />
         <Checkbox
           text="이용약관에 동의합니다"
-          className="mt-16px w-full px-20px"
+          className="mt-14px w-full px-20px"
           onChange={(e) => setTermsChecked(e.target.checked)}
         />
-        <SubmitButton isFormValid={isFormValid} text="회원가입" className="mt-31px" />
+        <SubmitButton isFormValid={isFormValid} text="회원가입" className="mt-22px" />
         {isModalOpen && <MessageModal text={modalMessage} closeModal={handleCloseModalAndNavigate} />}
       </form>
       <AccountActionLink text="로그인" />
