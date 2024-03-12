@@ -35,7 +35,7 @@ function NewStyle() {
       {/* 이미지 input */}
       <div className="flex justify-center">
         <div
-          className="w-[290px] h-[410px] bg-gray-300 flex justify-center relative rounded-2xl overflow-hidden cursor-pointer"
+          className="w-[290px] h-[410px] bg-gray-200 flex justify-center relative rounded-2xl overflow-hidden cursor-pointer"
           onClick={() => fileInputRef.current.click()}
         >
           <input type="file" ref={fileInputRef} onChange={handleAddImage} className="hidden" accept="image/*" />
