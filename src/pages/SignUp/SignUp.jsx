@@ -5,12 +5,10 @@ import EmailInput from '@/atoms/EmailInput/EmailInput';
 import PasswordInput from '@/atoms/PasswordInput/PasswordInput';
 import SubmitButton from '@/atoms/SubmitButton/SubmitButton';
 import Checkbox from '@/atoms/Checkbox/Checkbox';
-import PocketBase from 'pocketbase';
 import { useNavigate } from 'react-router-dom';
 import { useMessageModalStore } from '@/zustand/useStore';
 import MessageModal from '@/molecules/MessageModal/MessageModal';
-
-const pb = new PocketBase('https://pocket10.kro.kr');
+import pb from '@/api/pocketbase';
 
 const SignUp = () => {
   const navigate = useNavigate();

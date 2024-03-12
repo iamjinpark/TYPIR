@@ -25,8 +25,10 @@ function SetInitialProfile() {
   const isNameValid = /^[a-zA-Z]+$/.test(username) && username.length >= 3 && username.length <= 16;
   const isHandleValid = /^[a-zA-Z]+$/.test(handle) && handle.length >= 3 && handle.length <= 16;
 
-  const user = useUserStore((state) => state.user);
-  const userId = user?.id; // 또는 user?.userId 등 실제 저장된 필드명에 맞춰 사용
+  const user = JSON.parse(localStorage.getItem('user'));
+  const userId = user.id;
+
+  console.log(userId);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -34,38 +36,28 @@ function SetInitialProfile() {
     //   alert('폼 검증 실패');
     //   return;
     // }
-    const formData = new FormData();
+    // const formData = new FormData();
     const blob = await fetch(preview).then((res) => res.blob());
     const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
-    formData.append('profile', file);
-    // formData.append('username', username);
-    // formData.append('handle', handle);
-    // formData.append('password', '123456789 ');
-    // formData.append('passwordConfirm', '123456789');
-
-    // await pb.collection('users').create(formData);
+    // formData.append('profile', file);
 
     const userData = {
       username: username,
       handle: handle,
       profile: file,
-      password: '12345678',
-      passwordConfirm: '12345678',
     };
 
-    await pb.collection('users').create(userData);
+    try {
+      // 사용자 데이터 업데이트 로직
+      await pb.collection('users').update(userId, userData);
+      updateUser(userData); // Zustand를 통해 사용자 상태 업데이트
+      localStorage.setItem('user', JSON.stringify(userData)); // 로컬 스토리지 업데이트
 
-    // try {
-    //   // 사용자 데이터 업데이트 로직
-    // await pb.collection('users').update(userId, userData);
-    // updateUser(userData); // Zustand를 통해 사용자 상태 업데이트
-    //   localStorage.setItem('user', JSON.stringify(userData)); // 로컬 스토리지 업데이트
-
-    //   console.log('데이터 저장 완료');
-    //   // navigate('/style');
-    // } catch (error) {
-    //   console.error('데이터 저장 실패:', error);
-    // }
+      console.log('데이터 저장 완료');
+      navigate('/style');
+    } catch (error) {
+      console.error('데이터 저장 실패:', error);
+    }
   };
 
   return (
