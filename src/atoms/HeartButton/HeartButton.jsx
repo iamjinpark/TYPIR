@@ -1,27 +1,32 @@
 import { useEffect, useState } from "react";
 
-const HeartButton = ({ onClick }) => {
+const HeartButton = ({ onClick, imageId }) => {
+  const localStorageKey = `isClickedHeart_${imageId}`
 
   const [isClickedHeart, setIsClickedHeart] = useState(() => {
-    // 로컬 스토리지에서 값 가져와 (없으면 기본값 false)
-    const initIsClicked = JSON.parse(localStorage.getItem("isClickedHeart"))
-    return initIsClicked !== null ? initIsClicked : false;
+    const savedState = localStorage.getItem(localStorageKey)
+
+    return savedState ? JSON.parse(savedState) : false
   })
 
-  // 페이지 새로고침 => 로컬 스토리지에 저장된 상태 가져와
   useEffect(() => {
-    localStorage.setItem("isClickedHeart", JSON.stringify(isClickedHeart))
-  }, [isClickedHeart]);
+    localStorage.setItem(localStorageKey, JSON.stringify(isClickedHeart))
+  }, [isClickedHeart, localStorageKey])
 
-  const handleClickButton = () => {
-    setIsClickedHeart(val => !val)
-    if (onClick) {
-      onClick(isClickedHeart ? -1 : 1)  // 눌려있다 => 증가했다
-    }
+  const handleClick = () => {
+    setIsClickedHeart(prev => {
+      const newState = !prev
+      onClick(newState ? 1 : -1, imageId)
+
+      return newState
+    })
   }
 
   return (
-    <img onClick={handleClickButton} src={isClickedHeart ? "/images/heart_fill.svg" : "/images/heart_none.svg"}/>
+    // <img onClick={handleClickButton} src={isClickedHeart ? "/images/heart_fill.svg" : "/images/heart_none.svg"}/>
+    <button onClick={handleClick}>
+      {isClickedHeart ? <img src="/images/heart_fill.svg"/> : <img src="/images/heart_none.svg"/>}
+    </button>
   );
 };
 

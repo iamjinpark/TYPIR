@@ -18,10 +18,9 @@ function MyImageTemplateNew({ images }) {
     } else if (location.pathname.startsWith('/mypage/board')) {
       navigate(`/mypage/board/${category}/detail/${imageId}`);
     } else if (location.pathname.endsWith('/newpost')) {
-      // navigate(`/mypage/newpost/newBoard/${imageId}`);
-      navigate(`/mypage/newpost/newBoard`);
+      navigate(`/mypage/newpost/newBoard/${imageId}`, { state: { imageSrc: imageUrl } });
     } else if (location.pathname.includes('/newpost/board')) {
-      navigate(`/mypage/newpost/board/${category}/detail/${imageId}`);
+      navigate(`/mypage/newpost/newBoard/${imageId}`, { state: { imageSrc: imageUrl } });
     }
     setSelectedImageUrl(imageUrl);
   };

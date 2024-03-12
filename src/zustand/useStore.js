@@ -23,19 +23,13 @@ export const useDeleteModalStore = create((set) => ({
   closeModal: () => set({ isModalOpen: false }),
 }));
 
-export const useDetailModalStore = create((set) => ({
-  isModalOpen: false,
-  openModal: () => set({ isModalOpen: true }),
-  closeModal: () => set({ isModalOpen: false }),
-}));
-
 export const useMessageModalStore = create((set) => ({
   isModalOpen: false,
   openModal: () => set({ isModalOpen: true }),
   closeModal: () => set({ isModalOpen: false }),
 }));
 
-/* 파일 선택 */
+/* 프로필 파일 선택 */
 export const useFileStore = create((set) => ({
   selectedFile: null,
   setSelectedFile: (file) => set({ selectedFile: file }),
@@ -66,35 +60,6 @@ export const useProfileStore = create((set) => ({
   setIsProtect: (isProtect) => set({ isProtect }),
 }));
 
-// export const useUserStore = create((set) => ({
-//   users: [],
-//   setUsers: (users) => set({ users }),
-// }));
-
-/* 보드 카테고리 필터 */
-export const useFilteredImagesStore = create((set) => ({
-  filteredImages: [],
-  setFilteredImages: (images) => set({ filteredImages: images }),
-}));
-
-/* 북마크 카테고리 필터 */
-export const useBookmarkFilterStore = create((set) => ({
-  filteredBookmarks: [],
-  setFilteredBookmarks: (posts) => set({ filteredBookmarks: posts }),
-}));
-
-// 'All' 카테고리의 이미지를 위한 스토어
-export const useFilteredAllImagesStore = create((set) => ({
-  filteredAllImages: [],
-  setFilteredAllImages: (images) => set({ filteredAllImages: images }),
-}));
-
-// 특정 카테고리의 이미지를 위한 스토어
-export const useFilteredCategoryImagesStore = create((set) => ({
-  filteredCategoryImages: [],
-  setFilteredCategoryImages: (images) => set({ filteredCategoryImages: images }),
-}));
-
 /* 마이 페이지 앨범 */
 export const useAlbumStore = create(
   persist(
@@ -103,8 +68,8 @@ export const useAlbumStore = create(
       setAlbums: (albums) => set({ albums }),
     }),
     {
-      name: 'album-storage', // 세션 스토리지에 저장될 키 이름
-      getStorage: () => sessionStorage, // 세션 스토리지 사용
+      name: 'album-storage',
+      getStorage: () => sessionStorage,
     },
   ),
 );
@@ -117,20 +82,38 @@ export const useBoardStore = create(
       setBoards: (boards) => set({ boards }),
     }),
     {
-      name: 'board-storage', // 세션 스토리지에 저장될 키 이름
-      getStorage: () => sessionStorage, // 세션 스토리지 사용
+      name: 'board-storage',
+      getStorage: () => sessionStorage,
     },
   ),
 );
+
+/* 보드 필터 */
+export const useFilteredBoardsStore = create((set) => ({
+  boardsToShow: [],
+  setBoardsToShow: (boards) => set({ boardsToShow: boards }),
+}));
 
 /* 마이 페이지 게시물 */
 export const usePostStore = create((set) => ({
   posts: [],
   setPosts: (posts) => set({ posts }),
+  userPosts: [],
+  setUserPosts: (userPosts) => set({ userPosts }),
 }));
 
 /* 마이 페이지 북마크 */
 export const useBookmarkStore = create((set) => ({
   bookmarks: [],
   setBookmarks: (bookmarks) => set({ bookmarks }),
+}));
+/* 북마크 필터 */
+export const useAllBookmarkStore = create((set) => ({
+  allImages: [],
+  setAllImages: (images) => set({ allImages: images }),
+}));
+
+export const useCustomBookmarkStore = create((set) => ({
+  customImages: [],
+  setCustomImages: (images) => set({ customImages: images }),
 }));
