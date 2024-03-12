@@ -32,7 +32,7 @@ function LoginForm() {
       const authData = await pb.collection('users').authWithPassword(email, password);
       setUser({
         id: authData.record.id,
-        userName: authData.record.username,
+        username: authData.record.username,
         email: email,
         profile: authData.record.profile,
         handle: authData.record.handle,
@@ -44,7 +44,7 @@ function LoginForm() {
         'user',
         JSON.stringify({
           id: authData.record.id,
-          userName: authData.record.username,
+          username: authData.record.username,
           email: email,
           profile: authData.record.profile,
           handle: authData.record.handle,
