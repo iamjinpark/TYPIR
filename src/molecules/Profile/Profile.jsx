@@ -3,9 +3,9 @@ import UserModal from "../UserModal/UserModal";
 import WriterModal from "../WriterModal/WriterModal";
 import { useEffect } from "react";
 
-const Profile = ({ userName }) => {
-
+const Profile = ({ writerProfile, writerName, writerId}) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [isWriter, setIsWriter] = useState(false)
 
   const handleOpenModal = (e) => {
     e.preventDefault()
@@ -17,16 +17,27 @@ const Profile = ({ userName }) => {
     setIsOpen(false)
   }  
 
+  useEffect(() => {
+    const currentUserJSON = localStorage.getItem("user")
+    
+    if (currentUserJSON) {
+      const currentUser = JSON.parse(currentUserJSON)
+      
+      setIsWriter(currentUser.id === writerId)
+    }
+  }, [writerId])
+
   return (
     <div className="relative flex items-center justify-center pt-2">
-      <img src="/images/profile.svg" className="w-[45px] h-[45px] ml-[15px]"/>
-      <p className="ml-3">{userName}</p>
+      <img src={writerProfile} className="w-[30px] h-[30px] ml-[15px] rounded-full"/>
+      <p className="ml-3 text-sm font-semibold">{writerName}</p>
       <button type="button" onClick={handleOpenModal} className="ml-auto mr-[15px]">
         <img src="/images/plus.svg" className="w-[18px]"/>
       </button>
         <div className="absolute z-50">
           {/* {isOpen && <UserModal onClose={handleCloseModal} />} */}
           {isOpen && <WriterModal onClose={handleCloseModal}/>}
+          {isOpen && (isWriter ? <WriterModal onClose={handleCloseModal}/> : <UserModal onClose={handleCloseModal}/>)}
         </div>
     </div>
   );
