@@ -33,7 +33,7 @@ function SetInitialProfile() {
 
     const userData = {
       ...storedUser,
-      userName: username,
+      username: username,
       handle: handle,
       profile: file,
     };
