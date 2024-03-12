@@ -38,6 +38,8 @@ export const useFileStore = create((set) => ({
 /* 포켓베이스 데이터 관련 */
 /* 이미지 url 저장 - MyImageTemplate 에서 사용 */
 export const useImageStore = create((set) => ({
+  imageUrls: [],
+  setImageUrls: (urls) => set({ imageUrls: urls }),
   selectedImageUrl: null,
   setSelectedImageUrl: (url) => set({ selectedImageUrl: url }),
 }));

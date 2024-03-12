@@ -21,6 +21,7 @@ import {
   useBookmarkStore,
   useAllBookmarkStore,
   useCustomBookmarkStore,
+  useImageStore,
 } from '@/zustand/useStore';
 
 function MyPage() {
@@ -35,6 +36,8 @@ function MyPage() {
   const { bookmarks, setBookmarks } = useBookmarkStore();
   const { allImages, setAllImages } = useAllBookmarkStore();
   const { customImages, setCustomImages } = useCustomBookmarkStore();
+  /* 이미지 URL 스토어 */
+  const { setImageUrls } = useImageStore();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -62,6 +65,8 @@ function MyPage() {
       } else if (path === '/mypage/post') {
         const posts = await fetchPostsData();
         setPosts(posts);
+        const imageUrls = posts.map((post) => post.imageUrl);
+        setImageUrls(imageUrls);
         /* 북마크 */
       } else if (path === '/mypage/bookmark') {
         const bookmarks = await fetchBookmarksData();
@@ -78,11 +83,12 @@ function MyPage() {
     } finally {
       isFetching.current = false;
     }
-    const posts = await fetchPostsData();
   }
   useEffect(() => {
     fetchData(pathname);
   }, [pathname]);
+
+  console.log(posts);
 
   /* 앨범 */
   const myPageDetailMatch = useMatch('/mypage/detail/:imageId');
@@ -198,7 +204,7 @@ function MyPage() {
       {/* 게시물 */}
       {pathname === '/mypage/post' && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyPostTemplate key={userPosts} images={userPosts} title={userPosts} />
+          <MyPostTemplate key={posts} images={posts} title={posts} />
         </div>
       )}
 

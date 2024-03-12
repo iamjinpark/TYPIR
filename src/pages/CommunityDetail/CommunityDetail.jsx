@@ -6,85 +6,89 @@ import HeartCount from '@/atoms/HeartCount/HeartCount';
 import TextContents from '@/atoms/TextContents/TextContents';
 import Comment from '@/molecules/Comment/Comment';
 import CommentWindow from '@/molecules/CommentWindow/CommentWindow';
+import DetailImageFile from '@/molecules/DetailImageFile/DetailImageFile';
 import Profile from '@/molecules/Profile/Profile';
 import { getPbImage } from '@/utils';
+import { useAlbumStore } from '@/zustand/useStore';
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
 const CommunityDetail = () => {
   const location = useLocation();
-  const imageSrc = location.state?.imageSrc;
+  const { imageSrc, postImageSrc } = location.state || {};
+  console.log(imageSrc, postImageSrc);
+  // const imageSrc = location.state?.imageSrc;
   const context = location.state?.context;
-  const imageId = location.state?.imageId
-  const writerInfo = location.state?.writerInfo
+  const imageId = location.state?.imageId;
+  const writerInfo = location.state?.writerInfo;
 
-  const USERS_COLLECTION_ID = "_pb_users_auth_"
+  const USERS_COLLECTION_ID = '_pb_users_auth_';
 
-  const [comment, setComment] = useState([])
-  const [likeCount, setLikeCount] = useState(0)
+  const [comment, setComment] = useState([]);
+  const [likeCount, setLikeCount] = useState(0);
 
-  const [user, setUser] = useState(null)
-  const [profileImage, setProfileImage] = useState("")
-  
+  const [user, setUser] = useState(null);
+  const [profileImage, setProfileImage] = useState('');
+
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
 
-  const [writerData, setWriterData] = useState(null)
+  const [writerData, setWriterData] = useState(null);
 
   useEffect(() => {
-    const userDataJSON = localStorage.getItem("user")
-    
+    const userDataJSON = localStorage.getItem('user');
+
     if (userDataJSON) {
-      const userData = JSON.parse(userDataJSON)
-      
+      const userData = JSON.parse(userDataJSON);
+
       setUser({
-        profile : userData.profile,
-        userName : userData.userName,
-        userId : userData.id
-      })
+        profile: userData.profile,
+        userName: userData.userName,
+        userId: userData.id,
+      });
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (user) {
-      setProfileImage(`https://pocket10.kro.kr/api/files/${USERS_COLLECTION_ID}/${user.userId}/${user.profile}`)
+      setProfileImage(`https://pocket10.kro.kr/api/files/${USERS_COLLECTION_ID}/${user.userId}/${user.profile}`);
     }
-  }, [user])
+  }, [user]);
 
   // 댓글
   useEffect(() => {
-    const allComments = JSON.parse(localStorage.getItem("comment") || "{}")
+    const allComments = JSON.parse(localStorage.getItem('comment') || '{}');
 
-    setComment(allComments[imageId] || [])
-  }, [imageId])
+    setComment(allComments[imageId] || []);
+  }, [imageId]);
 
-  const handleAddComment = newComment => {
-    const allComments = JSON.parse(localStorage.getItem("comment") || "{}")
-    const imageComment = allComments[imageId] || []
-    const updatedComment = [...imageComment, newComment]
+  const handleAddComment = (newComment) => {
+    const allComments = JSON.parse(localStorage.getItem('comment') || '{}');
+    const imageComment = allComments[imageId] || [];
+    const updatedComment = [...imageComment, newComment];
 
-    allComments[imageId] = updatedComment
-    localStorage.setItem("comment", JSON.stringify(allComments))
-    setComment(updatedComment)
-  }
+    allComments[imageId] = updatedComment;
+    localStorage.setItem('comment', JSON.stringify(allComments));
+    setComment(updatedComment);
+  };
 
   // 좋아요
   useEffect(() => {
-    const allLikes = JSON.parse(localStorage.getItem("like") || "{}")
+    const allLikes = JSON.parse(localStorage.getItem('like') || '{}');
 
-    setLikeCount(allLikes[imageId] || 0)
-  }, [imageId])
+    setLikeCount(allLikes[imageId] || 0);
+  }, [imageId]);
 
   const handleLikeChange = (change) => {
-    setLikeCount(prev => {
-      const newCount = Math.max(prev + change, 0)
-      const allLikes = JSON.parse(localStorage.getItem("like") || "{}")
+    setLikeCount((prev) => {
+      const newCount = Math.max(prev + change, 0);
+      const allLikes = JSON.parse(localStorage.getItem('like') || '{}');
 
-      allLikes[imageId] = newCount
-      localStorage.setItem("like", JSON.stringify(allLikes))
+      allLikes[imageId] = newCount;
+      localStorage.setItem('like', JSON.stringify(allLikes));
 
-      return newCount
-    })
-  }
+      return newCount;
+    });
+  };
 
   // 화면 사이즈
   useEffect(() => {
@@ -97,32 +101,37 @@ const CommunityDetail = () => {
 
   // 게시글 작성자 정보 얻어오기
   useEffect(() => {
-    async function fetchWriterData () {
+    async function fetchWriterData() {
       if (writerInfo) {
-          const userRecord = await pb.collection("users").getOne(writerInfo)
-          const profileImageURL = getPbImage({
-            collectionId : "users",
-            id : userRecord.id,
-            image : userRecord.profile
-          })
-          setWriterData({
-            username : userRecord.username,
-            profile : profileImageURL
-          })
+        const userRecord = await pb.collection('users').getOne(writerInfo);
+        const profileImageURL = getPbImage({
+          collectionId: 'users',
+          id: userRecord.id,
+          image: userRecord.profile,
+        });
+        setWriterData({
+          username: userRecord.username,
+          profile: profileImageURL,
+        });
       }
     }
-    fetchWriterData()
-  }, [writerInfo])
+    fetchWriterData();
+  }, [writerInfo]);
 
   return (
     <>
       {isMobile ? (
-        <div className="w-[320px] mx-auto relative">
-          <Profile writerProfile={writerData?.profile} writerName={writerData?.username} writerId={writerInfo}/>
+        <div className="w-[320px] mx-auto relative mb-5">
+          <Profile writerProfile={writerData?.profile} writerName={writerData?.username} writerId={writerInfo} />
           <div className="px-[15px] mt-[10px]">
-            <img src={imageSrc} />
+            <div className="relative">
+              <img src={postImageSrc} className="min-h-[430px] object-cover" />
+              <div className="w-full absolute bottom-0 right-0">
+                <DetailImageFile imageSrc={imageSrc} />
+              </div>
+            </div>
             <div className="flex justify-between my-[10px]">
-              <HeartButton imageId={imageId} onClick={handleLikeChange}/>
+              <HeartButton imageId={imageId} onClick={handleLikeChange} />
               <BookmarkButton />
             </div>
             <div className="flex justify-between mb-[10px]">
@@ -142,22 +151,26 @@ const CommunityDetail = () => {
                 />
               ))}
             </div>
-            <CommentWindow onAddComment={handleAddComment} profileImage={profileImage} userData={user}/>
+            <CommentWindow onAddComment={handleAddComment} profileImage={profileImage} userData={user} />
           </div>
           <div className="w-[320px] h-[55px]"></div>
         </div>
       ) : (
         <div className="flex gap-3 w-[100%] sm:w-[768px] h-[480px] justify-center items-center mt-5">
-          <div className="w-[100%] sm:w-[350px] h-[480px] flex items-center justify-center ">
-            <img src={imageSrc} className="rounded-l-2xl w-full h-full object-cover" /> {/*DB에서 뿌릴 이미지*/}
+          <div className="w-[100%] sm:w-[350px] h-[480px] flex items-center justify-center relative">
+            <img src={postImageSrc} className="rounded-l-2xl w-full h-full object-cover" />
+            <div className="w-full absolute bottom-0 right-0">
+              <DetailImageFile imageSrc={imageSrc} />
+            </div>
           </div>
+
           <div className="w-[100%] sm:w-[350px] h-[480px] relative flex flex-col">
-          <Profile writerProfile={writerData?.profile} writerName={writerData?.username} writerId={writerInfo}/>
+            <Profile writerProfile={writerData?.profile} writerName={writerData?.username} writerId={writerInfo} />
             <div className="px-[15px] my-[30px] w-[100%] sm:w-[350px] h-[110px]">
               <TextContents text={context} />
             </div>
             <div className="flex justify-between mx-[15px]">
-              <HeartButton imageId={imageId} onClick={handleLikeChange}/>
+              <HeartButton imageId={imageId} onClick={handleLikeChange} />
               <BookmarkButton />
             </div>
             <div className="flex justify-between mx-15px mt-3 ">
@@ -177,7 +190,12 @@ const CommunityDetail = () => {
                 />
               ))}
             </div>
-            <CommentWindow onAddComment={handleAddComment} imageId={imageId} profileImage={profileImage} userData={user}/>
+            <CommentWindow
+              onAddComment={handleAddComment}
+              imageId={imageId}
+              profileImage={profileImage}
+              userData={user}
+            />
           </div>
         </div>
       )}
