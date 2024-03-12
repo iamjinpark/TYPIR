@@ -16,7 +16,7 @@ function SetInitialProfile() {
   const navigate = useNavigate();
 
   const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-  const updatedUser = { ...storedUser, username, handle, preview };
+  // const updatedUser = { ...storedUser, username, handle, preview };
 
   const isNameValid = /^[a-zA-Z]+$/.test(username) && username.length >= 3 && username.length <= 16;
   const isHandleValid = /^[a-zA-Z]+$/.test(handle) && handle.length >= 3 && handle.length <= 16;
@@ -33,7 +33,7 @@ function SetInitialProfile() {
 
     const userData = {
       ...storedUser,
-      username: username,
+      userName: username,
       handle: handle,
       profile: file,
     };
