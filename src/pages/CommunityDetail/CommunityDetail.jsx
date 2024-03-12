@@ -50,27 +50,13 @@ const CommunityDetail = () => {
     }
   }, [user])
 
-  // 댓글 & 좋아요
+  // 댓글
   useEffect(() => {
     const allComments = JSON.parse(localStorage.getItem("comment") || "{}")
-    const allLikes = JSON.parse(localStorage.getItem("like") || "{}")
 
-    // 댓글
-    if (allComments[imageId]) {
-      setComment(allComments[imageId])
-    } else {
-      setComment([])
-    }
-
-    // 좋아요
-    if (allLikes[imageId]) {
-      setLikeCount(allLikes[imageId])
-    } else {
-      setLikeCount(0)
-    }
+    setComment(allComments[imageId] || [])
   }, [imageId])
 
-  // 댓글 추가
   const handleAddComment = newComment => {
     const allComments = JSON.parse(localStorage.getItem("comment") || "{}")
     const imageComment = allComments[imageId] || []
@@ -80,29 +66,27 @@ const CommunityDetail = () => {
     localStorage.setItem("comment", JSON.stringify(allComments))
     setComment(updatedComment)
   }
-  
-  const handleLikeChange = (change, imageId) => {
-    setLikeCount(prev => {
-      const allLikes = JSON.parse(localStorage.getItem("like") || "{}")
-      const count = (allLikes[imageId] || 0) + change 
-      
-      allLikes[imageId] = Math.max(0, count)
 
-      return allLikes[imageId]
-    })
-    const localStorageKey = `isClickedHeart_${imageId}`
-    const isClickedHeart = change > 0
-    localStorage.setItem(localStorageKey, JSON.stringify(isClickedHeart))
-  }
-
+  // 좋아요
   useEffect(() => {
     const allLikes = JSON.parse(localStorage.getItem("like") || "{}")
-    allLikes[imageId] = likeCount
-    localStorage.setItem("like", JSON.stringify(allLikes))
-  }, [likeCount, imageId])
 
+    setLikeCount(allLikes[imageId] || 0)
+  }, [imageId])
 
+  const handleLikeChange = (change) => {
+    setLikeCount(prev => {
+      const newCount = Math.max(prev + change, 0)
+      const allLikes = JSON.parse(localStorage.getItem("like") || "{}")
 
+      allLikes[imageId] = newCount
+      localStorage.setItem("like", JSON.stringify(allLikes))
+
+      return newCount
+    })
+  }
+
+  // 화면 사이즈
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 640);
@@ -111,11 +95,10 @@ const CommunityDetail = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-
+  // 게시글 작성자 정보 얻어오기
   useEffect(() => {
     async function fetchWriterData () {
       if (writerInfo) {
-        
           const userRecord = await pb.collection("users").getOne(writerInfo)
           const profileImageURL = getPbImage({
             collectionId : "users",
@@ -126,7 +109,6 @@ const CommunityDetail = () => {
             username : userRecord.username,
             profile : profileImageURL
           })
-        
       }
     }
     fetchWriterData()

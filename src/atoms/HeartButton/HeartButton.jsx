@@ -2,28 +2,20 @@ import { useEffect, useState } from "react";
 
 const HeartButton = ({ onClick, imageId }) => {
   const localStorageKey = `isClickedHeart_${imageId}`
-
-  const [isClickedHeart, setIsClickedHeart] = useState(() => {
-    const savedState = localStorage.getItem(localStorageKey)
-
-    return savedState ? JSON.parse(savedState) : false
-  })
+  const [isClickedHeart, setIsClickedHeart] = useState(JSON.parse(localStorage.getItem(localStorageKey)) || false)
 
   useEffect(() => {
     localStorage.setItem(localStorageKey, JSON.stringify(isClickedHeart))
-  }, [isClickedHeart, localStorageKey])
+  }, [isClickedHeart])
 
   const handleClick = () => {
-    setIsClickedHeart(prev => {
-      const newState = !prev
-      onClick(newState ? 1 : -1, imageId)
-
-      return newState
-    })
+    const newState = !isClickedHeart
+    
+    setIsClickedHeart(newState)
+    onClick(newState ? 1 : -1)
   }
 
   return (
-    // <img onClick={handleClickButton} src={isClickedHeart ? "/images/heart_fill.svg" : "/images/heart_none.svg"}/>
     <button onClick={handleClick}>
       {isClickedHeart ? <img src="/images/heart_fill.svg"/> : <img src="/images/heart_none.svg"/>}
     </button>
