@@ -10,7 +10,7 @@ function CommunityImageTemplate({ boardText, margin = 'mt-[15px]', data = images
   const onBoxClicked = (imageId) => {
     const image = data.find((item) => item.id === imageId);
     if (location.pathname.endsWith('/community')) {
-      navigate(`/community/detail/${imageId}`, { state: { imageSrc: image.image, context: image.context, imageId: image.id} });
+      navigate(`/community/detail/${imageId}`, { state: { imageSrc: image.image, context: image.context, imageId: image.id, writerInfo : image.username} });
     }
   };
 

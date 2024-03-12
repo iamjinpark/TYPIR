@@ -1,3 +1,4 @@
+import pb from '@/api/pocketbase';
 import BookmarkButton from '@/atoms/BookmarkButton/BookmarkButton';
 import CommentCount from '@/atoms/CommentCount/CommentCount';
 import HeartButton from '@/atoms/HeartButton/HeartButton';
@@ -6,6 +7,8 @@ import TextContents from '@/atoms/TextContents/TextContents';
 import Comment from '@/molecules/Comment/Comment';
 import CommentWindow from '@/molecules/CommentWindow/CommentWindow';
 import Profile from '@/molecules/Profile/Profile';
+import { getPbImage } from '@/utils';
+import { fetchCommunityData } from '@/utils/\bfetchCommunityData';
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -14,18 +17,22 @@ const CommunityDetail = () => {
   const imageSrc = location.state?.imageSrc;
   const context = location.state?.context;
   const imageId = location.state?.imageId
+  const writerInfo = location.state?.writerInfo
 
   console.log("location : ", location)
   console.log("imageSrc : ", imageSrc)
   console.log("context : ", context)
   console.log("imageId : ", imageId)
 
+  console.log("작성자 정보 좀 불러와라,, : ", writerInfo)
+  console.log("작성자 프로필 : ", writerInfo?.profile)
+
   const [comment, setComment] = useState([])
   const [likeCount, setLikeCount] = useState(0)
 
   const [user, setUser] = useState(null)
   const [profileImage, setProfileImage] = useState("")
-  console.log("커뮤니티디테일유저 : ", user)
+  // console.log("커뮤니티디테일유저 : ", user)
 
   useEffect(() => {
     const userDataJSON = localStorage.getItem("user")
@@ -46,7 +53,7 @@ const CommunityDetail = () => {
       setProfileImage(`https://pocket10.kro.kr/api/files/_pb_users_auth_/${user.userId}/${user.profile}`)
     }
   }, [user])
-  console.log("profileImage : ", profileImage)
+  // console.log("profileImage : ", profileImage)
 
   // 댓글 & 좋아요
   useEffect(() => {
@@ -80,7 +87,7 @@ const CommunityDetail = () => {
   }
   
   const handleLikeChange = (change, imageId) => {
-    console.log("handleLikeChange")
+    // console.log("handleLikeChange")
     setLikeCount(prev => {
       const allLikes = JSON.parse(localStorage.getItem("like") || "{}")
       const count = (allLikes[imageId] || 0) + change 
@@ -92,7 +99,6 @@ const CommunityDetail = () => {
     const localStorageKey = `isClickedHeart_${imageId}`
     const isClickedHeart = change > 0
     localStorage.setItem(localStorageKey, JSON.stringify(isClickedHeart))
-    console.log("click2")
   }
 
   useEffect(() => {
@@ -112,12 +118,36 @@ const CommunityDetail = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const [writerData, setWriterData] = useState(null)
+
+  useEffect(() => {
+    async function fetchWriterData () {
+      if (writerInfo) {
+        try {
+          const userRecord = await pb.collection("users").getOne(writerInfo)
+          const profileImageURL = getPbImage({
+            collectionId : "users",
+            id : userRecord.id,
+            image : userRecord.profile
+          })
+          setWriterData({
+            username : userRecord.username,
+            profile : profileImageURL
+          })
+        } catch (err) {
+          console.error("실패 : ", err)
+        }
+      }
+    }
+    fetchWriterData()
+  }, [writerInfo])
 
   return (
     <>
       {isMobile ? (
         <div className="w-[320px] mx-auto relative">
-          <Profile />
+          {/* <Profile writerImg={writerImg} writerName={writerName}/> */}
+          <Profile writerProfile={writerData?.profile} writerName={writerData?.username} />
           <div className="px-[15px] mt-[10px]">
             {/* <img src="/images/sampleImg.png"/>   */}
             <img src={imageSrc} />
@@ -152,7 +182,7 @@ const CommunityDetail = () => {
             <img src={imageSrc} className="rounded-l-2xl w-full h-full object-cover" /> {/*DB에서 뿌릴 이미지*/}
           </div>
           <div className="w-[100%] sm:w-[350px] h-[480px] relative flex flex-col">
-            <Profile />
+          <Profile writerProfile={writerData?.profile} writerName={writerData?.username} />
             <div className="px-[15px] my-[30px] w-[100%] sm:w-[350px] h-[90px]">
               <TextContents text={context} />
               {/* DB에서 뿌릴 텍스트 */}
@@ -161,7 +191,7 @@ const CommunityDetail = () => {
               <HeartButton imageId={imageId} onClick={handleLikeChange}/>
               <BookmarkButton />
             </div>
-            <div className="flex justify-between mx-15px my-2">
+            <div className="flex justify-between mx-15px mt-3 ">
               <HeartCount count={likeCount} />
               <CommentCount count={comment.length} />
             </div>

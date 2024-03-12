@@ -3,7 +3,7 @@ import UserModal from "../UserModal/UserModal";
 import WriterModal from "../WriterModal/WriterModal";
 import { useEffect } from "react";
 
-const Profile = ({ userName }) => {
+const Profile = ({ writerProfile, writerName}) => {
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -19,8 +19,8 @@ const Profile = ({ userName }) => {
 
   return (
     <div className="relative flex items-center justify-center pt-2">
-      <img src="/images/profile.svg" className="w-[45px] h-[45px] ml-[15px]"/>
-      <p className="ml-3">{userName}</p>
+      <img src={writerProfile} className="w-[40px] h-[40px] ml-[15px] rounded-full"/>
+      <p className="ml-3">{writerName}</p>
       <button type="button" onClick={handleOpenModal} className="ml-auto mr-[15px]">
         <img src="/images/plus.svg" className="w-[18px]"/>
       </button>
