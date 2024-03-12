@@ -6,76 +6,72 @@ import AccountPageTitle from '@/atoms/AccountPageTitle/AccountPageTitle';
 import { useRef } from 'react';
 import { useUserStore } from '@/zustand/useUserStore';
 import { useNavigate } from 'react-router-dom';
-import PocketBase from 'pocketbase';
+// import PocketBase from 'pocketbase';
+import pb from '@/api/pocketbase';
 
 function SetInitialProfile() {
   const [username, setUsername] = useState('');
   const [handle, setHandle] = useState('');
   // const [image, setImage] = useState(null);
-  const image = useUserStore((state) => state.image);
+  // const image = useUserStore((state) => state.image);
+  const { image, preview, setImage, setPreview } = useUserStore();
   const { updateUser } = useUserStore();
 
   const navigate = useNavigate();
 
   const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-  const updatedUser = { ...storedUser, username, handle, image };
+  const updatedUser = { ...storedUser, username, handle, preview };
 
   const isNameValid = /^[a-zA-Z]+$/.test(username) && username.length >= 3 && username.length <= 16;
   const isHandleValid = /^[a-zA-Z]+$/.test(handle) && handle.length >= 3 && handle.length <= 16;
-
-  // PocketBase 인스턴스 생성 로직은 그대로 유지합니다.
-  const pb = new PocketBase('https://pocket10.kro.kr');
 
   const user = useUserStore((state) => state.user);
   const userId = user?.id; // 또는 user?.userId 등 실제 저장된 필드명에 맞춰 사용
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!isNameValid || !isHandleValid) {
-      alert('폼 검증 실패');
-      return;
-    }
+    // if (!isNameValid || !isHandleValid) {
+    //   alert('폼 검증 실패');
+    //   return;
+    // }
+    const formData = new FormData();
+    const blob = await fetch(preview).then((res) => res.blob());
+    const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+    formData.append('profile', file);
+    // formData.append('username', username);
+    // formData.append('handle', handle);
+    // formData.append('password', '123456789 ');
+    // formData.append('passwordConfirm', '123456789');
 
-    let profileUrl = null; // 업로드된 이미지의 URL을 저장할 변수 선언
-
-    // Zustand 스토어에서 이미지 가져오기
-    if (image instanceof File) {
-      const formData = new FormData();
-      formData.append('profile', image);
-
-      try {
-        // 이미지 업로드
-        const response = await pb.files.create(formData);
-        profileUrl = response.url;
-      } catch (error) {
-        console.error('이미지 업로드 실패:', error);
-        return;
-      }
-    }
+    // await pb.collection('users').create(formData);
 
     const userData = {
-      username,
-      handle,
-      profile: profileUrl,
+      username: username,
+      handle: handle,
+      profile: file,
+      password: '12345678',
+      passwordConfirm: '12345678',
     };
 
-    try {
-      // 사용자 데이터 업데이트 로직
-      await pb.collection('users').update(userId, userData);
-      updateUser(userData); // Zustand를 통해 사용자 상태 업데이트
-      localStorage.setItem('user', JSON.stringify(userData)); // 로컬 스토리지 업데이트
+    await pb.collection('users').create(userData);
 
-      console.log('데이터 저장 완료');
-      navigate('/style');
-    } catch (error) {
-      console.error('데이터 저장 실패:', error);
-    }
+    // try {
+    //   // 사용자 데이터 업데이트 로직
+    // await pb.collection('users').update(userId, userData);
+    // updateUser(userData); // Zustand를 통해 사용자 상태 업데이트
+    //   localStorage.setItem('user', JSON.stringify(userData)); // 로컬 스토리지 업데이트
+
+    //   console.log('데이터 저장 완료');
+    //   // navigate('/style');
+    // } catch (error) {
+    //   console.error('데이터 저장 실패:', error);
+    // }
   };
 
   return (
     <form onSubmit={handleSubmit} className="w-[320px] h-[650px] mx-auto flex flex-col items-center justify-start">
       <AccountPageTitle text={'프로필 설정'} className={'mt-75px mb-18px'} />
-      <ModifyProfileImg />
+      <ModifyProfileImg image={image} setImage={setImage} preview={preview} setPreview={setPreview} />
       <div className="mb-1">
         <CommonInput
           text="닉네임"
