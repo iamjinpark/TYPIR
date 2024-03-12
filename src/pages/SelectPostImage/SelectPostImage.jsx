@@ -1,7 +1,7 @@
 import LinkButton from '@/atoms/LinkButton/LinkButton';
 import UnderBar from '@/atoms/UnderBar/UnderBar';
 
-import MyImageTemplateNew from '@/molecules/MyImageTemplate/MyImageTemplateNew';
+import MyImageTemplate from '@/molecules/MyImageTemplate/MyImageTemplate';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
 import { useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { useAlbumStore, useBoardStore, useFilteredBoardsStore } from '@/zustand/useStore';
@@ -74,7 +74,7 @@ function SelectPostImage() {
       {pathname === '/mypage/newpost' && (
         <div className="flex flex-col items-center mt-8 h-auto">
           {albums.map((album) => (
-            <MyImageTemplateNew key={album.id} images={album.images} />
+            <MyImageTemplate key={album.id} images={album.images} />
           ))}
         </div>
       )}
@@ -100,7 +100,7 @@ function SelectPostImage() {
 
       {boardMatch && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyImageTemplateNew images={boardsToShow} />
+          <MyImageTemplate images={boardsToShow} />
         </div>
       )}
     </div>
