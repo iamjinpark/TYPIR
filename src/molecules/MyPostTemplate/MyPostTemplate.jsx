@@ -14,15 +14,17 @@ function MyPostTemplate({ images }) {
   // 창 크기 조정에 따라 컴포넌트 리-렌더링
   useResizeUpdateView();
 
-  const onBoxClicked = (imageId, imageUrl, postImageUrl) => {
+  const onBoxClicked = (imageId, imageUrl, postImageUrl, context) => {
     if (location.pathname.startsWith('/mypage/post')) {
-      navigate(`/mypage/post/detail/${imageId}`, { state: { imageSrc: imageUrl, postImageSrc: postImageUrl } });
+      navigate(`/mypage/post/detail/${imageId}`, {
+        state: { imageSrc: imageUrl, postImageSrc: postImageUrl, context },
+      });
     } else if (location.pathname.includes('all')) {
       navigate(`/mypage/bookmark/field/all/detail/${imageId}`, { state: { imageSrc: imageUrl } });
     } else if (boardText) {
       navigate(`/mypage/bookmark/${boardText}/detail/${imageId}`, { state: { imageSrc: imageUrl } });
     } else if (location.pathname.endsWith('/community')) {
-      navigate(`/community/detail/${imageId}`, { state: { imageSrc: imageUrl, postImageSrc: postImageUrl } });
+      navigate(`/community/detail/${imageId}`, { state: { imageSrc: imageUrl, postImageSrc: postImageUrl, context } });
     }
     setSelectedImageUrl(imageUrl);
   };
@@ -39,9 +41,9 @@ function MyPostTemplate({ images }) {
         fitWidth: true,
       }}
     >
-      {images.map(({ id, postImageUrl, title, imageUrl }, index) => (
+      {images.map(({ id, postImageUrl, title, imageUrl, context }, index) => (
         <motion.li key={id} layoutId={id} className="masonry-item absolute h-[350px]" style={{ margin: '-2px' }}>
-          <button type="button" onClick={() => onBoxClicked(id, imageUrl, postImageUrl)}>
+          <button type="button" onClick={() => onBoxClicked(id, imageUrl, postImageUrl, context)}>
             <img
               src={postImageUrl}
               className={`w-[170px] h-[260px] bg-gray-100 rounded-2xl cursor-zoom-in object-cover`}
