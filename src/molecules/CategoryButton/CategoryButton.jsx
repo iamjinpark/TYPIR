@@ -7,7 +7,6 @@ const CategoryButtons = ({ margin = 'mt-15px', selectedCategory, setSelectedCate
     event.preventDefault(); // 폼 제출 방지
     setSelectedCategory(category);
   };
-  console.log(selectedCategory);
 
   return (
     <div className="flex">

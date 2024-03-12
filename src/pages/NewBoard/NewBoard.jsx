@@ -8,7 +8,7 @@ import DetailImageFile from '@/molecules/DetailImageFile/DetailImageFile';
 import CategoryButton from '@/molecules/CategoryButton/CategoryButton';
 import StrokeButton from '@/atoms/StrokeButton/StrokeButton';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useBoardInputStore, useFileInputStore } from '@/zustand/useStyleStore';
+import { useBoardInputStore, useFileInputStore, useFormReset } from '@/zustand/useStyleStore';
 import pb from '@/api/pocketbase';
 
 const NewBoard = ({ imageId, category }) => {
@@ -17,6 +17,7 @@ const NewBoard = ({ imageId, category }) => {
 
   const { title, context, setTitle, setContent, selectedCategory, setSelectedCategory } = useBoardInputStore();
   const { image, preview, setImage, setPreview } = useFileInputStore();
+  const { submitted, setSubmitted } = useFormReset;
 
   // 제목 상태 업데이트
   const handleTitleChange = (e) => {
@@ -36,19 +37,25 @@ const NewBoard = ({ imageId, category }) => {
   async function handleSave(e) {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem('user'));
-    const userId = user.id;
+    const userName = user.id;
     const formData = new FormData();
-    const imageTest = formData.append('image', image);
-    console.log(imageTest);
 
-    const data = {
-      userId: userId,
-      title: `${title}`,
-      category: `${selectedCategory}`,
-      context: `${context}`,
-    };
+    const blob = await fetch(preview).then((res) => res.blob());
+    const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+    formData.append('image', file);
+    formData.append('username', userName);
+    formData.append('title', `${title}`);
+    formData.append('category', `${selectedCategory}`);
+    formData.append('context', `${context}`);
 
-    await pb.collection('communityPage').create(data);
+    await pb.collection('communityPage').create(formData);
+    navigate('/community');
+    setTitle('');
+    setContent('');
+    setSelectedCategory('');
+    setImage(null);
+    setPreview('');
+    setSubmitted(true);
   }
 
   return (
@@ -68,7 +75,7 @@ const NewBoard = ({ imageId, category }) => {
         </div>
       </div>
       <form className="  gap-[10px] xs:flex flex-row xs:gap-[50px] xs:mx-auto">
-        <FileInput imageSrc={imageSrc} />
+        <FileInput imageSrc={imageSrc} image={image} setImage={setImage} preview={preview} setPreview={setPreview} />
 
         <div className="flex flex-col gap-2 xs:gap-4 justify-center">
           <CategoryButton selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
@@ -95,7 +102,7 @@ const NewBoard = ({ imageId, category }) => {
               onClick={handleCancel}
             ></StrokeButton>
             {/* 저장 버튼 */}
-            <CommonButton fontSize="text-[14px]" onClick={handleSave} />
+            <CommonButton fontSize="text-[14px]" onClick={handleSave} type="submit" />
           </div>
         </div>
       </form>

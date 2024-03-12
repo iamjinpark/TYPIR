@@ -43,8 +43,8 @@ export const useBoardInputStore = create((set) => ({
   setSelectedCategory: (category) => set({ selectedCategory: category }),
 }));
 
-// 4. 카테고리
-// export const useCategoryStore = create((set) => ({
-//   selectedCategory: 'all',
-//   setSelectedCategory: (category) => set({ selectedCategory: category }),
-// }));
+// 4. form 제출 시 초기화
+export const useFormReset = create((set) => ({
+  submitted: 'false',
+  setSubmitted: (submitted) => set({ submitted }),
+}));
