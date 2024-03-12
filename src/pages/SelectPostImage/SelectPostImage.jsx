@@ -10,14 +10,13 @@ import { useEffect } from 'react';
 function SelectPostImage() {
   const { albums } = useAlbumStore();
   const { boards } = useBoardStore();
-  const { filteredImages, setFilteredImages } = useFilteredBoardsStore();
+  const { filteredImages } = useFilteredBoardsStore();
 
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
 
   const boardMatch = useMatch('/mypage/newpost/board/:boardText');
-  const { boardText } = useParams();
 
   const onBoardClicked = (boardText) => {
     navigate(`/mypage/newpost/board/${boardText}`);
@@ -36,7 +35,7 @@ function SelectPostImage() {
     const selectedCategoryData = filteredImages.find(
       (category) => category.name.toLowerCase() === currentBoard.toLowerCase(),
     );
-    boardsToShow = selectedCategoryData?.images || []; // 이미지가 없는 경우 빈 배열을 할당
+    boardsToShow = selectedCategoryData?.images || [];
   }
 
   useEffect(() => {
@@ -82,7 +81,7 @@ function SelectPostImage() {
 
       {/* 보드 */}
       {pathname === '/mypage/newpost/board' && (
-        <div className="flex justify-center min-h-[600px]">
+        <div className="flex justify-center">
           <div
             className="grid sm:grid-cols-2 grid-cols-1 gap-[15px] justify-center my-6"
             style={{ gridAutoRows: 'min-content' }}

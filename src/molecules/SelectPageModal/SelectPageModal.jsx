@@ -6,14 +6,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '@/zustand/useUserStore';
 import { useNewPostModalStore, useSelectCategoryStore } from '@/zustand/useStore';
+import { useEffect } from 'react';
 
 function SelectPageModal() {
   const navigate = useNavigate();
   const { logoutUser } = useUserStore();
 
   const {
-    // isModalOpen: isCategoryModalOpen,
-    // openModal: openCategoryModal,
+    isModalOpen: isCategoryModalOpen,
+    openModal: openCategoryModal,
     closeModal: closeCategoryModal,
   } = useSelectCategoryStore();
 
@@ -21,13 +22,35 @@ function SelectPageModal() {
   const {
     isModalOpen: isNewPostModalOpen,
     openModal: openNewPostModal,
-    // closeModal: closeNewPostModal,
+    closeModal: closeNewPostModal,
   } = useNewPostModalStore();
 
   const handleNavigate = (path) => {
     navigate(path);
     closeCategoryModal();
   };
+
+  // 모달 활성화 상태에 따라 스크롤 막기 및 키보드 이벤트 리스너 추가/제거
+  useEffect(() => {
+    const handleEscapeKey = (event) => {
+      if (event.key === 'Escape') {
+        closeCategoryModal();
+      }
+    };
+
+    if (isCategoryModalOpen || isNewPostModalOpen) {
+      document.body.style.overflow = 'hidden'; // 스크롤 막기
+      window.addEventListener('keydown', handleEscapeKey);
+    } else {
+      document.body.style.overflow = 'unset'; // 스크롤 허용
+      window.removeEventListener('keydown', handleEscapeKey);
+    }
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isCategoryModalOpen, isNewPostModalOpen, closeCategoryModal]);
 
   return (
     <div className="w-full h-screen bg-gray-700 z-10" style={{ position: 'absolute', top: 0, left: 0 }}>
@@ -57,6 +80,7 @@ function SelectPageModal() {
             logoutUser();
             localStorage.removeItem('user');
             navigate('/splash');
+            closeCategoryModal();
           }}
         />
       </div>

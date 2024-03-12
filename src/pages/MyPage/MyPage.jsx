@@ -10,25 +10,26 @@ import MyPostTemplateNew from '@/molecules/MyPostTemplate/MyPostTemplateNew';
 import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
 
 /* 데이터 */
-import pb from '@/api/pocketbase';
 import { useEffect, useRef } from 'react';
-import { useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { fetchAlbumsData, fetchBoardsData, fetchBookmarksData, fetchPostsData } from '@/utils/getMyPageData';
 import {
   useAlbumStore,
   useBoardStore,
+  useFilteredBoardsStore,
   usePostStore,
   useBookmarkStore,
   useAllBookmarkStore,
   useCustomBookmarkStore,
-  useFilteredBoardsStore,
 } from '@/zustand/useStore';
 
 function MyPage() {
   const { albums, setAlbums } = useAlbumStore();
+  /* 보드 스토어 */
   const { boards, setBoards } = useBoardStore();
-  const { filteredImages, setFilteredImages } = useFilteredBoardsStore();
-  const { posts, setPosts } = usePostStore();
+  const { boardsToShow, setBoardsToShow } = useFilteredBoardsStore();
+  /* 게시물 스토어 */
+  const { posts, setPosts, userPosts, setUserPosts } = usePostStore();
   /* 북마크 스토어 */
   const { bookmarks, setBookmarks } = useBookmarkStore();
   const { allImages, setAllImages } = useAllBookmarkStore();
@@ -58,8 +59,8 @@ function MyPage() {
         useFilteredBoardsStore.setState({ filteredImages });
         /* 게시물 */
       } else if (path === '/mypage/post') {
-        const postData = await fetchPostsData();
-        setPosts(postData);
+        const posts = await fetchPostsData();
+        setPosts(posts);
         /* 북마크 */
       } else if (path === '/mypage/bookmark') {
         const bookmarks = await fetchBookmarksData();
@@ -76,6 +77,7 @@ function MyPage() {
     } finally {
       isFetching.current = false;
     }
+    const posts = await fetchPostsData();
   }
   useEffect(() => {
     fetchData(pathname);
@@ -97,20 +99,34 @@ function MyPage() {
   const bookmarkBoardMatch = useMatch('/mypage/bookmark/:boardText');
 
   /* 보드 필터 */
-  const currentBoard = boardMatch?.params.boardText;
-  let boardsToShow = [];
-
-  if (boardMatch) {
-    const selectedCategoryData = filteredImages.find(
-      (category) => category.name.toLowerCase() === currentBoard.toLowerCase(),
-    );
-    boardsToShow = selectedCategoryData?.images || []; // 이미지가 없는 경우 빈 배열을 할당
-  }
-
   useEffect(() => {
-    const boardsToShow = boards.filter((board) => board.name !== 'All');
-    useFilteredBoardsStore.setState({ filteredImages: boardsToShow });
-  }, [boards]);
+    if (boardMatch) {
+      // 선택된 보드 카테고리에 따라 이미지를 필터링
+      const selectedCategoryData = boards.find(
+        (board) => board.name.toLowerCase() === boardMatch.params.boardText.toLowerCase(),
+      );
+      setBoardsToShow(selectedCategoryData?.images || []);
+    } else if (boardDetailMatch) {
+      // 선택된 이미지의 카테고리에 따라 이미지를 필터링
+      const imageId = boardDetailMatch.params.imageId;
+      const boardForImage = boards.find((board) => board.images.some((image) => image.id === imageId));
+      setBoardsToShow(boardForImage?.images || []);
+    } else {
+      // 모든 이미지를 포함하는 'boardsToShow'를 설정
+      setBoardsToShow(boards.flatMap((board) => board.images));
+    }
+  }, [boards, boardMatch, boardDetailMatch, setBoardsToShow]);
+
+  /* 게시물 필터 */
+  useEffect(() => {
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+
+    if (user && posts.length > 0) {
+      const filteredPosts = posts.filter((post) => post.username === user.id);
+      setUserPosts(filteredPosts);
+    }
+  }, [posts]);
 
   /* 북마크 필터 */
   const currentCategory = bookmarkBoardMatch?.params.boardText;
@@ -152,7 +168,7 @@ function MyPage() {
       {myPageDetailMatch && <MyDetailImage layoutId={layoutId} />}
 
       {/* 보드 */}
-      {pathname === '/mypage/board' && !boardMatch && (
+      {pathname === '/mypage/board' && !boardMatch && !boardDetailMatch && (
         <div className="flex justify-center min-h-[600px]">
           <div
             className="grid sm:grid-cols-2 grid-cols-1 gap-[15px] justify-center my-6"
@@ -181,7 +197,7 @@ function MyPage() {
       {/* 게시물 */}
       {pathname === '/mypage/post' && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyPostTemplateNew key={posts} images={posts} title={posts} />
+          <MyPostTemplateNew key={userPosts} images={userPosts} title={userPosts} />
         </div>
       )}
 
