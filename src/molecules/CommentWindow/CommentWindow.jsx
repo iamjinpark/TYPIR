@@ -1,6 +1,7 @@
+import pb from "@/api/pocketbase";
 import { useEffect, useState } from "react";
 
-const CommentWindow = ({ onAddComment }) => {
+const CommentWindow = ({ onAddComment, profileImage, userData }) => {
   const [text, setText] = useState("")
 
   // const [comments, setComments] = useState([])
@@ -16,7 +17,8 @@ const CommentWindow = ({ onAddComment }) => {
   const handleAddComment = () => {
     if (text.trim() !== "") {
       const newComment = {
-        userName: "User", // DB에서 받아오기
+        profileImg: profileImage,
+        userName: userData.userName, // DB에서 받아오기
         text: text,
         daysAgo: "방금 전",
       };
@@ -41,9 +43,10 @@ const CommentWindow = ({ onAddComment }) => {
     }
   }
 
+
   return (
     <div className="absolute bottom-0 w-[320px] h-[54px] bg-white flex items-center mx-0 sm:mx-[15px]">
-      <img src="/images/profile.svg" className="w-[35px] h-[35xpx] "/>
+      <img src={profileImage} className="w-[30px] h-[30px] rounded-full"/>
       <input 
         type="text" 
         value={text}

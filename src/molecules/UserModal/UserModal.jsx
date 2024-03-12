@@ -1,5 +1,6 @@
 import CloseButton from "@/atoms/CloseButton/CloseButton";
 import ModalButton from "@/atoms/ModalButton/ModalButton";
+import { useEffect } from "react";
 import { useState } from "react";
 
 
@@ -22,28 +23,35 @@ const UserModal = ({ onClose }) => {
     setTimeout(() => setReportMessage(false), 1500)
   }
 
+  const handleContainerClick = e => {
+    if (e.target === e.currentTarget) {
+      onClose()
+    }
+  }
+
   return (
     <>
-      <div className="fixed inset-0 flex justify-center items-center">
-        <div className="w-[290px] h-[200px] flex justify-center items-center z-50">
-        <div className="relative bg-white w-[290px] h-[200px] border border-black rounded-xl flex justify-center items-center">
-            <CloseButton onClose={onClose}/>
-            <ul className="flex gap-12">
-              <ModalButton href="#" fileName="edit" buttonText="수정"/>
-              <ModalButton href="#" fileName="delete" buttonText="삭제"/>
-              <ModalButton onClick={handleCopyLink} href="#" fileName="linkCopy" buttonText="링크 복사"/>
-            </ul>
-          </div>
+      <div className="fixed inset-0 flex justify-center items-center" onClick={handleContainerClick}>
+        <div className="relative bg-white w-[290px] h-[180px] border-2 border-black rounded-xl flex justify-center items-center">
+          <CloseButton onClose={onClose}/>
+          <ul className="flex gap-16 font-semibold">
+            <ModalButton onClick={handleCopyLink} fileName="linkCopy" buttonText="링크 복사"/>
+            <ModalButton onClick={handleReport} fileName="report" buttonText="신고"/>
+          </ul>
         </div>
       </div>
       {showCopyMessage && (
-        <div className="absolute flex justify-center items-center z-50">
-          <img src="/images/copyMessage.svg"/>
+        <div className="fixed top-16 inset-0 flex justify-center z-50">
+          <div>
+            <img src="/images/copyMessage.svg"/>
+          </div>
         </div>
       )}
       {showReportMessage && (
-        <div className="absolute flex justify-center items-center z-50">
-          <img src="/images/reportMessage.svg"/>
+        <div className="fixed top-16 inset-0 flex justify-center z-50">
+          <div>
+            <img src="/images/reportMessage.svg"/>
+          </div>
         </div>
       )}      
     </>
