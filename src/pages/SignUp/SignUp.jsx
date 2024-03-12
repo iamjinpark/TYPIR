@@ -5,12 +5,10 @@ import EmailInput from '@/atoms/EmailInput/EmailInput';
 import PasswordInput from '@/atoms/PasswordInput/PasswordInput';
 import SubmitButton from '@/atoms/SubmitButton/SubmitButton';
 import Checkbox from '@/atoms/Checkbox/Checkbox';
-import PocketBase from 'pocketbase';
 import { useNavigate } from 'react-router-dom';
 import { useMessageModalStore } from '@/zustand/useStore';
 import MessageModal from '@/molecules/MessageModal/MessageModal';
-
-const pb = new PocketBase('https://pocket10.kro.kr');
+import pb from '@/api/pocketbase';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -44,7 +42,7 @@ const SignUp = () => {
 
   const handleCloseModalAndNavigate = () => {
     closeModal(); // 먼저 모달을 닫음
-    if (modalMessage === '축하합니다! 회원가입 완료되었습니다.') {
+    if (modalMessage === '축하합니다!\n회원가입 완료되었습니다.') {
       navigate('/splash/signin'); // 회원가입 성공 메시지인 경우에만 페이지 이동
     }
   };
@@ -68,7 +66,7 @@ const SignUp = () => {
     const emailExists = await checkEmailExists(email);
 
     if (emailExists) {
-      setModalMessage('이미 존재하는 이메일 주소입니다. 다른 이메일 주소를 사용해주세요.');
+      setModalMessage('이미 존재하는 이메일 주소입니다.');
       openModal();
       return;
     }
@@ -91,11 +89,11 @@ const SignUp = () => {
 
     try {
       await pb.collection('users').create(data);
-      setModalMessage('축하합니다! 회원가입 완료되었습니다.');
+      setModalMessage('축하합니다!\n회원가입 완료되었습니다.');
       openModal();
     } catch (error) {
       console.error(error);
-      setModalMessage('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
+      setModalMessage('회원가입 중 오류가 발생했습니다.');
       openModal();
     }
   };
