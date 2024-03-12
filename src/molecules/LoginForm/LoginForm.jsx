@@ -30,7 +30,6 @@ function LoginForm() {
 
     try {
       const authData = await pb.collection('users').authWithPassword(email, password);
-      //  zustand에 사용자 정보 저장
       setUser({
         id: authData.record.id,
         userName: authData.record.username,
@@ -41,7 +40,6 @@ function LoginForm() {
         isProtect: authData.record.isProtect,
       });
 
-      // localStorage에 사용자 정보 저장
       localStorage.setItem(
         'user',
         JSON.stringify({
@@ -58,7 +56,6 @@ function LoginForm() {
       console.log(useUserStore.getState().user); // 상태 확인 방법
       console.log('Updating isFirstLogin for user ID:', authData.record.id);
       if (authData.record.isFirstLogin) {
-        // isFirstLogin을 false로 바꾸는 코드 추가
         await pb.collection('users').update(authData.record.id, { isFirstLogin: false });
         navigate('/splash/setprofile');
       } else {
@@ -70,22 +67,22 @@ function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md mx-auto p-4 rounded-lg bg-white">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md mx-auto pt-4 rounded-lg bg-white">
       <EmailInput
-        className="mb-[16px]"
+        className="mb-[20px]"
         onValidationChange={(isValid, value) => {
           setIsEmailValid(isValid);
           setEmail(value);
         }}
       />
       <PasswordInput
-        className="mb-[16px]"
+        className="mb-[20px]"
         onValidationChange={(isValid, value) => {
           setIsPasswordValid(isValid);
           setPassword(value);
         }}
       />
-      <Checkbox className="mb-[44px] mt-[16px]" />
+      <Checkbox className="mb-[44px] mt-[14px]" />
       <SubmitButton isFormValid={isFormValid} />
       {isModalOpen && <MessageModal text={'유효하지 않은\n이메일 혹은 패스워드입니다.'} closeModal={closeModal} />}
     </form>
