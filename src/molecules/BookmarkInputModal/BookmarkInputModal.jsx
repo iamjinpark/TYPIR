@@ -22,7 +22,7 @@ const BookmarkInputModal = ({ onAddBookmark, onClose, inputText = '나만의 북
   };
 
   return (
-    <div className="absolute top-[103px] right-[35px]">
+    <div className="absolute top-[103px] right-[15px]">
       <div className="w-[260px] h-[170px] bg-white border border-black rounded-xl flex items-center flex-col">
         <p className="mt-[15px] font-semibold">{inputText}</p>
         <input

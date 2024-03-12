@@ -1,3 +1,4 @@
+import BookmarkSaveModal from "@/molecules/BookmarkSaveModal/BookmarkSaveModal";
 import { useEffect, useState } from "react";
 
 const BookmarkButton = ({ onClick }) => {
@@ -8,20 +9,29 @@ const BookmarkButton = ({ onClick }) => {
     return initIsClicked !== null ? initIsClicked : false;
   })
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   // 페이지 새로고침 => 로컬 스토리지에 저장된 상태 가져와
   useEffect(() => {
     localStorage.setItem("isClickedBookmark", JSON.stringify(isClickedBookmark))
   }, [isClickedBookmark]);
 
   const handleClickButton = () => {
-    setIsClickedBookmark(prev => !prev)
-    if (onClick) {
-      onClick()
-    }
+
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
   }
 
   return (
-    <img onClick={handleClickButton} src={isClickedBookmark ? "/images/bookmark_fill.svg" : "/images/bookmark_none.svg"}/>
+    <>
+      <button onClick={handleClickButton}>
+        <img src={isClickedBookmark ? "/images/bookmark_fill.svg" : "/images/bookmark_none.svg"}/>
+      </button>
+      {isModalOpen && <BookmarkSaveModal onClose={handleCloseModal} onBookmarkChange={() => setIsClickedBookmark(true)}/>}
+    </>
   );
 };
 
