@@ -16,8 +16,6 @@ import { useLocation, useParams } from 'react-router-dom';
 const CommunityDetail = () => {
   const location = useLocation();
   const { imageSrc, postImageSrc } = location.state || {};
-  console.log(imageSrc, postImageSrc);
-  // const imageSrc = location.state?.imageSrc;
   const context = location.state?.context;
   const imageId = location.state?.imageId;
   const writerInfo = location.state?.writerInfo;
