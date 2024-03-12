@@ -3,10 +3,10 @@ import MyProfile from '@/molecules/MyProfile/MyProfile';
 import MyPageCategoryBar from '@/molecules/MyPageCategoryBar/MyPageCategoryBar';
 
 /* 템플릿 */
-import MyImageTemplateNew from '@/molecules/MyImageTemplate/MyImageTemplateNew';
+import MyImageTemplate from '@/molecules/MyImageTemplate/MyImageTemplate';
 import MyDetailImage from '@/molecules/MyDetailImage/MyDetailImage';
 import BoardTemplate from '@/molecules/BoardTemplate/BoardTemplate';
-import MyPostTemplateNew from '@/molecules/MyPostTemplate/MyPostTemplateNew';
+import MyPostTemplate from '@/molecules/MyPostTemplate/MyPostTemplate';
 import OverlapTemplate from '@/molecules/OverlapTemplate/OverlapTemplate';
 
 /* 데이터 */
@@ -24,6 +24,7 @@ import {
 } from '@/zustand/useStore';
 
 function MyPage() {
+  /* 앨범 스토어 */
   const { albums, setAlbums } = useAlbumStore();
   /* 보드 스토어 */
   const { boards, setBoards } = useBoardStore();
@@ -161,7 +162,7 @@ function MyPage() {
       {(pathname === '/mypage' || isAlbumDetail) && (
         <div className="flex flex-col items-center mt-8 h-auto">
           {albums.map((album) => (
-            <MyImageTemplateNew key={album.id} images={album.images} />
+            <MyImageTemplate key={album.id} images={album.images} />
           ))}
         </div>
       )}
@@ -188,7 +189,7 @@ function MyPage() {
 
       {(boardMatch || isBoardDetail) && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyImageTemplateNew images={boardsToShow} />
+          <MyImageTemplate images={boardsToShow} />
         </div>
       )}
 
@@ -197,7 +198,7 @@ function MyPage() {
       {/* 게시물 */}
       {pathname === '/mypage/post' && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyPostTemplateNew key={userPosts} images={userPosts} title={userPosts} />
+          <MyPostTemplate key={userPosts} images={userPosts} title={userPosts} />
         </div>
       )}
 
@@ -225,12 +226,12 @@ function MyPage() {
 
       {bookmarkAllMatch && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyPostTemplateNew images={allImages} />
+          <MyPostTemplate images={allImages} />
         </div>
       )}
       {bookmarkBoardMatch && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyPostTemplateNew images={imagesToShow} />
+          <MyPostTemplate images={imagesToShow} />
         </div>
       )}
     </div>
