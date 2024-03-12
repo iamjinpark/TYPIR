@@ -29,7 +29,7 @@ const CommunityCategory = ({ gap = 'gap-3' }) => {
   useEffect(() => {
     async function fetchImage() {
       try {
-        const styles = await pb.collection('communityPage').getFullList();
+        const styles = await pb.collection('communityPage').getFullList({ sort: '-created' });
         const stylesWithImages = styles.map((style) => {
           const imageURL = getPbImageURL(style);
 

@@ -23,20 +23,19 @@ const Profile = ({ writerProfile, writerName, writerId}) => {
     if (currentUserJSON) {
       const currentUser = JSON.parse(currentUserJSON)
       
-      setIsWriter(currentUser.id === writerId)
+      setIsWriter(currentUser.id === writerId[0])
     }
   }, [writerId])
 
+
   return (
     <div className="relative flex items-center justify-center pt-2">
-      <img src={writerProfile} className="w-[30px] h-[30px] ml-[15px] rounded-full"/>
+      <img src={writerProfile} className="w-[35px] h-[35px] ml-[15px] rounded-full"/>
       <p className="ml-3 text-sm font-semibold">{writerName}</p>
       <button type="button" onClick={handleOpenModal} className="ml-auto mr-[15px]">
         <img src="/images/plus.svg" className="w-[18px]"/>
       </button>
         <div className="absolute z-50">
-          {/* {isOpen && <UserModal onClose={handleCloseModal} />} */}
-          {isOpen && <WriterModal onClose={handleCloseModal}/>}
           {isOpen && (isWriter ? <WriterModal onClose={handleCloseModal}/> : <UserModal onClose={handleCloseModal}/>)}
         </div>
     </div>
