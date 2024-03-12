@@ -45,8 +45,8 @@ function AccountManagement() {
   };
 
   return (
-    <div className="w-full h-[570px] bg-white flex flex-col items-center mb-8">
-      <div className="w-full flex justify-between p-5">
+    <div className="w-full min-h-[570px] bg-white flex flex-col items-center mb-8">
+      <div className="w-full flex justify-between p-7">
         <div className="flex-1">
           <Backward />
         </div>
@@ -54,8 +54,8 @@ function AccountManagement() {
         <div className="flex-1"></div>
       </div>
       <CommonInput text="이메일" value={email} disabled={true} borderColor="border-transparent" />
-      <CommonInput text="비밀번호" borderColor="border-content" />
-      <CommonButton text="비밀번호 변경" width="w-[90px]" height="h-[33px]" margin="mt-5" />
+      <CommonInput text="비밀번호" borderColor="border-content" margin="mt-2" />
+      <CommonButton text="비밀번호 변경" width="w-[90px]" height="h-[33px]" margin="my-5" />
       <div className="w-[288px] flex items-center justify-between mt-8">
         <div className="flex flex-col w-[200px] gap-2">
           <TextContents text="비공개 프로필" fontWeight="font-bold" fontSize="text-[16px]" />
@@ -63,14 +63,14 @@ function AccountManagement() {
         </div>
         <ToggleButton isToggled={isPrivate} toggle={togglePrivate} />
       </div>
-      <div className="w-[288px] flex items-center justify-between mt-5">
+      <div className="w-[288px] flex items-center justify-between my-7">
         <div className="flex flex-col w-[210px] gap-2">
           <TextContents text="개인정보 보호 검색" fontWeight="font-bold" fontSize="text-[16px]" />
           <TextContents text="검색 엔진에서 프로필 및 찜목록을 숨깁니다." />
         </div>
         <ToggleButton isToggled={isProtect} toggle={toggleProtect} />
       </div>
-      <div className="w-[288px] flex items-center justify-between mt-5">
+      <div className="w-[288px] flex items-center justify-between mb-4">
         <div className="flex flex-col w-[200px] gap-2">
           <TextContents text="계정 삭제" fontWeight="font-bold" fontSize="text-[16px]" />
           <TextContents text="데이터 및 계정과 관련된 모든 정보를 영구적으로 삭제합니다." />

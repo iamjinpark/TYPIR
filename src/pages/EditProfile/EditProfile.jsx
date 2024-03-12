@@ -49,7 +49,7 @@ function EditProfile() {
 
   return (
     <div className="w-full h-[570px] bg-white flex flex-col items-center mb-8">
-      <div className="w-full flex justify-between p-5">
+      <div className="w-full flex justify-between p-7">
         <div className="flex-1">
           <Backward />
         </div>
@@ -58,12 +58,13 @@ function EditProfile() {
       </div>
       <ProfileImage imageUrl={imageUrl} />
 
-      <div className="nickname-input-wrapper">
+      <div className="nickname-input-wrapper mt-2">
         <CommonInput
           text="닉네임"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
           placeholder="커뮤니티에서 사용할 닉네임"
+          margin="mt-1"
         />
         <div className="text-red-500 text-xs h-1 mt-1 ml-1">
           {!isNameValid && '3글자 이상, 16글자 이하의 영문, 숫자만 사용 가능합니다.'}
@@ -76,6 +77,7 @@ function EditProfile() {
           value={handle}
           onChange={(e) => setHandle(e.target.value)}
           placeholder="개인페이지 ID"
+          margin="mt-1"
         />
         <div className="text-red-500 text-xs h-1 mt-1 mb-9 ml-1">
           {!isHandleValid && !isSpecialCharPresent(handle) && '3글자 이상, 16글자 이하의 영문, 숫자만 사용 가능합니다.'}
