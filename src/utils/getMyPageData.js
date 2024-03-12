@@ -46,18 +46,61 @@ export async function fetchBoardsData() {
 }
 
 // 'communityPage' 콜렉션 데이터 가져오기
-export async function fetchPostsData() {
-  const postData = await pb.collection('communityPage').getList(1, 50);
-  const postsWithImages = postData.items.map((post) => ({
-    ...post,
-    imageUrl: getPbImage({
-      collectionId: post.collectionId,
-      id: post.id,
-      image: post.image,
-    }),
-  }));
+// export async function fetchPostsData() {
+//   const postData = await pb.collection('communityPage').getList(1, 50);
+//   const postsWithImages = postData.items.map((post) => ({
+//     ...post,
+//     imageUrl: getPbImage({
+//       collectionId: post.collectionId,
+//       id: post.id,
+//       image: post.image,
+//     }),
+//   }));
 
-  return postsWithImages;
+//   return postsWithImages;
+// }
+
+// 'communityPage' 컬렉션에서 'styles' 데이터 가져오기
+export async function fetchPostsData() {
+  try {
+    const postData = await pb.collection('communityPage').getList(1, 50);
+    const postsWithImagesAndStyles = await Promise.all(
+      postData.items.map(async (post) => {
+        let styleImageUrl = null;
+        let postImageUrl = getPbImage({
+          collectionId: 'communityPage',
+          id: post.id,
+          image: post.image[0],
+        });
+
+        // styles 컬렉션에서 copy 속성으로 데이터 조회
+        if (post.copy) {
+          try {
+            const styleRecord = await pb.collection('styles').getOne(post.copy);
+            styleImageUrl = getPbImage({
+              collectionId: 'styles',
+              id: styleRecord.id,
+              image: styleRecord.image,
+            });
+          } catch (error) {
+            console.error(`Error fetching style image for post ${post.id}:`, error);
+            // 오류 발생 시 styleImageUrl을 null로 유지
+          }
+        }
+
+        return {
+          ...post,
+          imageUrl: styleImageUrl,
+          postImageUrl,
+        };
+      }),
+    );
+
+    return postsWithImagesAndStyles;
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    return []; // 오류 발생 시 빈 배열 반환
+  }
 }
 
 // 'bookmark' 콜렉션에서 relation 연결된 'community' 데이터 가져오기

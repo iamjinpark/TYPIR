@@ -1,3 +1,4 @@
+import { useImageStore } from '@/zustand/useStore';
 import React, { useRef } from 'react';
 
 const DetailImageFile = ({ imageSrc }) => {
