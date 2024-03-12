@@ -3,16 +3,13 @@ import EmailInput from '@/atoms/EmailInput/EmailInput';
 import PasswordInput from '@/atoms/PasswordInput/PasswordInput';
 import Checkbox from '@/atoms/Checkbox/Checkbox';
 import SubmitButton from '@/atoms/SubmitButton/SubmitButton';
-import PocketBase from 'pocketbase';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '@/zustand/useUserStore';
 import MessageModal from '../MessageModal/MessageModal';
 import { useMessageModalStore } from '@/zustand/useStore';
+import pb from '@/api/pocketbase';
 
 function LoginForm() {
-  const PB_AP = import.meta.env.VITE_PB_API;
-  const pb = new PocketBase(PB_AP);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(false);
@@ -90,7 +87,7 @@ function LoginForm() {
       />
       <Checkbox className="mb-[44px] mt-[16px]" />
       <SubmitButton isFormValid={isFormValid} />
-      {isModalOpen && <MessageModal text="유효하지 않은 이메일 혹은 패스워드입니다." closeModal={closeModal} />}
+      {isModalOpen && <MessageModal text={'유효하지 않은\n이메일 혹은 패스워드입니다.'} closeModal={closeModal} />}
     </form>
   );
 }
