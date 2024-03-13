@@ -60,7 +60,7 @@ function MyPostTemplate({ images }) {
               maxLength={25}
               fontFamily="font-serif"
               fontWeight="font-semilight"
-              fontSize="text-[14px]"
+              fontSize="text-[15px]"
               padding="p-2"
               style={{
                 width: '170px',

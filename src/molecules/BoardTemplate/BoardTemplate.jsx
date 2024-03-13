@@ -16,11 +16,15 @@ function BoardTemplate({ text, images, onBoardClick, imageProp }) {
     <div>
       <TextContents
         text={text}
+        maxLength={13}
         fontFamily="font-serif"
         fontWeight="font-bold"
         fontSize="text-[18px]"
         padding="p-2"
         margin="mt-2"
+        style={{
+          width: '250px',
+        }}
       />
       <div className="w-[280px] h-[170px] rounded-2xl overflow-hidden" onClick={() => onBoardClick(text.toLowerCase())}>
         <div className="w-full h-full grid grid-cols-3 grid-rows-2 gap-1px">
