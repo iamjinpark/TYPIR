@@ -48,12 +48,12 @@ export const useImageStore = create((set) => ({
 export const useProfileStore = create((set) => ({
   profiles: [],
   setProfiles: (profiles) => set({ profiles }),
-  userName: '',
-  setUserName: (userName) => set({ userName }),
+  username: '',
+  setUserName: (username) => set({ username }),
   handle: '',
   setHandle: (handle) => set({ handle }),
-  nameValid: (nickname) => /^[a-zA-Z0-9]+$/.test(nickname) && nickname.length >= 3 && nickname.length <= 16,
-  handleValid: (handle) => /^[a-zA-Z0-9_]+$/.test(handle) && handle.length >= 3 && handle.length <= 16,
+  // nameValid: (username) => /^[a-zA-Z0-9]+$/.test(username) && username.length >= 3 && username.length <= 16,
+  // handleValid: (handle) => /^[a-zA-Z0-9_]+$/.test(handle) && handle.length >= 3 && handle.length <= 16,
   imageUrl: '',
   setImageUrl: (imageUrl) => set({ imageUrl }),
   isPrivate: false,
@@ -118,4 +118,18 @@ export const useAllBookmarkStore = create((set) => ({
 export const useCustomBookmarkStore = create((set) => ({
   customImages: [],
   setCustomImages: (images) => set({ customImages: images }),
+}));
+
+/* 유저 리스트 */
+export const useUserStore = create((set) => ({
+  userList: [],
+  setUserList: (userList) => set({ userList }),
+}));
+
+/* 프로필 사진 */
+export const useProfileImageStore = create((set) => ({
+  image: null,
+  preview: '',
+  setPreview: (preview) => set({ preview }),
+  setImage: (image) => set({ image }),
 }));
