@@ -95,7 +95,7 @@ const SignUp = () => {
 
   return (
     <div className="w-[320px] h-[650px] mx-auto flex flex-col items-center justify-start">
-      <AccountPageTitle text="회원가입" className="mt-75px mb-43px" />
+      <AccountPageTitle text="회원가입" className="mt-[75px] mb-[40px]" />
       <form onSubmit={handleSubmit} className="w-full flex flex-col items-center">
         <EmailInput
           value={email}
