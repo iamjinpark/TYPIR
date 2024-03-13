@@ -7,3 +7,4 @@ export { default as getPbImage } from './getPbImage';
 export { default as numberWithComma } from './numberWithComma';
 export { default as getDocumentTitle } from './getDocumentTitle';
 export { default as convertDayFormat } from './convertDayFormat';
+export { default as getStorage } from './getStorage';

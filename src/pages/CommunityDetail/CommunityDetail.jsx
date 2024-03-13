@@ -15,12 +15,11 @@ import { useLocation, useParams } from 'react-router-dom';
 
 const CommunityDetail = () => {
   const location = useLocation();
-  const { imageSrc, postImageSrc } = location.state || {};
-  console.log(imageSrc, postImageSrc);
-  // const imageSrc = location.state?.imageSrc;
+  const { imageSrc, postImageSrc, writerInfo } = location.state || {};
   const context = location.state?.context;
   const imageId = location.state?.imageId;
-  const writerInfo = location.state?.writerInfo;
+  // const writerInfo = location.state?.writerInfo;
+  console.log(writerInfo);
 
   const USERS_COLLECTION_ID = '_pb_users_auth_';
 
@@ -99,24 +98,49 @@ const CommunityDetail = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 게시글 작성자 정보 얻어오기
+  // 게시글 작성자 정보 얻어오기 /* 다은님거 */
+  // useEffect(() => {
+  //   async function fetchWriterData() {
+  //     if (writerInfo) {
+  //       const userRecord = await pb.collection('users').getOne(writerInfo);
+  //       const profileImageURL = getPbImage({
+  //         collectionId: 'users',
+  //         id: userRecord.id,
+  //         image: userRecord.profile,
+  //       });
+  //       setWriterData({
+  //         username: userRecord.username,
+  //         profile: profileImageURL,
+  //       });
+  //     }
+  //   }
+  //   fetchWriterData();
+  // }, [writerInfo]);
+
   useEffect(() => {
     async function fetchWriterData() {
       if (writerInfo) {
-        const userRecord = await pb.collection('users').getOne(writerInfo);
-        const profileImageURL = getPbImage({
-          collectionId: 'users',
-          id: userRecord.id,
-          image: userRecord.profile,
-        });
-        setWriterData({
-          username: userRecord.username,
-          profile: profileImageURL,
-        });
+        try {
+          const userRecord = await pb.collection('users').getOne(writerInfo);
+          if (userRecord) {
+            const profileImageURL = getPbImage({
+              collectionId: 'users',
+              id: userRecord.id,
+              image: userRecord.profile,
+            });
+            setWriterData({
+              username: userRecord.username,
+              profile: profileImageURL,
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching writer data:', error);
+        }
       }
     }
     fetchWriterData();
   }, [writerInfo]);
+  console.log(writerInfo);
 
   return (
     <>
@@ -190,6 +214,12 @@ const CommunityDetail = () => {
                 />
               ))}
             </div>
+            <CommentWindow
+              onAddComment={handleAddComment}
+              imageId={imageId}
+              profileImage={profileImage}
+              userData={user}
+            />
             <CommentWindow
               onAddComment={handleAddComment}
               imageId={imageId}
