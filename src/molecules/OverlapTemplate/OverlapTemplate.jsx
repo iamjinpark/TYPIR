@@ -23,8 +23,8 @@ function OverlapTemplate({ text, images, onClick }) {
         margin="mt-2"
       />
       <div className="w-[280px] relative" onClick={onClick}>
-        {images.slice(0, 5).map(({ id, imageUrl }, index) => (
-          <BoardItem key={id} imageSrc={imageUrl} zIndex={5 - index} translateX={index * 40} />
+        {images.slice(0, 5).map(({ id, postImageUrl }, index) => (
+          <BoardItem key={id} imageSrc={postImageUrl} zIndex={5 - index} translateX={index * 40} />
         ))}
       </div>
     </div>

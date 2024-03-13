@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import { useFileStore } from '@/zustand/useStore';
+import { useRef, useEffect } from 'react';
+import { useProfileStore } from '@/zustand/useStore';
 
 function ProfileImage({
   width = 'w-[120px]',
@@ -11,7 +11,7 @@ function ProfileImage({
   imageUrl,
 }) {
   const fileInputRef = useRef();
-  const [tempSelectedFile, setTempSelectedFile] = useState(null);
+  const { tempSelectedImage, setTempSelectedImage } = useProfileStore();
 
   const handleImageClick = () => {
     if (editable) {
@@ -22,11 +22,16 @@ function ProfileImage({
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setTempSelectedFile(URL.createObjectURL(file)); // 파일을 임시 상태에 저장
+      const tempUrl = URL.createObjectURL(file);
+      useProfileStore.getState().setTempSelectedImage(tempUrl);
     }
   };
 
-  const imageSrc = tempSelectedFile || imageUrl;
+  useEffect(() => {
+    setTempSelectedImage(null);
+  }, [setTempSelectedImage]);
+
+  const imageSrc = tempSelectedImage || imageUrl;
 
   return (
     <div className={`${width} ${height} ${border} ${margin} ${imageSrc ? '' : bgColor}`} onClick={handleImageClick}>

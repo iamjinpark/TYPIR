@@ -10,52 +10,46 @@ import { useProfileStore, useUserStore } from '@/zustand/useStore';
 import pb from '@/api/pocketbase';
 
 export default function MyProfile() {
-  const { userList, setUserList } = useUserStore();
-  const { profiles, setProfiles } = useProfileStore();
+  const { userList, setUserList, imageUrl, setImageUrl } = useProfileStore();
   const navigate = useNavigate();
 
   const handleNavigate = (path) => {
     navigate(path);
   };
 
-  const fetchUserRecords = async () => {
-    try {
-      const nowUser = await getStorage('pocketbase_auth');
-      const nowUserId = nowUser.model.id; // 프로미스가 아닌 실제 값으로 가져옵니다.
-      console.log(nowUserId);
-
-      const records = await pb.collection('users').getOne(nowUserId);
-      return records;
-    } catch (error) {
-      console.error('Error fetching user records:', error);
-      throw error; // 에러를 다시 throw하여 호출자에게 전달합니다.
-    }
-  };
-
   useEffect(() => {
-    fetchUserRecords().then((data) => {
-      setUserList(data);
-    });
-  }, [setUserList]);
+    let isCancelled = false;
 
-  // const storedUser = localStorage.getItem('user');
-  // if (storedUser) {
-  //   setProfiles([JSON.parse(storedUser)]);
-  // }
+    const fetchUserRecords = async () => {
+      try {
+        const nowUser = await getStorage('pocketbase_auth');
+        const nowUserId = nowUser.model.id;
 
-  console.log(userList);
+        if (!isCancelled) {
+          const records = await pb.collection('users').getOne(nowUserId);
+          if (!isCancelled) {
+            setUserList(records);
+            const profileImageUrl = getPbImage({
+              collectionId: 'users',
+              id: records.id,
+              image: records.profile,
+            });
+            setImageUrl(profileImageUrl);
+          }
+        }
+      } catch (error) {
+        if (!error.isAbort && !isCancelled) {
+          console.error('Error fetching data:', error);
+        }
+      }
+    };
 
-  // if (profiles.length === 0) {
-  //   return <div>Loading...</div>;
-  // }
+    fetchUserRecords();
 
-  // const profile = profiles[0];
-  const imageUrl = getPbImage({
-    collectionId: 'users',
-    id: userList?.id,
-    image: userList?.profile,
-  });
-  console.log(imageUrl);
+    return () => {
+      isCancelled = true;
+    };
+  }, [setUserList, setImageUrl]);
 
   return (
     <div className="flex flex-col items-center p-3">

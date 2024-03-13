@@ -1,7 +1,6 @@
 import Backward from '@/atoms/Backward/Backward';
 import CommonButton from '@/atoms/CommonButton/CommonButton';
 import CommonInput from '@/atoms/CommonInput/CommonInput';
-import HandleText from '@/atoms/HandleText/HandleText';
 import ProfileImage from '@/atoms/ProfileImage/ProfileImage';
 import TextContents from '@/atoms/TextContents/TextContents';
 import { getPbImage } from '@/utils';
@@ -10,71 +9,64 @@ import { useEffect } from 'react';
 import pb from '@/api/pocketbase';
 
 const isSpecialCharPresent = (string) => {
-  return /[^a-zA-Z0-9_ㄱ-힣]/.test(string);
-  // 영문자, 숫자, 한글, 언더스코어 이외의 문자가 있는지 체크
+  return /[^a-zA-Z0-9_]/.test(string);
+  // 영문자, 숫자, 언더스코어 이외의 문자가 있는지 체크
 };
 
 function EditProfile() {
-  const { userList, setUserList } = useUserStore();
-  const {
-    profiles,
-    setProfiles,
-    username,
-    setUserName,
-    handle,
-    setHandle,
-    nameValid,
-    handleValid,
-    imageUrl,
-    setImageUrl,
-  } = useProfileStore();
+  const { userList, setUserList, setProfiles, username, setUserName, handle, setHandle, imageUrl, setImageUrl } =
+    useProfileStore();
 
   useEffect(() => {
-    // const storedUser = localStorage.getItem('user');
-    // if (storedUser) {
-    // const user = JSON.parse(storedUser);
-    setProfiles([userList]);
-    setUserName(userList?.username);
-    setHandle(userList?.handle);
-    setUserList(userList);
-    setImageUrl(
-      getPbImage({
-        collectionId: 'users',
-        id: userList?.id,
-        image: userList?.profile,
-      }),
-    );
+    if (userList) {
+      setProfiles([userList]);
+      setUserName(userList?.username);
+      setHandle(userList?.handle);
+      setUserList(userList);
+      setImageUrl(
+        getPbImage({
+          collectionId: 'users',
+          id: userList?.id,
+          image: userList?.profile,
+        }),
+      );
+    }
   }, [setProfiles, setUserName, setHandle, setImageUrl, userList, setUserList]);
 
-  // const isNameValid = nameValid(username);
-  // const isHandleValid = handleValid(handle);
-  console.log(userList);
-
-  // const user = JSON.parse(localStorage.getItem('user'));
   const userId = userList.id;
-  console.log(userId);
 
   const handleSaveButton = async (event) => {
-    event.preventDefault(); // preventDefault 함수 호출 방식 수정
+    event.preventDefault();
 
-    // userList가 정의되어 있지 않으면 기본값인 빈 객체로 설정
     const userData = {
       username: username,
       handle: handle,
-      profile: userList?.profile || null, // userList.profile이 없는 경우에 대한 처리 추가
+      profile: userList?.profile || null,
     };
 
     if (userId) {
-      // userId가 정의되어 있는 경우에만 업데이트 요청을 보냄
       try {
         await pb.collection('users').update(userId, userData);
       } catch (error) {
         console.error('데이터 저장 실패:', error);
       }
     } else {
-      console.error('유저 아이디가 없습니다.'); // userId가 정의되지 않은 경우 에러 처리
+      console.error('유저 아이디가 없습니다.');
     }
   };
+
+  const nameValid = (username) => {
+    if (!username) return false; // username이 undefined일 경우를 대비한 체크
+    return /^[a-zA-Z0-9]+$/.test(username) && username.length >= 3 && username.length <= 16;
+  };
+
+  const handleValid = (handle) => {
+    if (!handle) return false; // handle이 undefined일 경우를 대비한 체크
+    return /^[a-zA-Z0-9_]+$/.test(handle) && handle.length >= 3 && handle.length <= 16;
+  };
+
+  const isNameValid = username ? nameValid(username) : false;
+  const isHandleValid = handleValid(handle);
 
   return (
     <form className="w-full h-[570px] bg-white flex flex-col items-center mb-8">
@@ -96,7 +88,7 @@ function EditProfile() {
           margin="mt-1"
         />
         <div className="text-red-500 text-xs h-1 mt-1 ml-1">
-          {/* {!isNameValid && '3글자 이상, 16글자 이하의 영문, 숫자만 사용 가능합니다.'} */}
+          {!isNameValid && '3글자 이상, 16글자 이하의 영문, 숫자만 사용 가능합니다.'}
         </div>
       </div>
 
@@ -109,7 +101,7 @@ function EditProfile() {
           margin="mt-1"
         />
         <div className="text-red-500 text-xs h-1 mt-1 mb-9 ml-1">
-          {/* {!isHandleValid && !isSpecialCharPresent(handle) && '3글자 이상, 16글자 이하의 영문, 숫자만 사용 가능합니다.'} */}
+          {!isHandleValid && !isSpecialCharPresent(handle) && '3글자 이상, 16글자 이하의 영문, 숫자만 사용 가능합니다.'}
           {isSpecialCharPresent(handle) && '특수문자는 언더스코어(_)만 허용됩니다.'}
         </div>
       </div>

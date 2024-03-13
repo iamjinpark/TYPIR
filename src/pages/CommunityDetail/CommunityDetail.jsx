@@ -140,12 +140,11 @@ const CommunityDetail = () => {
     }
     fetchWriterData();
   }, [writerInfo]);
-  console.log(writerInfo);
 
   return (
     <>
       {isMobile ? (
-        <div className="w-[320px] mx-auto relative mb-5">
+        <div className="w-[375px] min-h-[600px] mx-auto relative mb-10">
           <Profile writerProfile={writerData?.profile} writerName={writerData?.username} writerId={writerInfo} />
           <div className="px-[15px] mt-[10px]">
             <div className="relative">
