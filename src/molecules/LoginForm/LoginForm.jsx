@@ -17,7 +17,7 @@ function LoginForm() {
   const [isFormValid, setIsFormValid] = useState(false);
 
   const navigate = useNavigate();
-  const { setUser } = useUserStore();
+  const setUser = useUserStore((state) => state.setUser);
 
   const { isModalOpen, openModal, closeModal } = useMessageModalStore();
 

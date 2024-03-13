@@ -7,7 +7,6 @@ const Community = () => {
   return (
     <>
       <div className="flex relative">
-        <SearchBar />
         <CommunityCategory />
       </div>
     </>

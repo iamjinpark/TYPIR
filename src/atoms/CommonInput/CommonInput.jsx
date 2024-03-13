@@ -12,6 +12,7 @@ function CommonInput({
   value,
   placeholder = '',
   disabled = false,
+  fontSize = 'text-[13px]',
 }) {
   return (
     <div>
@@ -21,7 +22,7 @@ function CommonInput({
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}
-        className={`${width} ${height} ${bgColor} border ${border} ${borderColor} ${margin} px-2 `}
+        className={`${fontSize} ${width} ${height} ${bgColor} border ${border} ${borderColor} ${margin} px-2 `}
       ></input>
     </div>
   );

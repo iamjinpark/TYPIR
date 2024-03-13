@@ -7,6 +7,7 @@ import TextContents from '@/atoms/TextContents/TextContents';
 import Comment from '@/molecules/Comment/Comment';
 import CommentWindow from '@/molecules/CommentWindow/CommentWindow';
 import DetailImageFile from '@/molecules/DetailImageFile/DetailImageFile';
+import Backward from '@/atoms/Backward/Backward';
 import Profile from '@/molecules/Profile/Profile';
 import { getPbImage } from '@/utils';
 import { useAlbumStore } from '@/zustand/useStore';
@@ -17,9 +18,9 @@ const CommunityDetail = () => {
   const location = useLocation();
   const { imageSrc, postImageSrc, writerInfo } = location.state || {};
   const context = location.state?.context;
-  const imageId = location.state?.imageId;
-  // const writerInfo = location.state?.writerInfo;
-  console.log(writerInfo);
+  
+  const path = location.pathname
+  const imageId = path.split("/").pop() // 이미지 아이디 추출 방식 변경
 
   const USERS_COLLECTION_ID = '_pb_users_auth_';
 
@@ -35,13 +36,13 @@ const CommunityDetail = () => {
 
   useEffect(() => {
     const userDataJSON = localStorage.getItem('user');
-
+  
     if (userDataJSON) {
       const userData = JSON.parse(userDataJSON);
 
       setUser({
         profile: userData.profile,
-        userName: userData.userName,
+        userName: userData.username,
         userId: userData.id,
       });
     }
@@ -143,6 +144,16 @@ const CommunityDetail = () => {
 
   return (
     <>
+      <div className="w-full flex flex-row justify-start items-center gap-8">
+        <div className="w-full flex justify-between pl-12 py-1">
+          <div className="flex-1">
+            <Backward />
+          </div>
+          <TextContents text="" fontWeight="font-extrabold" fontSize="text-[25px]" fontFamily="font-serif" />
+          <div className="flex-1"></div>
+        </div>
+      </div>
+
       {isMobile ? (
         <div className="w-[375px] min-h-[600px] mx-auto relative mb-10">
           <Profile writerProfile={writerData?.profile} writerName={writerData?.username} writerId={writerInfo} />
@@ -155,7 +166,7 @@ const CommunityDetail = () => {
             </div>
             <div className="flex justify-between my-[10px]">
               <HeartButton imageId={imageId} onClick={handleLikeChange} />
-              <BookmarkButton />
+              <BookmarkButton imageId={imageId}/>
             </div>
             <div className="flex justify-between mb-[10px]">
               <HeartCount count={likeCount} />
@@ -179,7 +190,7 @@ const CommunityDetail = () => {
           <div className="w-[320px] h-[55px]"></div>
         </div>
       ) : (
-        <div className="flex gap-3 w-[100%] sm:w-[768px] h-[480px] justify-center items-center mt-5">
+        <div className="flex gap-3 w-[100%] sm:w-[768px] h-[480px] justify-center items-center m-3">
           <div className="w-[100%] sm:w-[350px] h-[480px] flex items-center justify-center relative">
             <img src={postImageSrc} className="rounded-l-2xl w-full h-full object-cover" />
             <div className="w-full absolute bottom-0 right-0">
@@ -190,7 +201,7 @@ const CommunityDetail = () => {
           <div className="w-[100%] sm:w-[350px] h-[480px] relative flex flex-col">
             <Profile writerProfile={writerData?.profile} writerName={writerData?.username} writerId={writerInfo} />
             <div className="px-[15px] my-[30px] w-[100%] sm:w-[350px] h-[110px]">
-              <TextContents text={context} />
+              <TextContents text={context} fontSize="text-[13px]" />
             </div>
             <div className="flex justify-between mx-[15px]">
               <HeartButton imageId={imageId} onClick={handleLikeChange} />
@@ -213,12 +224,6 @@ const CommunityDetail = () => {
                 />
               ))}
             </div>
-            <CommentWindow
-              onAddComment={handleAddComment}
-              imageId={imageId}
-              profileImage={profileImage}
-              userData={user}
-            />
             <CommentWindow
               onAddComment={handleAddComment}
               imageId={imageId}
