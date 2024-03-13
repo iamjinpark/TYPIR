@@ -38,8 +38,7 @@ const BookmarkSaveModal = ({ text = '기존 북마크에 추가', onClose, onCli
     console.log(data);
 
     const album = await pb.collection('album').create(data);
-    const test = await pb.collection('users').update(userId, { album: album.id });
-    console.log(test);
+    const test = await pb.collection('users').update(userId, { album_id: album.id });
   }
 
   const openModal = () => {
