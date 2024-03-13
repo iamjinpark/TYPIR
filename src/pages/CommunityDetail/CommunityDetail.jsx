@@ -155,7 +155,7 @@ const CommunityDetail = () => {
             </div>
             <div className="flex justify-between my-[10px]">
               <HeartButton imageId={imageId} onClick={handleLikeChange} />
-              <BookmarkButton />
+              <BookmarkButton imageId={imageId}/>
             </div>
             <div className="flex justify-between mb-[10px]">
               <HeartCount count={likeCount} />

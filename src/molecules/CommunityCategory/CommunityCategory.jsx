@@ -77,7 +77,7 @@ const CommunityCategory = ({ gap = 'gap-3' }) => {
   return (
     <div className="w-full h-auto min-h-[570px] bg-white mt-4 mb-8">
       <div className="mt-[5px] mb-[15px] w-full ">
-        <ul className={`flex flex-row ${gap} font-serif `}>
+        <ul className={`flex flex-row ${gap} font-serif mx-4`}>
           {CATEGORIES.map((category) => (
             <li
               key={category}
