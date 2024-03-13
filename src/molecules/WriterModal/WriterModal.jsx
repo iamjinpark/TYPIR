@@ -11,13 +11,14 @@ const WriterModal = ({ onClose }) => {
 
   const navigate = useNavigate()
   const location = useLocation();
-  const imageId = location.state?.imageId
+  const path = location.pathname
+  const imageId = path.split("/").pop() // 이미지 아이디 추출 방식 변경
   console.log("작성자 모달 imageId : ", imageId)
 
   const handleDelete = async () => {
     try {
       await pb.collection('communityPage').delete(imageId);
-      console.log("삭제 성~공")
+      console.log("모달 이미지 아이디 : ", imageId)
       setShowDeleteMessage(true)
       setTimeout(() => {
         setShowDeleteMessage(false)
