@@ -17,7 +17,7 @@ function LoginForm() {
   const [isFormValid, setIsFormValid] = useState(false);
 
   const navigate = useNavigate();
-  const { setUser } = useUserStore(); // setUser 함수를 직접 구조분해 할당으로 추출
+  const { setUser } = useUserStore();
 
   const { isModalOpen, openModal, closeModal } = useMessageModalStore();
 
@@ -53,8 +53,6 @@ function LoginForm() {
         }),
       );
 
-      console.log(useUserStore.getState().user); // 상태 확인 방법
-      console.log('Updating isFirstLogin for user ID:', authData.record.id);
       if (authData.record.isFirstLogin) {
         await pb.collection('users').update(authData.record.id, { isFirstLogin: false });
         navigate('/splash/setprofile');
@@ -83,7 +81,7 @@ function LoginForm() {
         }}
       />
       <Checkbox className="mb-[44px] mt-[14px]" />
-      <SubmitButton isFormValid={isFormValid} />
+      <SubmitButton isFormValid={isFormValid} style={{ marginTop: '15px' }} />
       {isModalOpen && <MessageModal text={'유효하지 않은\n이메일 혹은 패스워드입니다.'} closeModal={closeModal} />}
     </form>
   );
