@@ -88,8 +88,6 @@ function MyPage() {
     fetchData(pathname);
   }, [pathname]);
 
-  console.log(posts);
-
   /* 앨범 */
   const myPageDetailMatch = useMatch('/mypage/detail/:imageId');
   const layoutId = myPageDetailMatch?.params.imageId;
@@ -134,6 +132,8 @@ function MyPage() {
       setUserPosts(filteredPosts);
     }
   }, [posts]);
+
+  console.log(posts);
 
   /* 북마크 필터 */
   const currentCategory = bookmarkBoardMatch?.params.boardText;

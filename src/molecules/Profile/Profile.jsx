@@ -17,15 +17,14 @@ const Profile = ({ writerProfile, writerName, writerId }) => {
     setIsOpen(false);
   };
 
-  // useEffect(() => {
-  //   const currentUserJSON = localStorage.getItem("user")
+  useEffect(() => {
+    const currentUserJSON = localStorage.getItem('user');
 
-  //   if (currentUserJSON) {
-  //     const currentUser = JSON.parse(currentUserJSON)
-
-  //     setIsWriter(currentUser.id === writerId[0])
-  //   }
-  // }, [writerId])
+    if (currentUserJSON && writerId && writerId.length > 0) {
+      const currentUser = JSON.parse(currentUserJSON);
+      setIsWriter(currentUser.id === writerId[0]);
+    }
+  }, [writerId]);
 
   return (
     <div className="relative flex items-center justify-center pt-2">
