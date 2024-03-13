@@ -7,6 +7,7 @@ import TextContents from '@/atoms/TextContents/TextContents';
 import Comment from '@/molecules/Comment/Comment';
 import CommentWindow from '@/molecules/CommentWindow/CommentWindow';
 import DetailImageFile from '@/molecules/DetailImageFile/DetailImageFile';
+import Backward from '@/atoms/Backward/Backward';
 import Profile from '@/molecules/Profile/Profile';
 import { getPbImage } from '@/utils';
 import { useAlbumStore } from '@/zustand/useStore';
@@ -143,6 +144,16 @@ const CommunityDetail = () => {
 
   return (
     <>
+      <div className="w-full flex flex-row justify-start items-center gap-8">
+        <div className="w-full flex justify-between pl-8 py-2">
+          <div className="flex-1">
+            <Backward />
+          </div>
+          <TextContents text="" fontWeight="font-extrabold" fontSize="text-[25px]" fontFamily="font-serif" />
+          <div className="flex-1"></div>
+        </div>
+      </div>
+
       {isMobile ? (
         <div className="w-[375px] min-h-[600px] mx-auto relative mb-10">
           <Profile writerProfile={writerData?.profile} writerName={writerData?.username} writerId={writerInfo} />
