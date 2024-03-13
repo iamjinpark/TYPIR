@@ -1,9 +1,9 @@
-const BookmarkList = ({ title }) => {
+const BookmarkList = ({ title, onClick }) => {
   return (
-      <li className="flex items-center mb-4">
-        <img src="/images/profile.svg" className="w-[40px] h-[40px] mr-3" alt="프로필 이미지"/>
-      <button className="font-semibold">{title}</button>
-    </li> 
+    <button className="font-semibold flex items-center mb-4" aria-label={title} onClick={onClick}>
+      <img src="/images/addBookmark.svg" className="w-[40px] h-[40px] mr-3" alt="저장하기" />
+      {title}
+    </button>
   );
 };
 
