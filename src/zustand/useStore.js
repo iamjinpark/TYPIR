@@ -62,8 +62,12 @@ export const useProfileStore = create(
       setIsProtect: (isProtect) => set({ isProtect }),
       imageUrl: '',
       setImageUrl: (imageUrl) => set({ imageUrl }),
+      /* 미리 보기용 로컬 URL */
       tempSelectedImage: null,
       setTempSelectedImage: (image) => set({ tempSelectedImage: image }),
+      /* 서버 전송용 이미지 객체 */
+      tempSelectedFile: null,
+      setTempSelectedFile: (file) => set({ tempSelectedFile: file }),
     }),
     {
       name: 'profile-storage',
