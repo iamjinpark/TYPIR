@@ -145,7 +145,7 @@ const CommunityDetail = () => {
   return (
     <>
       <div className="w-full flex flex-row justify-start items-center gap-8">
-        <div className="w-full flex justify-between pl-8 py-2">
+        <div className="w-full flex justify-between pl-12 py-1">
           <div className="flex-1">
             <Backward />
           </div>
@@ -190,7 +190,7 @@ const CommunityDetail = () => {
           <div className="w-[320px] h-[55px]"></div>
         </div>
       ) : (
-        <div className="flex gap-3 w-[100%] sm:w-[768px] h-[480px] justify-center items-center mt-5">
+        <div className="flex gap-3 w-[100%] sm:w-[768px] h-[480px] justify-center items-center m-3">
           <div className="w-[100%] sm:w-[350px] h-[480px] flex items-center justify-center relative">
             <img src={postImageSrc} className="rounded-l-2xl w-full h-full object-cover" />
             <div className="w-full absolute bottom-0 right-0">
@@ -201,7 +201,7 @@ const CommunityDetail = () => {
           <div className="w-[100%] sm:w-[350px] h-[480px] relative flex flex-col">
             <Profile writerProfile={writerData?.profile} writerName={writerData?.username} writerId={writerInfo} />
             <div className="px-[15px] my-[30px] w-[100%] sm:w-[350px] h-[110px]">
-              <TextContents text={context} />
+              <TextContents text={context} fontSize="text-[13px]" />
             </div>
             <div className="flex justify-between mx-[15px]">
               <HeartButton imageId={imageId} onClick={handleLikeChange} />

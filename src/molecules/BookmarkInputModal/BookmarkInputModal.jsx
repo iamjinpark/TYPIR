@@ -24,7 +24,7 @@ const BookmarkInputModal = ({ onAddBookmark, onClose, inputText = '나만의 북
   return (
     <div className="absolute top-[103px] right-[15px]">
       <div className="w-[260px] h-[170px] bg-white border border-black rounded-xl flex items-center flex-col">
-        <p className="mt-[15px] font-semibold">{inputText}</p>
+        <p className="mt-[15px] font-semibold  text-[16px]">{inputText}</p>
         <input
           type="text"
           value={bookmarkName}
@@ -33,12 +33,15 @@ const BookmarkInputModal = ({ onAddBookmark, onClose, inputText = '나만의 북
           className="w-[170px] border-black border-b mt-[22px] outline-none"
         />
         <div className="mt-[25px]">
-          <button onClick={onClose} className="border border-black rounded px-[22px] py-1 mr-6 font-semibold">
+          <button
+            onClick={onClose}
+            className="border border-black rounded px-[22px] py-1 mr-6 font-semibold text-[13px]"
+          >
             취소
           </button>
           <button
             onClick={handleAddBookmark}
-            className="border border-black rounded px-[22px] py-1 font-semibold bg-black text-white"
+            className="border border-black rounded px-[22px] py-1 font-semibold bg-black text-white text-[13px]"
           >
             확인
           </button>
