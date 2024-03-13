@@ -6,7 +6,7 @@ import HandleLogo from '@/atoms/HandleLogo/HandleLogo';
 import HandleText from '@/atoms/HandleText/HandleText';
 import StrokeButton from '@/atoms/StrokeButton/StrokeButton';
 import { useNavigate } from 'react-router-dom';
-import { useProfileStore, useUserStore } from '@/zustand/useStore';
+import { useProfileStore } from '@/zustand/useStore';
 import pb from '@/api/pocketbase';
 
 export default function MyProfile() {

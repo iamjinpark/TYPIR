@@ -4,7 +4,7 @@ import CommonInput from '@/atoms/CommonInput/CommonInput';
 import ProfileImage from '@/atoms/ProfileImage/ProfileImage';
 import TextContents from '@/atoms/TextContents/TextContents';
 import { getPbImage } from '@/utils';
-import { useProfileStore, useUserStore } from '@/zustand/useStore';
+import { useProfileStore } from '@/zustand/useStore';
 import { useEffect } from 'react';
 import pb from '@/api/pocketbase';
 

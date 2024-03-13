@@ -134,12 +134,6 @@ export const useCustomBookmarkStore = create((set) => ({
   setCustomImages: (images) => set({ customImages: images }),
 }));
 
-/* 유저 리스트 */
-export const useUserStore = create((set) => ({
-  userList: [],
-  setUserList: (userList) => set({ userList }),
-}));
-
 /* 커뮤니티 프로필 사진 */
 export const useProfileImageStore = create((set) => ({
   image: null,
