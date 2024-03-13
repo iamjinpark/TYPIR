@@ -120,8 +120,8 @@ export const useCustomBookmarkStore = create((set) => ({
 
 /* 유저 리스트 */
 export const useUserStore = create((set) => ({
-  userList: [], // 초기 상태
-  setUserList: (userList) => set({ userList }), // 상태를 설정하는 함수
+  userList: [],
+  setUserList: (userList) => set({ userList }),
 }));
 
 /* 프로필 사진 */

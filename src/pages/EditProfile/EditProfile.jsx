@@ -30,24 +30,51 @@ function EditProfile() {
   } = useProfileStore();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setProfiles([userList]);
-      setUserName(userList?.username);
-      setHandle(userList?.handle);
-      setImageUrl(
-        getPbImage({
-          collectionId: 'users',
-          id: userList?.id,
-          image: userList?.profile,
-        }),
-      );
-    }
-  }, [setProfiles, setUserName, setHandle, setImageUrl, userList]);
+    // const storedUser = localStorage.getItem('user');
+    // if (storedUser) {
+    // const user = JSON.parse(storedUser);
+    setProfiles([userList]);
+    setUserName(userList?.username);
+    setHandle(userList?.handle);
+    setUserList(userList);
+    setImageUrl(
+      getPbImage({
+        collectionId: 'users',
+        id: userList?.id,
+        image: userList?.profile,
+      }),
+    );
+  }, [setProfiles, setUserName, setHandle, setImageUrl, userList, setUserList]);
 
-  // const isNameValid = nameValid(userName);
+  // const isNameValid = nameValid(username);
   // const isHandleValid = handleValid(handle);
+  console.log(userList);
+
+  // const user = JSON.parse(localStorage.getItem('user'));
+  const userId = userList.id;
+  console.log(userId);
+
+  const handleSaveButton = async (event) => {
+    event.preventDefault(); // preventDefault 함수 호출 방식 수정
+
+    // userList가 정의되어 있지 않으면 기본값인 빈 객체로 설정
+    const userData = {
+      username: username,
+      handle: handle,
+      profile: userList?.profile || null, // userList.profile이 없는 경우에 대한 처리 추가
+    };
+
+    if (userId) {
+      // userId가 정의되어 있는 경우에만 업데이트 요청을 보냄
+      try {
+        await pb.collection('users').update(userId, userData);
+      } catch (error) {
+        console.error('데이터 저장 실패:', error);
+      }
+    } else {
+      console.error('유저 아이디가 없습니다.'); // userId가 정의되지 않은 경우 에러 처리
+    }
+  };
 
   return (
     <form className="w-full h-[570px] bg-white flex flex-col items-center mb-8">
@@ -87,7 +114,7 @@ function EditProfile() {
         </div>
       </div>
 
-      <CommonButton />
+      <CommonButton type="submit" onClick={handleSaveButton} />
     </form>
   );
 }
