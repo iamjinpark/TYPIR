@@ -1,5 +1,5 @@
 const CommonTextarea = ({
-  width = 'w-[290px]',
+  width = 'w-[300px]',
   border = 'rounded-2xl',
   borderColor = 'border-gray-200',
   margin = 'mt-[10px]',
