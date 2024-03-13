@@ -30,7 +30,7 @@ const ImageTemplate = ({ boardText, margin = 'mt-[15px]', data = images, layoutI
   return (
     <Masonry
       elementType="ul"
-      className={`min-w-[320px] max-w-screen-md h-auto bg-white ${margin} px-4 mx-auto relative`}
+      className={`min-w-[320px] max-w-screen-md h-auto bg-white ${margin} mx-auto relative`}
       options={{
         gutter: 15,
         horizontalOrder: true,
