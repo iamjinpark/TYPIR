@@ -22,7 +22,7 @@ const Profile = ({ writerProfile, writerName, writerId }) => {
 
     if (currentUserJSON && writerId && writerId.length > 0) {
       const currentUser = JSON.parse(currentUserJSON);
-      setIsWriter(currentUser.id === writerId[0]);
+      setIsWriter(currentUser.id === writerId);
     }
   }, [writerId]);
 
