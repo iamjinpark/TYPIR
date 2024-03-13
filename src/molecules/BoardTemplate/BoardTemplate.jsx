@@ -11,7 +11,7 @@ function BoardItem({ imageSrc, span }) {
   );
 }
 
-function BoardTemplate({ text, images, onBoardClick }) {
+function BoardTemplate({ text, images, onBoardClick, imageProp }) {
   return (
     <div>
       <TextContents
@@ -24,8 +24,8 @@ function BoardTemplate({ text, images, onBoardClick }) {
       />
       <div className="w-[280px] h-[170px] rounded-2xl overflow-hidden" onClick={() => onBoardClick(text.toLowerCase())}>
         <div className="w-full h-full grid grid-cols-3 grid-rows-2 gap-1px">
-          {images.slice(0, 3).map(({ id, postImageUrl, imageUrl }, index) => (
-            <BoardItem key={id} imageSrc={imageUrl} span={index === 0 ? 'col-span-2 row-span-2' : ''} />
+          {images.slice(0, 3).map((image, index) => (
+            <BoardItem key={image.id} imageSrc={image[imageProp]} span={index === 0 ? 'col-span-2 row-span-2' : ''} />
           ))}
         </div>
       </div>
