@@ -44,13 +44,30 @@ const BookmarkSaveModal = ({ onClose, onBookmarkChange }) => {
     loadDefaultBookmarks()
   }, [])
 
+  // 핸들
+  async function getUserIdByHandle (handle) {
+    const users = await pb.collection("users").getFullList()
+    console.log("유저유저유저들 : ", users)
+    const user = users.find (val => val.handle === handle)
+    console.log("유저유저유저 : ", user)
+    return user ? user.id : null
+  }
+
   // 새 북마크 추가
   const handleAddBookmark = async (bookmarkName) => {
     try {
-      const data = { name : bookmarkName }
-      const newRecord = await pb.collection("bookmark").create(data)
+      const userId = await getUserIdByHandle(userHandle)
 
-      setBookmarks(prevBookmark => [...prevBookmark, newRecord.name])  // 새 북마크 목록에 추가
+      if (!userId) {
+        // throw new Error ("User handle is not found in users collection")
+        throw new Error ("유저 핸들 못 찾아 하 시발")
+      }
+      const data = { name : bookmarkName, handle : userId}
+      console.log("데이터야 데이터 : ", data)
+      const newRecord = await pb.collection("bookmark").create(data)
+      console.log("데이터야 새로운 데이터 : ",newRecord)
+
+      setBookmarks(prevBookmark => [...prevBookmark, newRecord.name, ])  // 새 북마크 목록에 추가
 
       setOpenInputModal(false)
       onBookmarkChange()
@@ -58,6 +75,7 @@ const BookmarkSaveModal = ({ onClose, onBookmarkChange }) => {
       console.error ("Error adding bookmark : ", err)
     }
   }
+
 
   return (
       <div className="fixed inset-0 flex justify-center items-center z-50" onClick={handleContainerClick}>
