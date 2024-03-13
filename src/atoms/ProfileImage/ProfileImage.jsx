@@ -6,13 +6,12 @@ function ProfileImage({
   height = 'h-[120px]',
   border = 'rounded-full',
   bgColor = 'bg-gray-100',
-  margin,
   editable = true,
+  margin,
   imageUrl,
 }) {
   const fileInputRef = useRef();
   const { tempSelectedImage, setTempSelectedImage } = useProfileStore();
-
   const handleImageClick = () => {
     if (editable) {
       fileInputRef.current.click();
@@ -24,6 +23,7 @@ function ProfileImage({
     if (file) {
       const tempUrl = URL.createObjectURL(file);
       useProfileStore.getState().setTempSelectedImage(tempUrl);
+      useProfileStore.getState().setTempSelectedFile(file);
     }
   };
 

@@ -92,6 +92,7 @@ function SelectPostImage() {
                 text={board.name}
                 images={board.images}
                 onBoardClick={() => onBoardClicked(board.name.toLowerCase())}
+                imageProp="imageUrl"
               />
             ))}
           </div>

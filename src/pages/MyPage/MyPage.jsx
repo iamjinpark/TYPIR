@@ -185,6 +185,7 @@ function MyPage() {
                 text={board.name}
                 images={board.images}
                 onBoardClick={() => onBoardClicked(board.name.toLowerCase())}
+                imageProp="imageUrl"
               />
             ))}
           </div>
@@ -222,6 +223,7 @@ function MyPage() {
                 text={bookmark.name}
                 images={bookmark.images}
                 onBoardClick={() => onBoardClicked(bookmark.name.toLowerCase())}
+                imageProp="postImageUrl"
               />
             ))}
           </div>

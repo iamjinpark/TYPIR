@@ -62,8 +62,12 @@ export const useProfileStore = create(
       setIsProtect: (isProtect) => set({ isProtect }),
       imageUrl: '',
       setImageUrl: (imageUrl) => set({ imageUrl }),
+      /* 미리 보기용 로컬 URL */
       tempSelectedImage: null,
       setTempSelectedImage: (image) => set({ tempSelectedImage: image }),
+      /* 서버 전송용 이미지 객체 */
+      tempSelectedFile: null,
+      setTempSelectedFile: (file) => set({ tempSelectedFile: file }),
     }),
     {
       name: 'profile-storage',
@@ -128,12 +132,6 @@ export const useAllBookmarkStore = create((set) => ({
 export const useCustomBookmarkStore = create((set) => ({
   customImages: [],
   setCustomImages: (images) => set({ customImages: images }),
-}));
-
-/* 유저 리스트 */
-export const useUserStore = create((set) => ({
-  userList: [],
-  setUserList: (userList) => set({ userList }),
 }));
 
 /* 커뮤니티 프로필 사진 */
