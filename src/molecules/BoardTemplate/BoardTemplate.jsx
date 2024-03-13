@@ -12,27 +12,21 @@ function BoardItem({ imageSrc, span }) {
 }
 
 function BoardTemplate({ text, images, onBoardClick, imageProp }) {
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      onBoardClick(text.toLowerCase());
-    }
-  };
   return (
     <div>
       <TextContents
         text={text}
+        maxLength={13}
         fontFamily="font-serif"
         fontWeight="font-bold"
         fontSize="text-[18px]"
         padding="p-2"
         margin="mt-2"
+        style={{
+          width: '250px',
+        }}
       />
-      <div
-        className="w-[280px] h-[170px] rounded-2xl overflow-hidden"
-        onClick={() => onBoardClick(text.toLowerCase())}
-        tabIndex="0"
-        onKeyDown={handleKeyDown}
-      >
+      <div className="w-[280px] h-[170px] rounded-2xl overflow-hidden" onClick={() => onBoardClick(text.toLowerCase())}>
         <div className="w-full h-full grid grid-cols-3 grid-rows-2 gap-1px">
           {images.slice(0, 3).map((image, index) => (
             <BoardItem key={image.id} imageSrc={image[imageProp]} span={index === 0 ? 'col-span-2 row-span-2' : ''} />
