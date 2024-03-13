@@ -2,14 +2,7 @@ import { getStaticImage } from '@/utils';
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-const PasswordInput = ({
-  text = '패스워드',
-  className,
-  onValidationChange,
-  onChange,
-  password, // 상위 컴포넌트로부터 받은 패스워드 상태
-  isConfirm = false, // 패스워드 확인 필드인지 여부
-}) => {
+const PasswordInput = ({ text = '패스워드', className, onValidationChange, onChange, password, isConfirm = false }) => {
   const [inputValue, setInputValue] = useState('');
   const [isTouched, setIsTouched] = useState(false);
   const [isValid, setIsValid] = useState(true);
@@ -28,10 +21,8 @@ const PasswordInput = ({
       if (inputValue) {
         let valid;
         if (isConfirm) {
-          // 패스워드 확인 필드의 경우, 상위 컴포넌트의 패스워드와 일치하는지 검사
           valid = inputValue === password;
         } else {
-          // 일반 패스워드 필드의 경우, 정규 표현식을 사용한 유효성 검사
           const regex = /^(?=.*[~!@#$%^&*])[A-Za-z\d~!@#$%^&*]{6,16}$/;
           valid = regex.test(inputValue);
         }
@@ -53,7 +44,7 @@ const PasswordInput = ({
 
   return (
     <div className={`${className}`}>
-      <label className="font-bold px-2" htmlFor="passwordInput">
+      <label className="font-bold px-2" htmlFor={inputId}>
         {text}
       </label>
       <div className="relative w-72">
@@ -69,7 +60,7 @@ const PasswordInput = ({
           type="button"
           onClick={togglePasswordVisibility}
           className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-          style={{ top: '50%', transform: 'translateY(-50%)', marginRight: '10px' }} // 버튼을 인풋 필드 내부 오른쪽 끝에 정렬
+          style={{ top: '50%', transform: 'translateY(-50%)', marginRight: '3px' }} // 버튼을 인풋 필드 내부 오른쪽 끝에 정렬
         >
           {showPassword ? (
             <img src={getStaticImage('icon_eye.svg')} alt="보이기" />
