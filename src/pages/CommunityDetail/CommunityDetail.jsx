@@ -17,9 +17,9 @@ const CommunityDetail = () => {
   const location = useLocation();
   const { imageSrc, postImageSrc, writerInfo } = location.state || {};
   const context = location.state?.context;
-  const imageId = location.state?.imageId;
-  // const writerInfo = location.state?.writerInfo;
-  console.log(writerInfo);
+  
+  const path = location.pathname
+  const imageId = path.split("/").pop() // 이미지 아이디 추출 방식 변경
 
   const USERS_COLLECTION_ID = '_pb_users_auth_';
 
@@ -35,13 +35,13 @@ const CommunityDetail = () => {
 
   useEffect(() => {
     const userDataJSON = localStorage.getItem('user');
-
+  
     if (userDataJSON) {
       const userData = JSON.parse(userDataJSON);
 
       setUser({
         profile: userData.profile,
-        userName: userData.userName,
+        userName: userData.username,
         userId: userData.id,
       });
     }
@@ -140,7 +140,6 @@ const CommunityDetail = () => {
     }
     fetchWriterData();
   }, [writerInfo]);
-  console.log(writerInfo);
 
   return (
     <>
@@ -214,12 +213,6 @@ const CommunityDetail = () => {
                 />
               ))}
             </div>
-            <CommentWindow
-              onAddComment={handleAddComment}
-              imageId={imageId}
-              profileImage={profileImage}
-              userData={user}
-            />
             <CommentWindow
               onAddComment={handleAddComment}
               imageId={imageId}
