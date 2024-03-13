@@ -38,7 +38,9 @@ const Category = ({ gap = 'gap-3' }) => {
 
       return stylesWithImages;
     } catch (error) {
-      console.error('Error fetching data :', error);
+      if (!error.isAbort) {
+        console.error('Error fetching data :', error);
+      }
     }
   }
 
