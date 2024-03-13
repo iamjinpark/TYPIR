@@ -40,13 +40,12 @@ const ImageTemplate = ({ boardText, margin = 'mt-[15px]', data = images, layoutI
       }}
     >
       {data.map((item) => (
-        <motion.li key={item.id} layoutId={item.id} className="masonry-item absolute">
+        <motion.li key={item.id} layoutId={item.id} className="masonry-item absolute m-[-2px]">
           <button type="button" onClick={() => onBoxClicked(item.id)}>
             <img
               src={item.image}
               alt={item.alt}
-              className={`w-[150px] xs:w-[180px] bg-gray-100 rounded-2xl mb-[15px] cursor-zoom-in`}
-              style={{ height: `${item.height}px` }}
+              className={`w-[170px] bg-gray-100 rounded-2xl mb-[15px] cursor-zoom-in`}
             />
           </button>
         </motion.li>
