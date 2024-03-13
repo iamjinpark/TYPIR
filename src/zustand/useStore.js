@@ -45,22 +45,32 @@ export const useImageStore = create((set) => ({
 }));
 
 /* 마이 페이지 유저 프로필 */
-export const useProfileStore = create((set) => ({
-  profiles: [],
-  setProfiles: (profiles) => set({ profiles }),
-  username: '',
-  setUserName: (username) => set({ username }),
-  handle: '',
-  setHandle: (handle) => set({ handle }),
-  // nameValid: (username) => /^[a-zA-Z0-9]+$/.test(username) && username.length >= 3 && username.length <= 16,
-  // handleValid: (handle) => /^[a-zA-Z0-9_]+$/.test(handle) && handle.length >= 3 && handle.length <= 16,
-  imageUrl: '',
-  setImageUrl: (imageUrl) => set({ imageUrl }),
-  isPrivate: false,
-  setIsPrivate: (isPrivate) => set({ isPrivate }),
-  isProtect: false,
-  setIsProtect: (isProtect) => set({ isProtect }),
-}));
+export const useProfileStore = create(
+  persist(
+    (set) => ({
+      userList: [],
+      setUserList: (userList) => set({ userList }),
+      profiles: [],
+      setProfiles: (profiles) => set({ profiles }),
+      username: '',
+      setUserName: (username) => set({ username }),
+      handle: '',
+      setHandle: (handle) => set({ handle }),
+      isPrivate: false,
+      setIsPrivate: (isPrivate) => set({ isPrivate }),
+      isProtect: false,
+      setIsProtect: (isProtect) => set({ isProtect }),
+      imageUrl: '',
+      setImageUrl: (imageUrl) => set({ imageUrl }),
+      tempSelectedImage: null,
+      setTempSelectedImage: (image) => set({ tempSelectedImage: image }),
+    }),
+    {
+      name: 'profile-storage',
+      getStorage: () => sessionStorage,
+    },
+  ),
+);
 
 /* 마이 페이지 앨범 */
 export const useAlbumStore = create(
@@ -126,7 +136,7 @@ export const useUserStore = create((set) => ({
   setUserList: (userList) => set({ userList }),
 }));
 
-/* 프로필 사진 */
+/* 커뮤니티 프로필 사진 */
 export const useProfileImageStore = create((set) => ({
   image: null,
   preview: '',

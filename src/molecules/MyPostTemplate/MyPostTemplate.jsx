@@ -20,9 +20,13 @@ function MyPostTemplate({ images }) {
         state: { imageSrc: imageUrl, postImageSrc: postImageUrl, context, writerInfo: username },
       });
     } else if (location.pathname.includes('all')) {
-      navigate(`/mypage/bookmark/field/all/detail/${imageId}`, { state: { imageSrc: imageUrl } });
+      navigate(`/mypage/bookmark/field/all/detail/${imageId}`, {
+        state: { imageSrc: imageUrl, postImageSrc: postImageUrl, context, writerInfo: username },
+      });
     } else if (boardText) {
-      navigate(`/mypage/bookmark/${boardText}/detail/${imageId}`, { state: { imageSrc: imageUrl } });
+      navigate(`/mypage/bookmark/${boardText}/detail/${imageId}`, {
+        state: { imageSrc: imageUrl, postImageSrc: postImageUrl, context, writerInfo: username },
+      });
     } else if (location.pathname.endsWith('/community')) {
       navigate(`/community/detail/${imageId}`, {
         state: { imageSrc: imageUrl, postImageSrc: postImageUrl, context, writerInfo: username },

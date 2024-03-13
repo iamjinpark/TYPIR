@@ -128,12 +128,10 @@ function MyPage() {
     const user = userString ? JSON.parse(userString) : null;
 
     if (user && posts.length > 0) {
-      const filteredPosts = posts.filter((post) => post.username === user.id);
+      const filteredPosts = posts.filter((post) => post.username.includes(user.id));
       setUserPosts(filteredPosts);
     }
   }, [posts]);
-
-  console.log(posts);
 
   /* 북마크 필터 */
   const currentCategory = bookmarkBoardMatch?.params.boardText;
@@ -204,7 +202,7 @@ function MyPage() {
       {/* 게시물 */}
       {pathname === '/mypage/post' && (
         <div className="flex flex-col items-center mt-8 h-auto">
-          <MyPostTemplate key={posts} images={posts} title={posts} />
+          <MyPostTemplate key={userPosts} images={userPosts} title={userPosts} />
         </div>
       )}
 

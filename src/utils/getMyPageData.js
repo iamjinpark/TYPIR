@@ -45,25 +45,11 @@ export async function fetchBoardsData() {
   return boardsWithImages;
 }
 
-// 'communityPage' 콜렉션 데이터 가져오기
-// export async function fetchPostsData() {
-//   const postData = await pb.collection('communityPage').getList(1, 50);
-//   const postsWithImages = postData.items.map((post) => ({
-//     ...post,
-//     imageUrl: getPbImage({
-//       collectionId: post.collectionId,
-//       id: post.id,
-//       image: post.image,
-//     }),
-//   }));
-
-//   return postsWithImages;
-// }
-
 // 'communityPage' 컬렉션에서 'styles' 데이터 가져오기
 export async function fetchPostsData() {
   try {
     const postData = await pb.collection('communityPage').getList(1, 50);
+    const reversedData = postData.items.reverse();
     const postsWithImagesAndStyles = await Promise.all(
       postData.items.map(async (post) => {
         let styleImageUrl = null;
@@ -105,21 +91,54 @@ export async function fetchPostsData() {
 
 // 'bookmark' 콜렉션에서 relation 연결된 'community' 데이터 가져오기
 export async function fetchBookmarksData() {
-  const bookmarkData = await pb.collection('bookmark').getList(1, 50);
-  const bookmarksWithImages = await Promise.all(
-    bookmarkData.items.map(async (bookmark) => {
-      const relationedPostsPromises = bookmark.images.map((imageId) => pb.collection('communityPage').getOne(imageId));
+  try {
+    const bookmarkData = await pb.collection('bookmark').getList(1, 50);
+    const bookmarksWithImages = await Promise.all(
+      bookmarkData.items.map(async (bookmark) => {
+        const relationedPostsPromises = bookmark.images.map((imageId) =>
+          pb.collection('communityPage').getOne(imageId),
+        );
 
-      const relationedPosts = await Promise.all(relationedPostsPromises);
-      const formattedPosts = relationedPosts.map((postRecord) => ({
-        id: postRecord.id,
-        category: postRecord.category,
-        title: postRecord.title,
-        imageUrl: getPbImage(postRecord),
-      }));
+        const relationedPosts = await Promise.all(relationedPostsPromises);
+        const formattedPosts = await Promise.all(
+          relationedPosts.map(async (postRecord) => {
+            let postImageUrl = getPbImage({
+              collectionId: 'communityPage',
+              id: postRecord.id,
+              image: postRecord.image[0],
+            });
+            let styleImageUrl = null;
 
-      return { ...bookmark, images: formattedPosts };
-    }),
-  );
-  return bookmarksWithImages;
+            // styles 컬렉션에서 copy 속성으로 데이터 조회
+            if (postRecord.copy) {
+              try {
+                const styleRecord = await pb.collection('styles').getOne(postRecord.copy);
+                styleImageUrl = getPbImage({
+                  collectionId: 'styles',
+                  id: styleRecord.id,
+                  image: styleRecord.image,
+                });
+              } catch (error) {
+                console.error(`Error fetching style image for post ${postRecord.id}:`, error);
+                // 오류 발생 시 styleImageUrl을 null로 유지
+              }
+            }
+
+            return {
+              ...postRecord,
+              imageUrl: styleImageUrl, // 'styles' 컬렉션에서 가져온 이미지 URL
+              postImageUrl, // 'communityPage' 컬렉션에서 가져온 이미지 URL
+            };
+          }),
+        );
+
+        return { ...bookmark, images: formattedPosts };
+      }),
+    );
+
+    return bookmarksWithImages;
+  } catch (error) {
+    console.error('Error fetching bookmarks:', error);
+    return []; // 오류 발생 시 빈 배열 반환
+  }
 }
