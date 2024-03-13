@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '@/zustand/useUserStore';
 import { useNewPostModalStore, useSelectCategoryStore } from '@/zustand/useStore';
 import { useEffect } from 'react';
+import pb from '@/api/pocketbase';
 
 function SelectPageModal() {
   const navigate = useNavigate();
@@ -78,6 +79,7 @@ function SelectPageModal() {
           hoverScale=""
           onClick={() => {
             logoutUser();
+            pb.authStore.clear();
             localStorage.removeItem('user');
             navigate('/splash');
             closeCategoryModal();
