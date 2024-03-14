@@ -6,7 +6,10 @@
 ### 멋쟁이사자처럼 파이널프로젝트 10조  ✨**GIRL'S DAY**✨
 👗 **프로젝트 주제** : 핀터레스트 스타일 따라입기 공유 커뮤니티, TYPIR<br/>
 🗓️ **프로젝트 기간** : 2024.02.19(월) ~ 2024.03.14(목)<br/><br/>
-**[TYPIR 바로가기](https://typir.netlify.app/)**
+**[TYPIR 바로가기](https://typir.netlify.app/)**<br /><br/>
+**테스트 계정**<br/>
+ID : molecules@naver.com<br/>
+PW: #12345678
 </div>
 <br/>
 
