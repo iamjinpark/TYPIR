@@ -80,8 +80,8 @@ function LoginForm() {
           setPassword(value);
         }}
       />
-      <Checkbox className="mb-[44px] mt-[14px]" />
-      <SubmitButton isFormValid={isFormValid} style={{ marginTop: '15px' }} />
+      {/* <Checkbox className="mb-[44px] mt-[14px]" /> */}
+      <SubmitButton isFormValid={isFormValid} style={{ marginTop: '60px' }} />
       {isModalOpen && <MessageModal text={'유효하지 않은\n이메일 혹은 패스워드입니다.'} closeModal={closeModal} />}
     </form>
   );

@@ -1,5 +1,5 @@
 import DetailImage from '@/molecules/DetailImage/DetailImage';
-import Category from '@/molecules/Category/Category';
+import Category from '@/molecules/Category/CategoryTanstack';
 import ImageTemplate from '@/molecules/ImageTemplate/ImageTemplate';
 import { useMatch } from 'react-router-dom';
 import { useStyleStore } from '@/zustand/useStyleStore';

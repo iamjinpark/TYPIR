@@ -52,9 +52,9 @@ function SetInitialProfile() {
 
   return (
     <form onSubmit={handleSubmit} className="w-[320px] h-[650px] mx-auto flex flex-col items-center justify-start">
-      <AccountPageTitle text={'프로필 설정'} className={'mt-75px mb-18px'} />
+      <AccountPageTitle text={'프로필 설정'} className={'mt-130px mb-30px'} />
       <ModifyProfileImg image={image} setImage={setImage} preview={preview} setPreview={setPreview} />
-      <div className="mb-1">
+      <div className="mb-2">
         <CommonInput
           text="닉네임"
           value={username}
@@ -76,7 +76,7 @@ function SetInitialProfile() {
           {!isHandleValid && handle.length > 0 && '3글자 이상, 16글자 이하의 영문이어야 합니다.'}
         </div>
       </div>
-      <SubmitButton isFormValid={isNameValid && isHandleValid} text="설정" width="w-36" className={'mt-[30px]'} />
+      <SubmitButton isFormValid={isNameValid && isHandleValid} text="설정" width="w-36" className={'mt-[50px]'} />
     </form>
   );
 }

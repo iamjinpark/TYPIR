@@ -8,7 +8,7 @@ const AccountActionLink = ({ ask, text = '회원가입' }) => {
   return (
     <div className="mt-15px">
       {ask ? ask : askMessage}
-      <Link to={router} className="text-gray-300 ml-5px">
+      <Link to={router} className="text-gray-300 ml-10px">
         {text}
       </Link>
     </div>

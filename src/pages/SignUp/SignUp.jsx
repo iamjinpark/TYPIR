@@ -25,8 +25,8 @@ const SignUp = () => {
 
   useEffect(() => {
     const passwordsMatch = password === confirmPassword && confirmPassword !== '';
-    setIsFormValid(emailValid && passwordValid && passwordsMatch && termsChecked);
-  }, [emailValid, passwordValid, password, confirmPassword, termsChecked]);
+    setIsFormValid(emailValid && passwordValid && passwordsMatch);
+  }, [emailValid, passwordValid, password, confirmPassword]);
 
   const handlePasswordValidationChange = (isValid) => {
     setPasswordValid(isValid);
@@ -95,7 +95,7 @@ const SignUp = () => {
 
   return (
     <div className="w-[320px] h-[650px] mx-auto flex flex-col items-center justify-start">
-      <AccountPageTitle text="회원가입" className="mt-[75px] mb-[40px]" />
+      <AccountPageTitle text="회원가입" className="mt-[130px] mb-[40px]" />
       <form onSubmit={handleSubmit} className="w-full flex flex-col items-center">
         <EmailInput
           value={email}
@@ -120,12 +120,12 @@ const SignUp = () => {
           password={password}
           onValidationChange={(isValid) => setPasswordValid(isValid && password === confirmPassword)}
         />
-        <Checkbox
+        {/* <Checkbox
           text="이용약관에 동의합니다"
           className="mt-14px w-full px-20px"
           onChange={(e) => setTermsChecked(e.target.checked)}
-        />
-        <SubmitButton isFormValid={isFormValid} text="회원가입" className="mt-22px" />
+        /> */}
+        <SubmitButton isFormValid={isFormValid} text="회원가입" className="mt-60px" />
         {isModalOpen && <MessageModal text={modalMessage} closeModal={handleCloseModalAndNavigate} />}
       </form>
       <AccountActionLink text="로그인" />
